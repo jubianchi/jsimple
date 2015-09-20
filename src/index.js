@@ -51,6 +51,10 @@ class Jimple {
             this.tagmap.get(tag).add(name);
         });
 
+        if (this.shared.has(name)) {
+            this.shared.delete(name);
+        }
+
         return this;
     }
 
@@ -61,10 +65,6 @@ class Jimple {
 
         if (typeof code !== "function") {
             throw new Error("Argument #2 passed to Jimple.share must be a function")
-        }
-
-        if (this.shared.has(name)) {
-            this.shared.delete(name);
         }
 
         return this.define(
@@ -87,10 +87,6 @@ class Jimple {
 
         if (typeof code !== "function") {
             throw new Error("Argument #2 passed to Jimple.factory must be a function")
-        }
-
-        if (this.shared.has(name)) {
-            this.shared.delete(name);
         }
 
         return this.define(name, code, tags || []);
