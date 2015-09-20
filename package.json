@@ -13,6 +13,7 @@
     "node": "^4.0"
   },
   "devDependencies": {
+    "esdoc": "^0.2.6",
     "istanbul": "^0.3.20",
     "jscs": "^1.7.3",
     "mocha": "^2.3.2",
@@ -22,8 +23,10 @@
     "test": "mocha -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
     "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
     "cs": "node_modules/.bin/jscs src/ test/",
+    "doc": "node_modules/.bin/esdoc -c esdoc.json",
     "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run test",
     "dcover": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cover",
-    "dcs": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cs"
+    "dcs": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cs",
+    "ddoc": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run doc"
   }
 }

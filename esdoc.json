@@ -1,0 +1,11 @@
+{
+    "title": "Jimple",
+    "source": "./src",
+    "destination": "./docs",
+    "unexportIdentifier": true,
+    "test": {
+        "type": "mocha",
+        "source": "./tests",
+        "includes": ["\\.(js|es6)$"]
+    }
+}

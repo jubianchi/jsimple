@@ -7,6 +7,13 @@ class Jimple {
         this.shared = new Map();
     }
 
+    /**
+     *
+     * @param {Array} deps
+     * @param {String} module
+     *
+     * @returns {*}
+     */
     use(deps, module) {
         if (deps.constructor.name === "Array") {
             deps = deps || [];
@@ -23,6 +30,14 @@ class Jimple {
         }
     }
 
+    /**
+     *
+     * @param {String} name
+     * @param {*} value
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
     define(name, value, tags) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.define must be a string identifier")
@@ -58,6 +73,14 @@ class Jimple {
         return this;
     }
 
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
     share(name, code, tags) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.share must be a string identifier")
@@ -80,6 +103,14 @@ class Jimple {
         );
     }
 
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
     factory(name, code, tags) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.factory must be a string identifier")
@@ -92,6 +123,14 @@ class Jimple {
         return this.define(name, code, tags || []);
     }
 
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
     extend(name, code, tags) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.extend must be a string identifier")
@@ -110,6 +149,12 @@ class Jimple {
         );
     }
 
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {Boolean}
+     */
     exists(name) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.exists must be a string identifier")
@@ -118,6 +163,12 @@ class Jimple {
         return this.values.has(name);
     }
 
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {*}
+     */
     get(name) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.get must be a string identifier")
@@ -128,6 +179,10 @@ class Jimple {
 
     /**
      * @deprecated
+     *
+     * @param {String} tag
+     *
+     * @return {Array}
      */
     getTagged(tag) {
         return this.tagged(tag);
@@ -143,11 +198,19 @@ class Jimple {
 
     /*
      * @deprecated
+     *
+     * @return {Array}
      */
     keys() {
         return Array.from(this.values.keys());
     }
 
+    /**
+     *
+     * @param {Function} code
+     *
+     * @returns {Function}
+     */
     protect(code) {
         if (typeof code !== "function") {
             throw new Error("Argument #1 passed to Jimple.protect must be a function")
@@ -156,6 +219,12 @@ class Jimple {
         return () => code;
     }
 
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {Function}
+     */
     raw(name) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.raw must be a string identifier")
