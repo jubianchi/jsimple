@@ -13,7 +13,6 @@
     "node": "^4.0"
   },
   "devDependencies": {
-    "atoum.js": "~0.0.11",
     "istanbul": "^0.3.20",
     "jscs": "^1.7.3",
     "mocha": "^2.3.2",
