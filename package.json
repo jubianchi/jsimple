@@ -1,6 +1,6 @@
 {
   "name": "jimple",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "jimple - a JS dependency injection/service locator",
   "main": "src/index.js",
   "author": "Julien Bianchi <julien.bianchi@pmsipilot.com>",
