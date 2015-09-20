@@ -1,13 +1,16 @@
 {
   "name": "jimple",
   "version": "2.0.0",
-  "description": "jimple - a JS dependency injection/service locator",
+  "description": "jimple - a JS dependency injection container/service locator",
   "main": "src/index.js",
-  "author": "Julien Bianchi <julien.bianchi@pmsipilot.com>",
+  "author": "Julien Bianchi <contact@jubianchi.fr>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/jubianchi/laboard.git"
+  },
+  "engines" : {
+    "node" : "^4.0"
   },
   "devDependencies": {
     "atoum.js": "~0.0.11",
