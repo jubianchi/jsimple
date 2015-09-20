@@ -3,7 +3,7 @@
 class Jimple {
     constructor() {
         this.values = new Map();
-        this.tagged = new Map();
+        this.tagmap = new Map();
         this.shared = new Map();
     }
 
@@ -30,7 +30,7 @@ class Jimple {
 
         if (this.values.has(name)) {
             (this.values.get(name).tags || []).forEach(tag => {
-                this.tagged.get(tag).delete(name);
+                this.tagmap.get(tag).delete(name);
             });
 
             this.values.delete(name);
@@ -44,11 +44,11 @@ class Jimple {
 
         this.values.get(name).tags = tags || [];
         this.values.get(name).tags.forEach(tag => {
-            if (this.tagged.has(tag) === false) {
-                this.tagged.set(tag, new Set());
+            if (this.tagmap.has(tag) === false) {
+                this.tagmap.set(tag, new Set());
             }
 
-            this.tagged.get(tag).add(name);
+            this.tagmap.get(tag).add(name);
         });
 
         return this;
@@ -89,11 +89,11 @@ class Jimple {
             throw new Error("Argument #2 passed to Jimple.extend must be a function")
         }
 
-        let service = this.get(name);
+        let service = this.raw(name);
 
         return this.share(
             name,
-            jimple => code(service, jimple),
+            jimple => code(service(jimple), jimple),
             tags || this.values.get(name).tags
         );
     }
@@ -114,12 +114,19 @@ class Jimple {
         return this.raw(name)(this);
     }
 
+    /**
+     * @deprecated
+     */
     getTagged(tag) {
+        return this.tagged(tag);
+    }
+
+    tagged(tag) {
         if (typeof tag !== "string") {
-            throw new Error("Argument #1 passed to Jimple.getTagged must be a string identifier")
+            throw new Error("Argument #1 passed to Jimple.tagged must be a string identifier")
         }
 
-        return Array.from(this.tagged.get(tag) || []);
+        return Array.from(this.tagmap.get(tag) || []);
     }
 
     /*

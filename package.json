@@ -9,20 +9,22 @@
     "type": "git",
     "url": "https://gitlab.com/jubianchi/laboard.git"
   },
-  "engines" : {
-    "node" : "^4.0"
+  "engines": {
+    "node": "^4.0"
   },
   "devDependencies": {
     "atoum.js": "~0.0.11",
-    "jscs": "^1.7.3"
+    "istanbul": "^0.3.20",
+    "jscs": "^1.7.3",
+    "mocha": "^2.3.2",
+    "should": "^7.1.0"
   },
   "scripts": {
-    "test": "node_modules/atoum.js/bin/atoum -d tests",
-    "cover": "node_modules/atoum.js/bin/atoum --coverage --coverage-dir src -d tests",
-    "cs": "node_modules/.bin/jscs src",
-
-    "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /app/node_modules/atoum.js/bin/atoum -d /app/tests",
-    "dcover": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /app/node_modules/atoum.js/bin/atoum --coverage --coverage-dir /app/src -d /app/tests",
-    "dcs": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /app/node_modules/.bin/jscs /app/src"
+    "test": "mocha -s 1 --require should --reporter spec --check-leaks tests/spec/**/*.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -s 1 --require should --reporter spec --check-leaks tests/spec/**/*.js",
+    "cs": "node_modules/.bin/jscs src/ test/",
+    "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run test",
+    "dcover": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cover",
+    "dcs": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cs"
   }
 }
