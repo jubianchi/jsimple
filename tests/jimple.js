@@ -1,6 +1,6 @@
 "use strict";
 
-var Jimple = require("../../src");
+var Jimple = require("../src");
 
 describe("Jimple", () => {
     let jimple;
@@ -87,6 +87,10 @@ describe("Jimple", () => {
                 jimple.get("service").should.not.equal(service);
             })
         });
+    });
+
+    describe(".factory", () => {
+        it("should return jimple instance", () => jimple.share("service", () => {}).should.be.equal(jimple));
     });
 
     describe(".extend", () => {

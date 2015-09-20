@@ -19,8 +19,8 @@
     "should": "^7.1.0"
   },
   "scripts": {
-    "test": "mocha -s 1 --require should --reporter spec --check-leaks tests/spec/**/*.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -s 1 --require should --reporter spec --check-leaks tests/spec/**/*.js",
+    "test": "mocha -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
     "cs": "node_modules/.bin/jscs src/ test/",
     "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run test",
     "dcover": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cover",
