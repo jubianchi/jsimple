@@ -80,6 +80,22 @@ class Jimple {
         );
     }
 
+    factory(name, code, tags) {
+        if (typeof name !== "string") {
+            throw new Error("Argument #1 passed to Jimple.factory must be a string identifier")
+        }
+
+        if (typeof code !== "function") {
+            throw new Error("Argument #2 passed to Jimple.factory must be a function")
+        }
+
+        if (this.shared.has(name)) {
+            this.shared.delete(name);
+        }
+
+        return this.define(name, code, tags || []);
+    }
+
     extend(name, code, tags) {
         if (typeof name !== "string") {
             throw new Error("Argument #1 passed to Jimple.extend must be a string identifier")

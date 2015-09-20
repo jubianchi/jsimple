@@ -37,8 +37,7 @@ describe("Jimple", () => {
         it("should return jimple instance", () => jimple.share("service", () => {}).should.be.equal(jimple));
 
         it("should wrap callable", () => {
-            let service,
-                callable = () => {};
+            let callable = () => {};
 
             jimple.share("service", callable);
 
@@ -90,7 +89,40 @@ describe("Jimple", () => {
     });
 
     describe(".factory", () => {
-        it("should return jimple instance", () => jimple.share("service", () => {}).should.be.equal(jimple));
+        it("should return jimple instance", () => jimple.factory("service", () => {}).should.be.equal(jimple));
+
+        it("should not wrap callable", () => {
+            let callable = () => {};
+
+            jimple.factory("service", callable).raw("service").should.be.equal(callable);
+        });
+
+        it("should delete shared instance", () => {
+            let service,
+                callable = () => service = {};
+
+            jimple.share("service", callable).get("service");
+
+            jimple.factory("service", () => ({})).get("service").should.not.be.equal(service);
+        });
+
+        describe("factory", () => {
+            it("should not share service instance", () => {
+                let callable = () => ({});
+
+                jimple.factory("service", callable);
+
+                jimple.get("service").should.not.equal(jimple.get("service"));
+            });
+
+            it("should receive jimple instance as an argument", () => {
+                let callable = (arg) => arg.should.be.equal(jimple);
+
+                jimple.factory("service", callable);
+
+                jimple.get("service");
+            });
+        });
     });
 
     describe(".extend", () => {
