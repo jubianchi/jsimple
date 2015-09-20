@@ -52,7 +52,7 @@
         "beforeOpeningCurlyBrace": true
     },
     "validateLineBreaks": "LF",
-
+    "validateQuoteMarks": "\"",
     "disallowKeywords": [ "with" ],
     "disallowKeywordsOnNewLine": [ "else" ],
     "disallowSpaceAfterObjectKeys": true,

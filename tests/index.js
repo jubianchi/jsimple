@@ -1,6 +1,6 @@
-require('atoum.js')(module);
+require("atoum.js")(module);
 
-var testedClass = require('../src/index');
+var testedClass = require("../src/index");
 
 module.exports = {
     testClass: function() {
@@ -17,10 +17,10 @@ module.exports = {
             .and(module = this.generateCallback(function() {
                 return {};
             }))
-            .if(container.share('service', function() { return service; }))
-            .if(container.share('otherService', function() { return otherService; }))
+            .if(container.share("service", function() { return service; }))
+            .if(container.share("otherService", function() { return otherService; }))
             .then()
-                .object(container.use(['service', 'otherService'], module))
+                .object(container.use(["service", "otherService"], module))
                 .callback(module)
                     .wasCalled().withArguments(service, otherService, container)
             .if(module = this.generateCallback(function() {
@@ -40,14 +40,14 @@ module.exports = {
             .given(container = new testedClass)
             .then()
                 .error(function() {
-                        container.define(function() {}, 'service')
+                        container.define(function() {}, "service")
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.define must be a string identifier')
+                    .hasMessage("Argument #1 passed to Jimple.define must be a string identifier")
             .given(service = [])
             .then()
-                .object(container.define('service', service)).isIdenticalTo(container)
-                .array(container.get('service')).isIdenticalTo(service)
+                .object(container.define("service", service)).isIdenticalTo(container)
+                .array(container.get("service")).isIdenticalTo(service)
         ;
     },
 
@@ -58,27 +58,27 @@ module.exports = {
             .given(container = new testedClass)
             .then()
                 .error(function() {
-                        container.share(function() {}, 'service')
+                        container.share(function() {}, "service")
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.share must be a string identifier')
+                    .hasMessage("Argument #1 passed to Jimple.share must be a string identifier")
                 .error(function() {
-                        container.share('service', 'function')
+                        container.share("service", "function")
                     }
                 )
-                    .hasMessage('Argument #2 passed to Jimple.share must be a function')
+                    .hasMessage("Argument #2 passed to Jimple.share must be a function")
             .given(factory = function() { return {}; })
             .then()
-                .object(container.share('service', factory)).isIdenticalTo(container)
-                .object(container.get('service')).isIdenticalTo(container.get('service'))
-            .if(container.share('service', factory, ['tag']))
+                .object(container.share("service", factory)).isIdenticalTo(container)
+                .object(container.get("service")).isIdenticalTo(container.get("service"))
+            .if(container.share("service", factory, ["tag"]))
             .then()
-                .array(container.getTagged('tag')).isEqualTo(['service'])
-            .if(container.get('service'))
-            .and(container.share('service', factory, ['other']))
+                .array(container.getTagged("tag")).isEqualTo(["service"])
+            .if(container.get("service"))
+            .and(container.share("service", factory, ["other"]))
             .then()
-                .array(container.getTagged('tag')).isEmpty()
-                .array(container.getTagged('other')).isEqualTo(['service'])
+                .array(container.getTagged("tag")).isEmpty()
+                .array(container.getTagged("other")).isEqualTo(["service"])
         ;
     },
 
@@ -89,36 +89,36 @@ module.exports = {
             .given(container = new testedClass)
             .then()
                 .error(function() {
-                        container.extend(function() {}, 'service')
+                        container.extend(function() {}, "service")
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.extend must be a string identifier')
+                    .hasMessage("Argument #1 passed to Jimple.extend must be a string identifier")
                 .error(function() {
-                        container.extend('service', 'function')
+                        container.extend("service", "function")
                     }
                 )
-                    .hasMessage('Argument #2 passed to Jimple.extend must be a function')
+                    .hasMessage("Argument #2 passed to Jimple.extend must be a function")
                 .error(function() {
-                        container.extend('service', function() {})
+                        container.extend("service", function() {})
                     }
                 )
                     .hasMessage("Identifier service is not defined")
             .given(extended = this.generateCallback(function() { return {}; }))
             .and(service = {})
-            .if(container.share('service', function() { return service; }))
+            .if(container.share("service", function() { return service; }))
             .then()
-                .object(container.extend('service', extended)).isIdenticalTo(container)
-            .if(container.get('service'))
+                .object(container.extend("service", extended)).isIdenticalTo(container)
+            .if(container.get("service"))
             .then()
                 .callback(extended).wasCalled().withArguments(service, container)
-            .if(container.share('service', function() { return service; }, ['tag']))
-            .and(container.extend('service', extended))
+            .if(container.share("service", function() { return service; }, ["tag"]))
+            .and(container.extend("service", extended))
             .then()
-                .array(container.getTagged('tag')).isEqualTo(['service'])
-            .if(container.extend('service', extended, ['other']))
+                .array(container.getTagged("tag")).isEqualTo(["service"])
+            .if(container.extend("service", extended, ["other"]))
             .then()
-                .array(container.getTagged('tag')).isEmpty()
-                .array(container.getTagged('other')).isEqualTo(['service'])
+                .array(container.getTagged("tag")).isEmpty()
+                .array(container.getTagged("other")).isEqualTo(["service"])
         ;
     },
 
@@ -132,11 +132,11 @@ module.exports = {
                         container.exists(function() {})
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.exists must be a string identifier')
-            .if(container.share('service', function() { return {}; }))
+                    .hasMessage("Argument #1 passed to Jimple.exists must be a string identifier")
+            .if(container.share("service", function() { return {}; }))
             .then()
-                .bool(container.exists('service')).isTrue()
-                .bool(container.exists('unknown')).isFalse()
+                .bool(container.exists("service")).isTrue()
+                .bool(container.exists("unknown")).isFalse()
         ;
     },
 
@@ -150,12 +150,12 @@ module.exports = {
                         container.get(function() {})
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.get must be a string identifier')
-            .if(container.share('service', function() { return {}; }))
+                    .hasMessage("Argument #1 passed to Jimple.get must be a string identifier")
+            .if(container.share("service", function() { return {}; }))
             .then()
-                .object(container.get('service')).isEqualTo({})
+                .object(container.get("service")).isEqualTo({})
                 .error(function() {
-                        container.get('unknown');
+                        container.get("unknown");
                     }
                 )
                     .hasMessage("Identifier unknown is not defined")
@@ -172,16 +172,16 @@ module.exports = {
                         container.getTagged(function() {})
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.getTagged must be a string identifier')
-            .if(container.share('service', function() { return {}; }))
+                    .hasMessage("Argument #1 passed to Jimple.getTagged must be a string identifier")
+            .if(container.share("service", function() { return {}; }))
             .then()
-                .array(container.getTagged('tag')).isEmpty()
-            .if(container.share('service', function() { return {}; }, ['tag']))
+                .array(container.getTagged("tag")).isEmpty()
+            .if(container.share("service", function() { return {}; }, ["tag"]))
             .then()
-                .array(container.getTagged('tag')).isEqualTo(['service'])
-            .if(container.share('service', function() { return {}; }, ['tag', 'other']))
+                .array(container.getTagged("tag")).isEqualTo(["service"])
+            .if(container.share("service", function() { return {}; }, ["tag", "other"]))
             .then()
-                .array(container.getTagged('tag')).isEqualTo(container.getTagged('other'))
+                .array(container.getTagged("tag")).isEqualTo(container.getTagged("other"))
         ;
     },
 
@@ -192,9 +192,9 @@ module.exports = {
             .given(container = new testedClass)
             .then()
                 .array(container.keys()).isEmpty()
-            .if(container.share('service', function() { return {}; }))
+            .if(container.share("service", function() { return {}; }))
             .then()
-                .array(container.keys()).isEqualTo(['service'])
+                .array(container.keys()).isEqualTo(["service"])
         ;
     },
 
@@ -207,13 +207,13 @@ module.exports = {
             .then()
                 .function(service = container.protect(factory))
                 .function(service()).isIdenticalTo(factory)
-            .if(factory = 'foo')
+            .if(factory = "foo")
             .then()
                 .error(function() {
                         container.protect(factory)
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.protect must be a function')
+                    .hasMessage("Argument #1 passed to Jimple.protect must be a function")
         ;
     },
 
@@ -227,11 +227,11 @@ module.exports = {
                         container.raw(function() {})
                     }
                 )
-                    .hasMessage('Argument #1 passed to Jimple.raw must be a string identifier')
+                    .hasMessage("Argument #1 passed to Jimple.raw must be a string identifier")
             .given(factory = function() { return {}; })
-            .if(container.define('service', factory))
+            .if(container.define("service", factory))
             .then()
-                .function(container.raw('service')).isIdenticalTo(factory)
+                .function(container.raw("service")).isIdenticalTo(factory)
         ;
     }
 };

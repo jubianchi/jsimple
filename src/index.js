@@ -22,7 +22,7 @@
                 return module.apply(null, deps);
             }
 
-            if (typeof deps === 'function') {
+            if (typeof deps === "function") {
                 return deps(this);
             } else {
                 return module(this);
@@ -31,7 +31,7 @@
 
         define: function(name, value, tags) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.define must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.define must be a string identifier")
             }
 
             if (this.values[name] !== undefined) {
@@ -74,11 +74,11 @@
 
         share: function(name, code, tags) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.share must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.share must be a string identifier")
             }
 
             if (typeof code !== "function") {
-                throw new Error('Argument #2 passed to Jimple.share must be a function')
+                throw new Error("Argument #2 passed to Jimple.share must be a function")
             }
 
             if (this.shared[name] !== undefined) {
@@ -100,11 +100,11 @@
 
         extend: function(name, code, tags) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.extend must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.extend must be a string identifier")
             }
 
             if (typeof code !== "function") {
-                throw new Error('Argument #2 passed to Jimple.extend must be a function')
+                throw new Error("Argument #2 passed to Jimple.extend must be a function")
             }
 
             var service = this.get(name);
@@ -119,7 +119,7 @@
 
         exists: function(name) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.exists must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.exists must be a string identifier")
             }
 
             return (this.keys().indexOf(name) > -1);
@@ -127,7 +127,7 @@
 
         get: function(name) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.get must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.get must be a string identifier")
             }
 
             return this.raw(name)(this);
@@ -135,7 +135,7 @@
 
         getTagged: function(tag) {
             if (typeof tag !== "string") {
-                throw new Error('Argument #1 passed to Jimple.getTagged must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.getTagged must be a string identifier")
             }
 
             return this.tagged[tag] || [];
@@ -147,7 +147,7 @@
 
         protect: function(code) {
             if (typeof code !== "function") {
-                throw new Error('Argument #1 passed to Jimple.protect must be a function')
+                throw new Error("Argument #1 passed to Jimple.protect must be a function")
             }
 
             return function() {
@@ -157,7 +157,7 @@
 
         raw: function(name) {
             if (typeof name !== "string") {
-                throw new Error('Argument #1 passed to Jimple.raw must be a string identifier')
+                throw new Error("Argument #1 passed to Jimple.raw must be a string identifier")
             }
 
             if (this.exists(name) === false) {
