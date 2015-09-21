@@ -158,6 +158,31 @@ container.extend(&quot;app&quot;, (app, c) =&gt; {
 });</code>
 </code></pre><p>Our Express app will now have the <code>static</code> middleware configured to lookup the <code>public</code> and <code>files</code> folders when we request
 resources.</p>
+<h3 id="using-the-proxy">Using the proxy</h3>
+<p>Jimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to <code>Jimple#get</code>
+or <code>Jimple#share</code>:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Jimple = require(&quot;jimple&quot;),
+    container = (new Jimple()).proxify(); //Here the magic happens!
+
+container.app = () =&gt; {
+    let express = require(&quot;express&quot;);
+
+    return express();
+};
+
+container[&quot;app.static&quot;] = container.protect(express.static(&quot;public&quot;)), [&quot;middleware&quot;]);
+container[&quot;app.static&quot;] = container.protect(express.static(&quot;files&quot;)), [&quot;middleware&quot;]);
+
+container.extend(&quot;app&quot;, (app, c) =&gt; {
+    c.tagged(&quot;middleware&quot;).forEach(middleware =&gt; app.use(c.[middleware]));
+
+    return app;
+});</code>
+</code></pre>
+<p>See how we removed every call to <code>share</code> and <code>get</code>! We now call services as if they were direct property on the <code>container</code> object.
+<strong>Do not forget that to use this feature you have to remove the <code>--no-optional</code> flag from the <code>npm install</code> command.</strong></p>
 <h2 id="license">License</h2>
 <p><a href="LICENSE">The MIT License (MIT)</a></p>
 <p>Copyright (c) 2015 jubianchi</p>
