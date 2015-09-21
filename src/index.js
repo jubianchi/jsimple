@@ -239,16 +239,32 @@ class Jimple {
 
     /**
      *
-     * @param {String} tag tag The tag name for which to fetch parameters, services or factories
+     * @param {String|Array<String>} tags tag The tag names for which to fetch parameters, services or factories
      *
-     * @returns {Array} Service names associated with the provided tag
+     * @returns {Array} Service names associated with the provided tags
      */
-    tagged(tag) {
-        if (typeof tag !== "string") {
-            throw new Error("Argument #1 passed to Jimple.tagged must be a string identifier")
+    tagged(tags) {
+        if (typeof tags !== "string" && tags.constructor.name !== "Array") {
+            throw new Error("Argument #1 passed to Jimple.tagged must be a string identifier or an array of string identifiers")
         }
 
-        return Array.from(this.tagmap.get(tag) || []);
+        if (typeof tags === "string") {
+            tags = [tags];
+        }
+
+        let tagged;
+
+        tags.forEach(tag => {
+            let services = Array.from(this.tagmap.get(tag) || []);
+
+            if (!tagged) {
+                tagged = services;
+            } else {
+                tagged = services.filter(service => tagged.indexOf(service) > -1);
+            }
+        });
+
+        return tagged;
     }
 
     /**

@@ -246,6 +246,15 @@ describe("Jimple", () => {
             jimple.tagged("tag").should.be.eql(["service", "ecivres"]);
             jimple.tagged("gat").should.be.eql(["service"]);
         });
+
+        it("should return service names associated with several tags", () => {
+            jimple.define("service", () => {}, ["tag", "gat"]);
+            jimple.define("ecivres", () => {}, ["tag"]);
+            jimple.define("vreseci", () => {}, ["gat"]);
+
+            jimple.tagged("tag").should.be.eql(["service", "ecivres"]);
+            jimple.tagged(["tag", "gat"]).should.be.eql(["service"]);
+        })
     });
 
     /** @test {Jimple#proxify} */
