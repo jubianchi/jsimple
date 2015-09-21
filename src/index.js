@@ -215,7 +215,7 @@ class Jimple {
         return Array.from(this.tagmap.get(tag) || []);
     }
 
-    /*
+    /**
      * @deprecated
      *
      * @return {Array}
