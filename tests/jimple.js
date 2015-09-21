@@ -240,7 +240,8 @@ describe("Jimple", () => {
         beforeEach(() => {
             let should = require("should");
 
-            should.extend("then", Proxy.prototype)
+            should.extend("then", Proxy.prototype);
+            should.extend("Boolean", Proxy.prototype);
         });
 
         beforeEach(() => jimple = jimple.proxify());
@@ -249,74 +250,116 @@ describe("Jimple", () => {
 
         it("should be extensible", () => Object.isExtensible(jimple).should.be.true);
 
-        describe(".get", () => {
-            it("should not override native methods", () => {
-                let service,
-                    callable = () => service = {};
+        it("should be idempotent", () => {
+            (jimple.proxify() === jimple).should.be.true;
+            (jimple.proxify() === jimple.proxify()).should.be.true;
+        });
 
-                jimple.share("service", callable);
+        describe("traps", () => {
+            describe(".get", () => {
+                it("should not override native methods", () => {
+                    let service,
+                        callable = () => service = {};
 
-                jimple.get("service").should.be.equal(service);
+                    jimple.share("service", callable);
+
+                    jimple.get("service").should.be.equal(service);
+                });
+
+                it("should fetch service", () => {
+                    let service,
+                        callable = () => service = {};
+
+                    jimple.share("service", callable);
+
+                    jimple.service.should.be.equal(service);
+                });
+
+                it("should execute factory", () => {
+                    let service,
+                        callable = () => service = {};
+
+                    jimple.factory("service", callable);
+
+                    jimple.service.should.be.an.object;
+                    jimple.service.should.be.eql({});
+                    jimple.service.should.not.equal(jimple.service);
+                });
             });
 
-            it("should fetch service", () => {
-                let service,
-                    callable = () => service = {};
+            describe(".set", () => {
+                it("should refuse to override native methods", () => {
+                    (() => jimple.factory = () => {
+                    }).should.throw(Error);
+                    (() => jimple.get = () => {
+                    }).should.throw(Error);
+                });
 
-                jimple.share("service", callable);
+                it("should define a shared service", () => {
+                    let service;
 
-                jimple.service.should.be.equal(service);
+                    jimple.service = () => service = {};
+
+                    jimple.get("service").should.equal(service);
+                    jimple.get("service").should.be.equal(jimple.get("service"));
+                });
             });
 
-            it("should execute factory", () => {
-                let service,
-                    callable = () => service = {};
+            describe(".has", () => {
+                it("should check if service exists", () => {
+                    jimple.service = () => {
+                    };
 
-                jimple.factory("service", callable);
+                    ("service" in jimple).should.be.true;
+                    ("factory" in jimple).should.be.false;
+                });
 
-                jimple.service.should.be.an.object;
-                jimple.service.should.be.eql({});
-                jimple.service.should.not.equal(jimple.service);
+                it("should check if factory exists", () => {
+                    jimple.factory("service", () => {
+                    });
+
+                    ("service" in jimple).should.be.true;
+                    ("factory" in jimple).should.be.false;
+                });
+            });
+
+            describe(".delete", () => {
+                it("should prevent deletion", () => {
+                    jimple.service = () => {
+                    };
+
+                    (() => delete jimple.service).should.throw(Error);
+                });
             });
         });
 
-        describe(".set", () => {
-            it("should refuse to override native methods", () => {
-                (() => jimple.factory = () => {}).should.throw(Error);
-                (() => jimple.get = () => {}).should.throw(Error);
-            });
+        describe(".share", () => {
+            describe("factory", () => {
+                it("should receive jimple proxy instance as an argument", () => {
+                    let otherService,
+                        callable = (arg) => arg.otherService.should.be.equal(otherService),
+                        otherCallable = () => otherService = {};
 
-            it("should define a shared service", () => {
-                let service;
+                    jimple.share("service", callable);
+                    jimple.share("otherService", otherCallable);
 
-                jimple.service = () => service = {};
-
-                jimple.get("service").should.equal(service);
-                jimple.get("service").should.be.equal(jimple.get("service"));
-            });
-        });
-
-        describe(".has", () => {
-            it("should check if service exists", () => {
-                jimple.service = () => {};
-
-                ("service" in jimple).should.be.true;
-                ("factory" in jimple).should.be.false;
-            });
-
-            it("should check if factory exists", () => {
-                jimple.factory("service", () => {});
-
-                ("service" in jimple).should.be.true;
-                ("factory" in jimple).should.be.false;
+                    jimple.get("service");
+                });
             });
         });
 
-        describe(".delete", () => {
-            it("should prevent deletion", () => {
-                jimple.service = () => {};
+        describe(".factory", () => {
+            describe("factory", () => {
+                it("should receive jimple proxy instance as an argument", () => {
+                    let service,
+                        callable = (arg) => arg.service.should.be.equal(service),
+                        otherCallable = () => service = {};
 
-                (() => delete jimple.service).should.throw(Error);
+                    jimple.share("service", otherCallable);
+                    jimple.factory("factory", callable);
+
+                    jimple.get("factory");
+                });
             });
         });
     });

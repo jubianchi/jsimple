@@ -6,8 +6,9 @@ class Jimple {
         this.tagmap = new Map();
         this.shared = new Map();
         this.frozen = new Set();
+        this.proxified = false;
 
-        Object.freeze(this);
+        Object.seal(this);
     }
 
     /**
@@ -259,35 +260,15 @@ class Jimple {
     }
 
     proxify() {
-        try {
-            require.resolve("harmony-reflect");
-        } catch (err) {
-            throw new Error("You should install harmony-reflect module and use the --harmony_proxies flag to use this feature");
+        var Proxy = require("./proxy.js");
+
+        if (this.proxified === false) {
+            this.proxified = true;
+
+            return new Proxy(this);
         }
 
-        require("harmony-reflect");
-
-        let handler = {
-            get: (target, name) => {
-                return name in target ? target[name] : target.get(name);
-            },
-
-            set: (target, name, value, receiver) => {
-                if (name in target) {
-                    throw new Error(`Cannot define a service named ${name}`);
-                }
-
-                target.share(name, value);
-
-                return true;
-            },
-
-            has: (target, name) => target.exists(name),
-
-            deleteProperty: () => false
-        };
-
-        return new Proxy(this, handler);
+        return this;
     }
 }
 
