@@ -10,7 +10,8 @@
     "url": "https://gitlab.com/jubianchi/laboard.git"
   },
   "engines": {
-    "node": "^4.0"
+    "node": "^4.0",
+    "npm" : "<3.0"
   },
   "devDependencies": {
     "esdoc": "^0.2.6",
