@@ -8,12 +8,19 @@ try {
 
 require("harmony-reflect");
 
+/**
+ * @access private
+ */
 let Jimple = require(".");
 
+/**
+ * @access private
+ */
 class JimpleProxy extends Proxy {
     /**
+     * Builds a proxy on a Jimple instance
      *
-     * @param {Jimple} jimple
+     * @param {?Jimple} A Jimple instance to wrap in a Proxy
      */
     constructor(jimple) {
         let handler = {

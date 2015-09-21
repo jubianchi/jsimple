@@ -2,20 +2,25 @@
 
 var Jimple = require("../src");
 
+/** @test {Jimple} */
 describe("Jimple", () => {
     let jimple;
 
     beforeEach(() => jimple = new Jimple());
 
-    it("should instanciate", () => jimple.should.be.an.object);
+    /** @test {Jimple#constructor} */
+    describe("constructor", () => {
+        it("should instanciate", () => jimple.should.be.an.object);
 
-    it("should be empty", () => jimple.keys().should.be.empty);
+        it("should be empty", () => jimple.keys().should.be.empty);
 
-    it("should be frozen", () => {
-        Object.isExtensible(jimple).should.be.false;
-        (() => jimple.foo = "bar").should.throw(Error);
+        it("should be sealed", () => {
+            Object.isExtensible(jimple).should.be.false;
+            (() => jimple.foo = "bar").should.throw(Error);
+        });
     });
 
+    /** @test {Jimple#define} */
     describe(".define", () => {
         it("should return jimple instance", () => jimple.define("service", () => {}).should.be.equal(jimple));
 
@@ -38,6 +43,7 @@ describe("Jimple", () => {
         it("should not tag same callable twice", () => jimple.define("service", () => {}, ["tag"]).define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
     });
 
+    /** @test {Jimple#share} */
     describe(".share", () => {
         it("should return jimple instance", () => jimple.share("service", () => {}).should.be.equal(jimple));
 
@@ -93,6 +99,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#factory} */
     describe(".factory", () => {
         it("should return jimple instance", () => jimple.factory("service", () => {}).should.be.equal(jimple));
 
@@ -135,6 +142,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#extend} */
     describe(".extend", () => {
         it("should return jimple instance", () => jimple.share("service", () => {}).extend("service", () => {}).should.be.equal(jimple));
 
@@ -180,6 +188,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#use} */
     describe(".use", () => {
         it("should inject jimple", () => jimple.use((arg) => arg.should.be.equal(jimple)));
 
@@ -207,6 +216,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#protect} */
     describe(".protect", () => {
         it("should wrap callable", () => {
             let callable = () => {};
@@ -216,6 +226,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#raw} */
     describe(".raw", () => {
         it("should return raw callable", () => {
             let callable = () => {};
@@ -226,6 +237,7 @@ describe("Jimple", () => {
         it("should return raw callable for value", () => jimple.define("service", 42).raw("service").should.be.a.Function());
     });
 
+    /** @test {Jimple#tagged} */
     describe(".tagged", () => {
         it("should return tagged service names", () => {
             jimple.define("service", () => {}, ["tag", "gat"]);
@@ -236,6 +248,7 @@ describe("Jimple", () => {
         });
     });
 
+    /** @test {Jimple#proxify} */
     describe(".proxify", () => {
         beforeEach(() => {
             let should = require("should");
@@ -333,6 +346,7 @@ describe("Jimple", () => {
             });
         });
 
+        /** @test {Jimple#share} */
         describe(".share", () => {
             describe("factory", () => {
                 it("should receive jimple proxy instance as an argument", () => {
@@ -348,6 +362,7 @@ describe("Jimple", () => {
             });
         });
 
+        /** @test {Jimple#factory} */
         describe(".factory", () => {
             describe("factory", () => {
                 it("should receive jimple proxy instance as an argument", () => {
