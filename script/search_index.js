@@ -1,20 +1,8 @@
 window.esdocSearchIndex = [
   [
-    "jimple/src/proxy.js~jimple",
-    "variable/index.html#static-variable-Jimple",
-    "<span>Jimple</span> <span class=\"search-result-import-path\">jimple/src/proxy.js</span>",
-    "variable"
-  ],
-  [
     "jimple~jimple",
     "class/src/index.js~Jimple.html",
     "<span>Jimple</span> <span class=\"search-result-import-path\">jimple</span>",
-    "class"
-  ],
-  [
-    "jimple/src/proxy.js~jimpleproxy",
-    "class/src/proxy.js~JimpleProxy.html",
-    "<span>JimpleProxy</span> <span class=\"search-result-import-path\">jimple/src/proxy.js</span>",
     "class"
   ],
   [
@@ -342,405 +330,411 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber5",
+    "jimple src/index.js~jimple,jimple",
+    "test-file/tests/jimple.js.html#lineNumber6",
     "Jimple",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber19",
+    "jimple#define src/index.js~jimple#define,jimple#define",
+    "test-file/tests/jimple.js.html#lineNumber24",
     "Jimple .define",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber22",
+    "test-file/tests/jimple.js.html#lineNumber27",
     "Jimple .define should define service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber38",
+    "test-file/tests/jimple.js.html#lineNumber43",
     "Jimple .define should not tag same callable twice",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber20",
+    "test-file/tests/jimple.js.html#lineNumber25",
     "Jimple .define should return jimple instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber24",
+    "test-file/tests/jimple.js.html#lineNumber29",
     "Jimple .define should store callable",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber30",
+    "test-file/tests/jimple.js.html#lineNumber35",
     "Jimple .define should store value as callable",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber36",
+    "test-file/tests/jimple.js.html#lineNumber41",
     "Jimple .define should tag callable",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber138",
+    "jimple#extend src/index.js~jimple#extend,jimple#extend",
+    "test-file/tests/jimple.js.html#lineNumber146",
     "Jimple .extend",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber141",
+    "test-file/tests/jimple.js.html#lineNumber149",
     "Jimple .extend should extend existing service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber150",
+    "test-file/tests/jimple.js.html#lineNumber158",
     "Jimple .extend should receive base service instance as first argument",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber161",
+    "test-file/tests/jimple.js.html#lineNumber169",
     "Jimple .extend should receive jimple instance as second argument",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber170",
+    "test-file/tests/jimple.js.html#lineNumber178",
     "Jimple .extend should refuse to extend an already fetched service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber176",
+    "test-file/tests/jimple.js.html#lineNumber184",
     "Jimple .extend should refuse to extend an already used factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber139",
+    "test-file/tests/jimple.js.html#lineNumber147",
     "Jimple .extend should return jimple instance",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber96",
+    "jimple#factory src/index.js~jimple#factory,jimple#factory",
+    "test-file/tests/jimple.js.html#lineNumber103",
     "Jimple .factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber117",
+    "test-file/tests/jimple.js.html#lineNumber124",
     "Jimple .factory factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber118",
+    "test-file/tests/jimple.js.html#lineNumber125",
     "Jimple .factory factory should not share service instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber128",
+    "test-file/tests/jimple.js.html#lineNumber135",
     "Jimple .factory factory should receive jimple instance as an argument",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber108",
+    "test-file/tests/jimple.js.html#lineNumber115",
     "Jimple .factory should delete shared instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber97",
+    "test-file/tests/jimple.js.html#lineNumber104",
     "Jimple .factory should return jimple instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber99",
+    "test-file/tests/jimple.js.html#lineNumber106",
     "Jimple .factory should wrap callable",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber210",
+    "jimple#protect src/index.js~jimple#protect,jimple#protect",
+    "test-file/tests/jimple.js.html#lineNumber220",
     "Jimple .protect",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber211",
+    "test-file/tests/jimple.js.html#lineNumber221",
     "Jimple .protect should wrap callable",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber239",
+    "jimple#proxify src/index.js~jimple#proxify,jimple#proxify",
+    "test-file/tests/jimple.js.html#lineNumber252",
     "Jimple .proxify",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber351",
+    "jimple#factory src/index.js~jimple#factory,jimple#factory",
+    "test-file/tests/jimple.js.html#lineNumber366",
     "Jimple .proxify .factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber352",
+    "test-file/tests/jimple.js.html#lineNumber367",
     "Jimple .proxify .factory factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber353",
+    "test-file/tests/jimple.js.html#lineNumber368",
     "Jimple .proxify .factory factory should receive jimple proxy instance as an argument",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber336",
+    "jimple#share src/index.js~jimple#share,jimple#share",
+    "test-file/tests/jimple.js.html#lineNumber350",
     "Jimple .proxify .share",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber337",
+    "test-file/tests/jimple.js.html#lineNumber351",
     "Jimple .proxify .share factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber338",
+    "test-file/tests/jimple.js.html#lineNumber352",
     "Jimple .proxify .share factory should receive jimple proxy instance as an argument",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber251",
+    "test-file/tests/jimple.js.html#lineNumber264",
     "Jimple .proxify should be extensible",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber253",
+    "test-file/tests/jimple.js.html#lineNumber266",
     "Jimple .proxify should be idempotent",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber249",
+    "test-file/tests/jimple.js.html#lineNumber262",
     "Jimple .proxify should return a proxified instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber258",
+    "test-file/tests/jimple.js.html#lineNumber271",
     "Jimple .proxify traps",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber326",
+    "test-file/tests/jimple.js.html#lineNumber339",
     "Jimple .proxify traps .delete",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber327",
+    "test-file/tests/jimple.js.html#lineNumber340",
     "Jimple .proxify traps .delete should prevent deletion",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber259",
+    "test-file/tests/jimple.js.html#lineNumber272",
     "Jimple .proxify traps .get",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber278",
+    "test-file/tests/jimple.js.html#lineNumber291",
     "Jimple .proxify traps .get should execute factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber269",
+    "test-file/tests/jimple.js.html#lineNumber282",
     "Jimple .proxify traps .get should fetch service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber260",
+    "test-file/tests/jimple.js.html#lineNumber273",
     "Jimple .proxify traps .get should not override native methods",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber308",
+    "test-file/tests/jimple.js.html#lineNumber321",
     "Jimple .proxify traps .has",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber317",
+    "test-file/tests/jimple.js.html#lineNumber330",
     "Jimple .proxify traps .has should check if factory exists",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber309",
+    "test-file/tests/jimple.js.html#lineNumber322",
     "Jimple .proxify traps .has should check if service exists",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber290",
+    "test-file/tests/jimple.js.html#lineNumber303",
     "Jimple .proxify traps .set",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber298",
+    "test-file/tests/jimple.js.html#lineNumber311",
     "Jimple .proxify traps .set should define a shared service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber291",
+    "test-file/tests/jimple.js.html#lineNumber304",
     "Jimple .proxify traps .set should refuse to override native methods",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber219",
+    "jimple#raw src/index.js~jimple#raw,jimple#raw",
+    "test-file/tests/jimple.js.html#lineNumber230",
     "Jimple .raw",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber220",
+    "test-file/tests/jimple.js.html#lineNumber231",
     "Jimple .raw should return raw callable",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber226",
+    "test-file/tests/jimple.js.html#lineNumber237",
     "Jimple .raw should return raw callable for value",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber41",
+    "jimple#share src/index.js~jimple#share,jimple#share",
+    "test-file/tests/jimple.js.html#lineNumber47",
     "Jimple .share",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber62",
+    "test-file/tests/jimple.js.html#lineNumber68",
     "Jimple .share factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber73",
+    "test-file/tests/jimple.js.html#lineNumber79",
     "Jimple .share factory should receive jimple instance as an argument",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber81",
+    "test-file/tests/jimple.js.html#lineNumber87",
     "Jimple .share factory should reset when service change",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber63",
+    "test-file/tests/jimple.js.html#lineNumber69",
     "Jimple .share factory should share service instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber53",
+    "test-file/tests/jimple.js.html#lineNumber59",
     "Jimple .share should overwrite existing service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber42",
+    "test-file/tests/jimple.js.html#lineNumber48",
     "Jimple .share should return jimple instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber44",
+    "test-file/tests/jimple.js.html#lineNumber50",
     "Jimple .share should wrap callable",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber229",
+    "jimple#tagged src/index.js~jimple#tagged,jimple#tagged",
+    "test-file/tests/jimple.js.html#lineNumber241",
     "Jimple .tagged",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber230",
+    "test-file/tests/jimple.js.html#lineNumber242",
     "Jimple .tagged should return tagged service names",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber183",
+    "jimple#use src/index.js~jimple#use,jimple#use",
+    "test-file/tests/jimple.js.html#lineNumber192",
     "Jimple .use",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber186",
+    "test-file/tests/jimple.js.html#lineNumber195",
     "Jimple .use should inject given service",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber195",
+    "test-file/tests/jimple.js.html#lineNumber204",
     "Jimple .use should inject given services",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber184",
+    "test-file/tests/jimple.js.html#lineNumber193",
     "Jimple .use should inject jimple",
     "test"
   ],
   [
-    "",
+    "jimple#constructor src/index.js~jimple#constructor,jimple#constructor",
     "test-file/tests/jimple.js.html#lineNumber12",
-    "Jimple should be empty",
+    "Jimple constructor",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber14",
-    "Jimple should be frozen",
+    "test-file/tests/jimple.js.html#lineNumber15",
+    "Jimple constructor should be empty",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber10",
-    "Jimple should instanciate",
+    "test-file/tests/jimple.js.html#lineNumber17",
+    "Jimple constructor should be sealed",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/jimple.js.html#lineNumber13",
+    "Jimple constructor should instanciate",
     "test"
   ],
   [
@@ -868,12 +862,6 @@ window.esdocSearchIndex = [
     "file/src/proxy.js.html",
     "src/proxy.js",
     "file"
-  ],
-  [
-    "src/proxy.js~jimpleproxy#constructor",
-    "class/src/proxy.js~JimpleProxy.html#instance-constructor-constructor",
-    "src/proxy.js~JimpleProxy#constructor",
-    "method"
   ],
   [
     "tests/jimple.js",

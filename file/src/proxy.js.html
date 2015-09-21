@@ -32,7 +32,6 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -40,13 +39,7 @@
 
 
 
-<div data-ice="variableWrap">
-  <h2><a href="variable/">Variable</a></h2>
-  <ul>
-    
-  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
-</ul>
-</div>
+
 
 
 
@@ -64,12 +57,19 @@ try {
 
 require(&quot;harmony-reflect&quot;);
 
+/**
+ * @access private
+ */
 let Jimple = require(&quot;.&quot;);
 
+/**
+ * @access private
+ */
 class JimpleProxy extends Proxy {
     /**
+     * Builds a proxy on a Jimple instance
      *
-     * @param {Jimple} jimple
+     * @param {?Jimple} A Jimple instance to wrap in a Proxy
      */
     constructor(jimple) {
         let handler = {

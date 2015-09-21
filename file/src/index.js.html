@@ -32,7 +32,6 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -40,13 +39,7 @@
 
 
 
-<div data-ice="variableWrap">
-  <h2><a href="variable/">Variable</a></h2>
-  <ul>
-    
-  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
-</ul>
-</div>
+
 
 
 
@@ -56,12 +49,27 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
 
+/**
+ * @access public
+ */
 class Jimple {
+    /**
+     * Builds a new Jimple instance
+     */
     constructor() {
+        /** @type {Map&lt;String, *&gt;} */
         this.values = new Map();
+
+        /** @type {Map&lt;String, Set&gt;} */
         this.tagmap = new Map();
+
+        /** @type {Map&lt;String, *&gt;} */
         this.shared = new Map();
+
+        /** @type {Set&lt;String&gt;} */
         this.frozen = new Set();
+
+        /** @type {boolean} */
         this.proxified = false;
 
         Object.seal(this);
@@ -69,34 +77,35 @@ class Jimple {
 
     /**
      *
-     * @param {Array} deps
-     * @param {String} module
+     * @param {Array&lt;String&gt;|Function(deps: *, container: Jimple): *} deps   List of dependencies to inject or executable function
+     * @param {Function(deps: *, container: Jimple): *}               [code] Executable function
      *
-     * @returns {*}
+     * @returns {*} Result of executing the provided function as code
      */
-    use(deps, module) {
+    use(deps, code) {
         if (deps.constructor.name === &quot;Array&quot;) {
             deps = deps || [];
             deps.forEach((value, key) =&gt; deps[key] = this.get(value));
             deps.push(this);
 
-            return module.apply(null, deps);
+            return code.apply(null, deps);
         }
 
         if (typeof deps === &quot;function&quot;) {
             return deps(this);
         } else {
-            return module(this);
+            return code(this);
         }
     }
 
     /**
+     * Sets a parameter or an object factory
      *
-     * @param {String} name
-     * @param {*} value
-     * @param {Array} tags
+     * @param {String}                           name   The unique identifier for the parameter or factory
+     * @param {*|Function(container: Jimple): *} value  The parameter value or a factory function
+     * @param {Array&lt;String&gt;}                    [tags] An array of tags to associate to the parameter or factory
      *
-     * @returns {Jimple}
+     * @returns {Jimple} The current Jimple instance
      */
     define(name, value, tags) {
         if (typeof name !== &quot;string&quot;) {
@@ -135,11 +144,11 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
-     * @param {Function} code
-     * @param {Array} tags
+     * @param {String}                         name   The unique identifier for the factory
+     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Array&lt;String&gt;}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple}
+     * @returns {Jimple} The current Jimple instance
      */
     share(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
@@ -169,11 +178,11 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
-     * @param {Function} code
-     * @param {Array} tags
+     * @param {String}                         name   The unique identifier for the factory
+     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Array&lt;String&gt;}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple}
+     * @returns {Jimple} The current Jimple instance
      */
     factory(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
@@ -199,11 +208,11 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
-     * @param {Function} code
-     * @param {Array} tags
+     * @param {String}                                     name   The unique identifier for the parameter or factory to extend
+     * @param {Function(service: *, container: Jimple): *} code   The executable extended function
+     * @param {Array&lt;String&gt;}                              [tags] An array of tags to associate to the the parameter or factory to extend
      *
-     * @returns {Jimple}
+     * @returns {Jimple} The current Jimple instance
      */
     extend(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
@@ -229,9 +238,9 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
+     * @param {String} name The unique identifier for the parameter, service or factory
      *
-     * @returns {Boolean}
+     * @returns {Boolean} Wether the parameter, service or factory exists
      */
     exists(name) {
         if (typeof name !== &quot;string&quot;) {
@@ -243,9 +252,9 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
+     * @param {String} name The unique identifier for the parameter, service or factory to fetch
      *
-     * @returns {*}
+     * @returns {*} Result of executing the factory function
      */
     get(name) {
         if (typeof name !== &quot;string&quot;) {
@@ -256,16 +265,24 @@ class Jimple {
     }
 
     /**
-     * @deprecated
      *
-     * @param {String} tag
+     * @deprecated Use {@link Jimple#tagged} instead
+     * @see Jimple#tagged
      *
-     * @return {Array}
+     * @param {String} tag The tag name for which to fetch parameters, services or factories
+     *
+     * @return {Array} Service names associated with the provided tag
      */
     getTagged(tag) {
         return this.tagged(tag);
     }
 
+    /**
+     *
+     * @param {String} tag tag The tag name for which to fetch parameters, services or factories
+     *
+     * @returns {Array} Service names associated with the provided tag
+     */
     tagged(tag) {
         if (typeof tag !== &quot;string&quot;) {
             throw new Error(&quot;Argument #1 passed to Jimple.tagged must be a string identifier&quot;)
@@ -275,9 +292,10 @@ class Jimple {
     }
 
     /**
+     *
      * @deprecated
      *
-     * @return {Array}
+     * @return {Array} Declared parameter, service and factory names
      */
     keys() {
         return Array.from(this.values.keys());
@@ -285,9 +303,9 @@ class Jimple {
 
     /**
      *
-     * @param {Function} code
+     * @param {Function(): *} code Function to be protected from becoming a factory
      *
-     * @returns {Function}
+     * @returns {Function(): *} Function wrapping the provided function as code
      */
     protect(code) {
         if (typeof code !== &quot;function&quot;) {
@@ -299,9 +317,9 @@ class Jimple {
 
     /**
      *
-     * @param {String} name
+     * @param {String} name The unique identifier for the factory to fetch
      *
-     * @returns {Function}
+     * @returns {Function(container: Jimple): *} The declared factory function
      */
     raw(name) {
         if (typeof name !== &quot;string&quot;) {
@@ -315,6 +333,10 @@ class Jimple {
         return this.values.get(name);
     }
 
+    /**
+     *
+     * @returns {Jimple} The current Jimple instance wrapped in a Proxy
+     */
     proxify() {
         var Proxy = require(&quot;./proxy.js&quot;);
 

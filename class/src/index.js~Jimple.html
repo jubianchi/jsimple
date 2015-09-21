@@ -32,7 +32,6 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -40,13 +39,7 @@
 
 
 
-<div data-ice="variableWrap">
-  <h2><a href="variable/">Variable</a></h2>
-  <ul>
-    
-  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
-</ul>
-</div>
+
 
 
 
@@ -60,7 +53,7 @@
   
   
   
-  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber3">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber6">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -86,7 +79,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber6">Jimple</a></span></li>
+</ul>
+  </div>
 
   
 </div>
@@ -114,7 +113,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Builds a new Jimple instance</p>
+</div>
       </div>
     </td>
     <td>
@@ -140,7 +140,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-frozen">frozen</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-frozen">frozen</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</span>
         </p>
       </div>
       <div>
@@ -190,7 +190,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-shared">shared</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-shared">shared</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span>*</span>&gt;</span>
         </p>
       </div>
       <div>
@@ -215,7 +215,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-tagmap">tagmap</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-tagmap">tagmap</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a></span>&gt;</span>
         </p>
       </div>
       <div>
@@ -240,7 +240,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-values">values</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-member-values">values</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span>*</span>&gt;</span>
         </p>
       </div>
       <div>
@@ -272,13 +272,14 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-define">define</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, value: <span>*</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-define">define</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, value: <span>*</span> | <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
         
         
-        
+        <div data-ice="description"><p>Sets a parameter or an object factory</p>
+</div>
       </div>
     </td>
     <td>
@@ -322,7 +323,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-extend">extend</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-extend">extend</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(service: *, container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
@@ -347,7 +348,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-factory">factory</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-factory">factory</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
@@ -401,7 +402,7 @@
         </p>
       </div>
       <div>
-        <div class="deprecated" data-ice="deprecated">this method was deprecated.</div>
+        <div class="deprecated" data-ice="deprecated">this method was deprecated. Use {@link Jimple#tagged} instead</div>
         
         
       </div>
@@ -447,7 +448,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-protect">protect</a></span></span><span data-ice="signature">(code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-protect">protect</a></span></span><span data-ice="signature">(code: <span>Function(): *</span>): <span>Function(): *</span></span>
         </p>
       </div>
       <div>
@@ -472,7 +473,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-proxify">proxify</a></span></span><span data-ice="signature">(): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-proxify">proxify</a></span></span><span data-ice="signature">(): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
@@ -497,7 +498,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-raw">raw</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-raw">raw</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span>Function(container: Jimple): *</span></span>
         </p>
       </div>
       <div>
@@ -522,7 +523,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-share">share</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-share">share</a></span></span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
@@ -547,7 +548,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-tagged">tagged</a></span></span><span data-ice="signature">(tag: <span>*</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-tagged">tagged</a></span></span><span data-ice="signature">(tag: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></span>
         </p>
       </div>
       <div>
@@ -572,7 +573,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-use">use</a></span></span><span data-ice="signature">(deps: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>, module: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/index.js~Jimple.html#instance-method-use">use</a></span></span><span data-ice="signature">(deps: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt; | <span>Function(deps: *, container: Jimple): *</span>, code: <span>Function(deps: *, container: Jimple): *</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -607,14 +608,15 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber4">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber10">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Builds a new Jimple instance</p>
+</div>
 
   
 
@@ -631,7 +633,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber12">Jimple constructor</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -646,11 +654,11 @@
     
     
     
-    <span data-ice="name">frozen</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">frozen</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber8">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber21">source</a></span></span>
     </span>
   </h3>
 
@@ -690,7 +698,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber9">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
@@ -726,11 +734,11 @@
     
     
     
-    <span data-ice="name">shared</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">shared</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span>*</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber7">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber18">source</a></span></span>
     </span>
   </h3>
 
@@ -766,11 +774,11 @@
     
     
     
-    <span data-ice="name">tagmap</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">tagmap</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set">Set</a></span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber6">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber15">source</a></span></span>
     </span>
   </h3>
 
@@ -806,11 +814,11 @@
     
     
     
-    <span data-ice="name">values</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">values</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map">Map</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, <span>*</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber5">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber12">source</a></span></span>
     </span>
   </h3>
 
@@ -849,18 +857,19 @@
     
     
     
-    <span data-ice="name">define</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, value: <span>*</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+    <span data-ice="name">define</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, value: <span>*</span> | <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber45">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber61">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Sets a parameter or an object factory</p>
+</div>
 
   
 
@@ -876,19 +885,22 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the parameter or factory</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">value</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span>*</span> | <span>Function(container: Jimple): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The parameter value or a factory function</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">tags</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>An array of tags to associate to the parameter or factory</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -900,7 +912,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>The current Jimple instance</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -915,7 +928,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber24">Jimple .define</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -931,7 +950,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber180">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber196">source</a></span></span>
     </span>
   </h3>
 
@@ -954,7 +973,8 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the parameter, service or factory</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -966,7 +986,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>Wether the parameter, service or factory exists</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -993,11 +1014,11 @@
     
     
     
-    <span data-ice="name">extend</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+    <span data-ice="name">extend</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(service: *, container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber152">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber168">source</a></span></span>
     </span>
   </h3>
 
@@ -1020,19 +1041,22 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the parameter or factory to extend</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">code</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span>Function(service: *, container: Jimple): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The executable extended function</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">tags</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>An array of tags to associate to the the parameter or factory to extend</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1044,7 +1068,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>The current Jimple instance</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1059,7 +1084,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber146">Jimple .extend</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1071,11 +1102,11 @@
     
     
     
-    <span data-ice="name">factory</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+    <span data-ice="name">factory</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber122">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber138">source</a></span></span>
     </span>
   </h3>
 
@@ -1098,19 +1129,22 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the factory</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">code</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span>Function(container: Jimple): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The executable factory function</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">tags</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>An array of tags to associate to the factory</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1122,7 +1156,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>The current Jimple instance</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1137,7 +1172,14 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber103">Jimple .factory</a></span></li>
+<li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber366">Jimple .proxify .factory</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1153,7 +1195,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber194">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber210">source</a></span></span>
     </span>
   </h3>
 
@@ -1176,7 +1218,8 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the parameter, service or factory to fetch</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1188,7 +1231,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span>*</span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>Result of executing the factory function</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1219,12 +1263,12 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber209">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber227">source</a></span></span>
     </span>
   </h3>
 
   
-  <div class="deprecated" data-ice="deprecated">this method was deprecated.</div>
+  <div class="deprecated" data-ice="deprecated">this method was deprecated. Use {@link Jimple#tagged} instead</div>
   
   
 
@@ -1242,7 +1286,8 @@
       <td data-ice="name" data-depth="0">tag</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The tag name for which to fetch parameters, services or factories</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1254,7 +1299,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>Service names associated with the provided tag</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1271,7 +1317,7 @@
 
   
 
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><a href="Jimple#tagged">Jimple#tagged</a></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -1285,7 +1331,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber226">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber251">source</a></span></span>
     </span>
   </h3>
 
@@ -1304,7 +1350,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>Declared parameter, service and factory names</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1331,11 +1378,11 @@
     
     
     
-    <span data-ice="name">protect</span><span data-ice="signature">(code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
+    <span data-ice="name">protect</span><span data-ice="signature">(code: <span>Function(): *</span>): <span>Function(): *</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber236">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber261">source</a></span></span>
     </span>
   </h3>
 
@@ -1356,9 +1403,10 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">code</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span>Function(): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>Function to be protected from becoming a factory</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1369,8 +1417,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
-        
+        <td class="return-type" data-ice="returnType"><span>Function(): *</span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Function wrapping the provided function as code</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1385,7 +1434,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber220">Jimple .protect</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1397,11 +1452,11 @@
     
     
     
-    <span data-ice="name">proxify</span><span data-ice="signature">(): <span>*</span></span>
+    <span data-ice="name">proxify</span><span data-ice="signature">(): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber262">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber291">source</a></span></span>
     </span>
   </h3>
 
@@ -1419,8 +1474,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>*</span></td>
-        
+        <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>The current Jimple instance wrapped in a Proxy</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1435,7 +1491,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber252">Jimple .proxify</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1447,11 +1509,11 @@
     
     
     
-    <span data-ice="name">raw</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
+    <span data-ice="name">raw</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span>Function(container: Jimple): *</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber250">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber275">source</a></span></span>
     </span>
   </h3>
 
@@ -1474,7 +1536,8 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the factory to fetch</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1485,8 +1548,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
-        
+        <td class="return-type" data-ice="returnType"><span>Function(container: Jimple): *</span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>The declared factory function</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1501,7 +1565,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber230">Jimple .raw</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1513,11 +1583,11 @@
     
     
     
-    <span data-ice="name">share</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
+    <span data-ice="name">share</span><span data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, code: <span>Function(container: Jimple): *</span>, tags: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber88">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber104">source</a></span></span>
     </span>
   </h3>
 
@@ -1540,19 +1610,22 @@
       <td data-ice="name" data-depth="0">name</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The unique identifier for the factory</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">code</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span>Function(container: Jimple): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The executable factory function</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">tags</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt;</td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>An array of tags to associate to the factory</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1564,7 +1637,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>The current Jimple instance</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1579,7 +1653,14 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber47">Jimple .share</a></span></li>
+<li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber350">Jimple .proxify .share</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1591,11 +1672,11 @@
     
     
     
-    <span data-ice="name">tagged</span><span data-ice="signature">(tag: <span>*</span>): <span>*</span></span>
+    <span data-ice="name">tagged</span><span data-ice="signature">(tag: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber213">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber237">source</a></span></span>
     </span>
   </h3>
 
@@ -1616,9 +1697,10 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">tag</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>tag The tag name for which to fetch parameters, services or factories</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1629,8 +1711,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>*</span></td>
-        
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Service names associated with the provided tag</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1645,7 +1728,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber241">Jimple .tagged</a></span></li>
+</ul>
+  </div>
 
   
   
@@ -1657,11 +1746,11 @@
     
     
     
-    <span data-ice="name">use</span><span data-ice="signature">(deps: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>, module: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span>*</span></span>
+    <span data-ice="name">use</span><span data-ice="signature">(deps: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt; | <span>Function(deps: *, container: Jimple): *</span>, code: <span>Function(deps: *, container: Jimple): *</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber36">source</a></span></span>
     </span>
   </h3>
 
@@ -1682,15 +1771,17 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">deps</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>&gt; | <span>Function(deps: *, container: Jimple): *</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>List of dependencies to inject or executable function</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">module</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="name" data-depth="0">code</td>
+      <td data-ice="type"><span>Function(deps: *, container: Jimple): *</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Executable function</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -1702,7 +1793,8 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span>*</span></td>
-        
+        <td class="return-desc" data-ice="returnDescription"><p>Result of executing the provided function as code</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -1717,7 +1809,13 @@
 
   
 
-  
+  <div data-ice="tests">
+    <h4>Test:</h4>
+    <ul>
+      
+    <li data-ice="test"><span><a href="test-file/tests/jimple.js.html#lineNumber192">Jimple .use</a></span></li>
+</ul>
+  </div>
 
   
   

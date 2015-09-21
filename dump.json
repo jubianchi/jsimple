@@ -9,7 +9,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\nclass Jimple {\n    constructor() {\n        this.values = new Map();\n        this.tagmap = new Map();\n        this.shared = new Map();\n        this.frozen = new Set();\n        this.proxified = false;\n\n        Object.seal(this);\n    }\n\n    /**\n     *\n     * @param {Array} deps\n     * @param {String} module\n     *\n     * @returns {*}\n     */\n    use(deps, module) {\n        if (deps.constructor.name === \"Array\") {\n            deps = deps || [];\n            deps.forEach((value, key) => deps[key] = this.get(value));\n            deps.push(this);\n\n            return module.apply(null, deps);\n        }\n\n        if (typeof deps === \"function\") {\n            return deps(this);\n        } else {\n            return module(this);\n        }\n    }\n\n    /**\n     *\n     * @param {String} name\n     * @param {*} value\n     * @param {Array} tags\n     *\n     * @returns {Jimple}\n     */\n    define(name, value, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.define must be a string identifier\")\n        }\n\n        if (this.values.has(name)) {\n            (this.values.get(name).tags || []).forEach(tag => {\n                this.tagmap.get(tag).delete(name);\n            });\n\n            this.values.delete(name);\n        }\n\n        if (typeof value !== \"function\") {\n            this.values.set(name, () => value);\n        } else {\n            this.values.set(name, value);\n        }\n\n        this.values.get(name).tags = tags || [];\n        this.values.get(name).tags.forEach(tag => {\n            if (this.tagmap.has(tag) === false) {\n                this.tagmap.set(tag, new Set());\n            }\n\n            this.tagmap.get(tag).add(name);\n        });\n\n        if (this.shared.has(name)) {\n            this.shared.delete(name);\n        }\n\n        return this;\n    }\n\n    /**\n     *\n     * @param {String} name\n     * @param {Function} code\n     * @param {Array} tags\n     *\n     * @returns {Jimple}\n     */\n    share(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.share must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.share must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                if (jimple.shared.has(name) === false) {\n                    jimple.shared.set(name, code(jimple));\n                }\n\n                let instance = jimple.shared.get(name);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String} name\n     * @param {Function} code\n     * @param {Array} tags\n     *\n     * @returns {Jimple}\n     */\n    factory(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.factory must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.factory must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                let instance = code(jimple);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String} name\n     * @param {Function} code\n     * @param {Array} tags\n     *\n     * @returns {Jimple}\n     */\n    extend(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.extend must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.extend must be a function\")\n        }\n\n        if (this.frozen.has(name)) {\n            throw new Error(\"Cannot extend an already fetched service\");\n        }\n\n        let service = this.raw(name);\n\n        return this.share(\n            name,\n            jimple => code(service(jimple), jimple),\n            tags || this.values.get(name).tags\n        );\n    }\n\n    /**\n     *\n     * @param {String} name\n     *\n     * @returns {Boolean}\n     */\n    exists(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.exists must be a string identifier\")\n        }\n\n        return this.values.has(name);\n    }\n\n    /**\n     *\n     * @param {String} name\n     *\n     * @returns {*}\n     */\n    get(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.get must be a string identifier\")\n        }\n\n        return this.raw(name)(this);\n    }\n\n    /**\n     * @deprecated\n     *\n     * @param {String} tag\n     *\n     * @return {Array}\n     */\n    getTagged(tag) {\n        return this.tagged(tag);\n    }\n\n    tagged(tag) {\n        if (typeof tag !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.tagged must be a string identifier\")\n        }\n\n        return Array.from(this.tagmap.get(tag) || []);\n    }\n\n    /**\n     * @deprecated\n     *\n     * @return {Array}\n     */\n    keys() {\n        return Array.from(this.values.keys());\n    }\n\n    /**\n     *\n     * @param {Function} code\n     *\n     * @returns {Function}\n     */\n    protect(code) {\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #1 passed to Jimple.protect must be a function\")\n        }\n\n        return () => code;\n    }\n\n    /**\n     *\n     * @param {String} name\n     *\n     * @returns {Function}\n     */\n    raw(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.raw must be a string identifier\")\n        }\n\n        if (this.exists(name) === false) {\n            throw new Error(`Identifier ${name} is not defined`);\n        }\n\n        return this.values.get(name);\n    }\n\n    proxify() {\n        var Proxy = require(\"./proxy.js\");\n\n        if (this.proxified === false) {\n            this.proxified = true;\n\n            return new Proxy(this);\n        }\n\n        return this;\n    }\n}\n\nmodule.exports = Jimple;\n"
+    "content": "\"use strict\";\n\n/**\n * @access public\n */\nclass Jimple {\n    /**\n     * Builds a new Jimple instance\n     */\n    constructor() {\n        /** @type {Map<String, *>} */\n        this.values = new Map();\n\n        /** @type {Map<String, Set>} */\n        this.tagmap = new Map();\n\n        /** @type {Map<String, *>} */\n        this.shared = new Map();\n\n        /** @type {Set<String>} */\n        this.frozen = new Set();\n\n        /** @type {boolean} */\n        this.proxified = false;\n\n        Object.seal(this);\n    }\n\n    /**\n     *\n     * @param {Array<String>|Function(deps: *, container: Jimple): *} deps   List of dependencies to inject or executable function\n     * @param {Function(deps: *, container: Jimple): *}               [code] Executable function\n     *\n     * @returns {*} Result of executing the provided function as code\n     */\n    use(deps, code) {\n        if (deps.constructor.name === \"Array\") {\n            deps = deps || [];\n            deps.forEach((value, key) => deps[key] = this.get(value));\n            deps.push(this);\n\n            return code.apply(null, deps);\n        }\n\n        if (typeof deps === \"function\") {\n            return deps(this);\n        } else {\n            return code(this);\n        }\n    }\n\n    /**\n     * Sets a parameter or an object factory\n     *\n     * @param {String}                           name   The unique identifier for the parameter or factory\n     * @param {*|Function(container: Jimple): *} value  The parameter value or a factory function\n     * @param {Array<String>}                    [tags] An array of tags to associate to the parameter or factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    define(name, value, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.define must be a string identifier\")\n        }\n\n        if (this.values.has(name)) {\n            (this.values.get(name).tags || []).forEach(tag => {\n                this.tagmap.get(tag).delete(name);\n            });\n\n            this.values.delete(name);\n        }\n\n        if (typeof value !== \"function\") {\n            this.values.set(name, () => value);\n        } else {\n            this.values.set(name, value);\n        }\n\n        this.values.get(name).tags = tags || [];\n        this.values.get(name).tags.forEach(tag => {\n            if (this.tagmap.has(tag) === false) {\n                this.tagmap.set(tag, new Set());\n            }\n\n            this.tagmap.get(tag).add(name);\n        });\n\n        if (this.shared.has(name)) {\n            this.shared.delete(name);\n        }\n\n        return this;\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    share(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.share must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.share must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                if (jimple.shared.has(name) === false) {\n                    jimple.shared.set(name, code(jimple));\n                }\n\n                let instance = jimple.shared.get(name);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    factory(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.factory must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.factory must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                let instance = code(jimple);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                                     name   The unique identifier for the parameter or factory to extend\n     * @param {Function(service: *, container: Jimple): *} code   The executable extended function\n     * @param {Array<String>}                              [tags] An array of tags to associate to the the parameter or factory to extend\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    extend(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.extend must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.extend must be a function\")\n        }\n\n        if (this.frozen.has(name)) {\n            throw new Error(\"Cannot extend an already fetched service\");\n        }\n\n        let service = this.raw(name);\n\n        return this.share(\n            name,\n            jimple => code(service(jimple), jimple),\n            tags || this.values.get(name).tags\n        );\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory\n     *\n     * @returns {Boolean} Wether the parameter, service or factory exists\n     */\n    exists(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.exists must be a string identifier\")\n        }\n\n        return this.values.has(name);\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory to fetch\n     *\n     * @returns {*} Result of executing the factory function\n     */\n    get(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.get must be a string identifier\")\n        }\n\n        return this.raw(name)(this);\n    }\n\n    /**\n     *\n     * @deprecated Use {@link Jimple#tagged} instead\n     * @see Jimple#tagged\n     *\n     * @param {String} tag The tag name for which to fetch parameters, services or factories\n     *\n     * @return {Array} Service names associated with the provided tag\n     */\n    getTagged(tag) {\n        return this.tagged(tag);\n    }\n\n    /**\n     *\n     * @param {String} tag tag The tag name for which to fetch parameters, services or factories\n     *\n     * @returns {Array} Service names associated with the provided tag\n     */\n    tagged(tag) {\n        if (typeof tag !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.tagged must be a string identifier\")\n        }\n\n        return Array.from(this.tagmap.get(tag) || []);\n    }\n\n    /**\n     *\n     * @deprecated\n     *\n     * @return {Array} Declared parameter, service and factory names\n     */\n    keys() {\n        return Array.from(this.values.keys());\n    }\n\n    /**\n     *\n     * @param {Function(): *} code Function to be protected from becoming a factory\n     *\n     * @returns {Function(): *} Function wrapping the provided function as code\n     */\n    protect(code) {\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #1 passed to Jimple.protect must be a function\")\n        }\n\n        return () => code;\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the factory to fetch\n     *\n     * @returns {Function(container: Jimple): *} The declared factory function\n     */\n    raw(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.raw must be a string identifier\")\n        }\n\n        if (this.exists(name) === false) {\n            throw new Error(`Identifier ${name} is not defined`);\n        }\n\n        return this.values.get(name);\n    }\n\n    /**\n     *\n     * @returns {Jimple} The current Jimple instance wrapped in a Proxy\n     */\n    proxify() {\n        var Proxy = require(\"./proxy.js\");\n\n        if (this.proxified === false) {\n            this.proxified = true;\n\n            return new Proxy(this);\n        }\n\n        return this;\n    }\n}\n\nmodule.exports = Jimple;\n"
   },
   {
     "kind": "class",
@@ -18,13 +18,12 @@
     "name": "Jimple",
     "memberof": "src/index.js",
     "longname": "src/index.js~Jimple",
-    "access": null,
+    "access": "public",
     "export": false,
     "importPath": "jimple",
     "importStyle": null,
     "description": null,
-    "lineNumber": 3,
-    "undocument": true,
+    "lineNumber": 6,
     "interface": false
   },
   {
@@ -35,9 +34,8 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#constructor",
     "access": null,
-    "description": null,
-    "lineNumber": 4,
-    "undocument": true,
+    "description": "Builds a new Jimple instance",
+    "lineNumber": 10,
     "params": [],
     "generator": false
   },
@@ -50,12 +48,14 @@
     "longname": "src/index.js~Jimple#values",
     "access": null,
     "description": null,
-    "lineNumber": 5,
-    "undocument": true,
+    "lineNumber": 12,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Map<String, *>"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -67,12 +67,14 @@
     "longname": "src/index.js~Jimple#tagmap",
     "access": null,
     "description": null,
-    "lineNumber": 6,
-    "undocument": true,
+    "lineNumber": 15,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Map<String, Set>"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -84,12 +86,14 @@
     "longname": "src/index.js~Jimple#shared",
     "access": null,
     "description": null,
-    "lineNumber": 7,
-    "undocument": true,
+    "lineNumber": 18,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Map<String, *>"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -101,12 +105,14 @@
     "longname": "src/index.js~Jimple#frozen",
     "access": null,
     "description": null,
-    "lineNumber": 8,
-    "undocument": true,
+    "lineNumber": 21,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Set<String>"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -118,12 +124,14 @@
     "longname": "src/index.js~Jimple#proxified",
     "access": null,
     "description": null,
-    "lineNumber": 9,
-    "undocument": true,
+    "lineNumber": 24,
     "type": {
+      "nullable": null,
       "types": [
         "boolean"
-      ]
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -135,33 +143,34 @@
     "longname": "src/index.js~Jimple#use",
     "access": null,
     "description": "",
-    "lineNumber": 21,
+    "lineNumber": 36,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{*}"
+        "tagValue": "{*} Result of executing the provided function as code"
       }
     ],
     "params": [
       {
         "nullable": null,
         "types": [
-          "Array"
+          "Array<String>",
+          "Function(deps: *, container: Jimple): *"
         ],
         "spread": false,
         "optional": false,
         "name": "deps",
-        "description": ""
+        "description": "List of dependencies to inject or executable function"
       },
       {
         "nullable": null,
         "types": [
-          "String"
+          "Function(deps: *, container: Jimple): *"
         ],
         "spread": false,
-        "optional": false,
-        "name": "module",
-        "description": ""
+        "optional": true,
+        "name": "code",
+        "description": "Executable function"
       }
     ],
     "return": {
@@ -170,7 +179,7 @@
         "*"
       ],
       "spread": false,
-      "description": ""
+      "description": "Result of executing the provided function as code"
     },
     "generator": false
   },
@@ -182,12 +191,12 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#define",
     "access": null,
-    "description": "",
-    "lineNumber": 45,
+    "description": "Sets a parameter or an object factory",
+    "lineNumber": 61,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple}"
+        "tagValue": "{Jimple} The current Jimple instance"
       }
     ],
     "params": [
@@ -199,27 +208,28 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the parameter or factory"
       },
       {
         "nullable": null,
         "types": [
-          "*"
+          "*",
+          "Function(container: Jimple): *"
         ],
         "spread": false,
         "optional": false,
         "name": "value",
-        "description": ""
+        "description": "The parameter value or a factory function"
       },
       {
         "nullable": null,
         "types": [
-          "Array"
+          "Array<String>"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "tags",
-        "description": ""
+        "description": "An array of tags to associate to the parameter or factory"
       }
     ],
     "return": {
@@ -228,7 +238,7 @@
         "Jimple"
       ],
       "spread": false,
-      "description": ""
+      "description": "The current Jimple instance"
     },
     "generator": false
   },
@@ -241,11 +251,11 @@
     "longname": "src/index.js~Jimple#share",
     "access": null,
     "description": "",
-    "lineNumber": 88,
+    "lineNumber": 104,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple}"
+        "tagValue": "{Jimple} The current Jimple instance"
       }
     ],
     "params": [
@@ -257,27 +267,27 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the factory"
       },
       {
         "nullable": null,
         "types": [
-          "Function"
+          "Function(container: Jimple): *"
         ],
         "spread": false,
         "optional": false,
         "name": "code",
-        "description": ""
+        "description": "The executable factory function"
       },
       {
         "nullable": null,
         "types": [
-          "Array"
+          "Array<String>"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "tags",
-        "description": ""
+        "description": "An array of tags to associate to the factory"
       }
     ],
     "return": {
@@ -286,7 +296,7 @@
         "Jimple"
       ],
       "spread": false,
-      "description": ""
+      "description": "The current Jimple instance"
     },
     "generator": false
   },
@@ -299,11 +309,11 @@
     "longname": "src/index.js~Jimple#factory",
     "access": null,
     "description": "",
-    "lineNumber": 122,
+    "lineNumber": 138,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple}"
+        "tagValue": "{Jimple} The current Jimple instance"
       }
     ],
     "params": [
@@ -315,27 +325,27 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the factory"
       },
       {
         "nullable": null,
         "types": [
-          "Function"
+          "Function(container: Jimple): *"
         ],
         "spread": false,
         "optional": false,
         "name": "code",
-        "description": ""
+        "description": "The executable factory function"
       },
       {
         "nullable": null,
         "types": [
-          "Array"
+          "Array<String>"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "tags",
-        "description": ""
+        "description": "An array of tags to associate to the factory"
       }
     ],
     "return": {
@@ -344,7 +354,7 @@
         "Jimple"
       ],
       "spread": false,
-      "description": ""
+      "description": "The current Jimple instance"
     },
     "generator": false
   },
@@ -357,11 +367,11 @@
     "longname": "src/index.js~Jimple#extend",
     "access": null,
     "description": "",
-    "lineNumber": 152,
+    "lineNumber": 168,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple}"
+        "tagValue": "{Jimple} The current Jimple instance"
       }
     ],
     "params": [
@@ -373,27 +383,27 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the parameter or factory to extend"
       },
       {
         "nullable": null,
         "types": [
-          "Function"
+          "Function(service: *, container: Jimple): *"
         ],
         "spread": false,
         "optional": false,
         "name": "code",
-        "description": ""
+        "description": "The executable extended function"
       },
       {
         "nullable": null,
         "types": [
-          "Array"
+          "Array<String>"
         ],
         "spread": false,
-        "optional": false,
+        "optional": true,
         "name": "tags",
-        "description": ""
+        "description": "An array of tags to associate to the the parameter or factory to extend"
       }
     ],
     "return": {
@@ -402,7 +412,7 @@
         "Jimple"
       ],
       "spread": false,
-      "description": ""
+      "description": "The current Jimple instance"
     },
     "generator": false
   },
@@ -415,11 +425,11 @@
     "longname": "src/index.js~Jimple#exists",
     "access": null,
     "description": "",
-    "lineNumber": 180,
+    "lineNumber": 196,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Boolean}"
+        "tagValue": "{Boolean} Wether the parameter, service or factory exists"
       }
     ],
     "params": [
@@ -431,7 +441,7 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the parameter, service or factory"
       }
     ],
     "return": {
@@ -440,7 +450,7 @@
         "Boolean"
       ],
       "spread": false,
-      "description": ""
+      "description": "Wether the parameter, service or factory exists"
     },
     "generator": false
   },
@@ -453,11 +463,11 @@
     "longname": "src/index.js~Jimple#get",
     "access": null,
     "description": "",
-    "lineNumber": 194,
+    "lineNumber": 210,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{*}"
+        "tagValue": "{*} Result of executing the factory function"
       }
     ],
     "params": [
@@ -469,7 +479,7 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the parameter, service or factory to fetch"
       }
     ],
     "return": {
@@ -478,7 +488,7 @@
         "*"
       ],
       "spread": false,
-      "description": ""
+      "description": "Result of executing the factory function"
     },
     "generator": false
   },
@@ -490,9 +500,12 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#getTagged",
     "access": null,
-    "description": null,
-    "lineNumber": 209,
-    "deprecated": true,
+    "description": "",
+    "see": [
+      "Jimple#tagged"
+    ],
+    "lineNumber": 227,
+    "deprecated": "Use {@link Jimple#tagged} instead",
     "params": [
       {
         "nullable": null,
@@ -502,7 +515,7 @@
         "spread": false,
         "optional": false,
         "name": "tag",
-        "description": ""
+        "description": "The tag name for which to fetch parameters, services or factories"
       }
     ],
     "return": {
@@ -511,7 +524,7 @@
         "Array"
       ],
       "spread": false,
-      "description": ""
+      "description": "Service names associated with the provided tag"
     },
     "generator": false
   },
@@ -523,21 +536,33 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#tagged",
     "access": null,
-    "description": null,
-    "lineNumber": 213,
-    "undocument": true,
+    "description": "",
+    "lineNumber": 237,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Array} Service names associated with the provided tag"
+      }
+    ],
     "params": [
       {
-        "name": "tag",
+        "nullable": null,
         "types": [
-          "*"
-        ]
+          "String"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "tag",
+        "description": "tag The tag name for which to fetch parameters, services or factories"
       }
     ],
     "return": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Array"
+      ],
+      "spread": false,
+      "description": "Service names associated with the provided tag"
     },
     "generator": false
   },
@@ -549,8 +574,8 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#keys",
     "access": null,
-    "description": null,
-    "lineNumber": 226,
+    "description": "",
+    "lineNumber": 251,
     "deprecated": true,
     "params": [],
     "return": {
@@ -559,7 +584,7 @@
         "Array"
       ],
       "spread": false,
-      "description": ""
+      "description": "Declared parameter, service and factory names"
     },
     "generator": false
   },
@@ -572,32 +597,32 @@
     "longname": "src/index.js~Jimple#protect",
     "access": null,
     "description": "",
-    "lineNumber": 236,
+    "lineNumber": 261,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Function}"
+        "tagValue": "{Function(): *} Function wrapping the provided function as code"
       }
     ],
     "params": [
       {
         "nullable": null,
         "types": [
-          "Function"
+          "Function(): *"
         ],
         "spread": false,
         "optional": false,
         "name": "code",
-        "description": ""
+        "description": "Function to be protected from becoming a factory"
       }
     ],
     "return": {
       "nullable": null,
       "types": [
-        "Function"
+        "Function(): *"
       ],
       "spread": false,
-      "description": ""
+      "description": "Function wrapping the provided function as code"
     },
     "generator": false
   },
@@ -610,11 +635,11 @@
     "longname": "src/index.js~Jimple#raw",
     "access": null,
     "description": "",
-    "lineNumber": 250,
+    "lineNumber": 275,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Function}"
+        "tagValue": "{Function(container: Jimple): *} The declared factory function"
       }
     ],
     "params": [
@@ -626,16 +651,16 @@
         "spread": false,
         "optional": false,
         "name": "name",
-        "description": ""
+        "description": "The unique identifier for the factory to fetch"
       }
     ],
     "return": {
       "nullable": null,
       "types": [
-        "Function"
+        "Function(container: Jimple): *"
       ],
       "spread": false,
-      "description": ""
+      "description": "The declared factory function"
     },
     "generator": false
   },
@@ -647,14 +672,22 @@
     "memberof": "src/index.js~Jimple",
     "longname": "src/index.js~Jimple#proxify",
     "access": null,
-    "description": null,
-    "lineNumber": 262,
-    "undocument": true,
+    "description": "",
+    "lineNumber": 291,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Jimple} The current Jimple instance wrapped in a Proxy"
+      }
+    ],
     "params": [],
     "return": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "Jimple"
+      ],
+      "spread": false,
+      "description": "The current Jimple instance wrapped in a Proxy"
     },
     "generator": false
   },
@@ -667,7 +700,7 @@
     "longname": "src/index.js~Jimple#proxified",
     "access": null,
     "description": null,
-    "lineNumber": 266,
+    "lineNumber": 295,
     "undocument": true,
     "type": {
       "types": [
@@ -685,7 +718,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\nlet Jimple = require(\".\");\n\nclass JimpleProxy extends Proxy {\n    /**\n     *\n     * @param {Jimple} jimple\n     */\n    constructor(jimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jimple || new Jimple(), handler);\n    }\n}\n\nmodule.exports = JimpleProxy;\n"
+    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\n/**\n * @access private\n */\nlet Jimple = require(\".\");\n\n/**\n * @access private\n */\nclass JimpleProxy extends Proxy {\n    /**\n     * Builds a proxy on a Jimple instance\n     *\n     * @param {?Jimple} A Jimple instance to wrap in a Proxy\n     */\n    constructor(jimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jimple || new Jimple(), handler);\n    }\n}\n\nmodule.exports = JimpleProxy;\n"
   },
   {
     "kind": "variable",
@@ -694,13 +727,12 @@
     "name": "Jimple",
     "memberof": "src/proxy.js",
     "longname": "src/proxy.js~Jimple",
-    "access": null,
+    "access": "private",
     "export": false,
     "importPath": "jimple/src/proxy.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 11,
-    "undocument": true,
+    "lineNumber": 14,
     "type": {
       "types": [
         "*"
@@ -714,13 +746,12 @@
     "name": "JimpleProxy",
     "memberof": "src/proxy.js",
     "longname": "src/proxy.js~JimpleProxy",
-    "access": null,
+    "access": "private",
     "export": false,
     "importPath": "jimple/src/proxy.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 13,
-    "undocument": true,
+    "lineNumber": 19,
     "interface": false,
     "extends": [
       "Proxy"
@@ -734,18 +765,18 @@
     "memberof": "src/proxy.js~JimpleProxy",
     "longname": "src/proxy.js~JimpleProxy#constructor",
     "access": null,
-    "description": "",
-    "lineNumber": 18,
+    "description": "Builds a proxy on a Jimple instance",
+    "lineNumber": 25,
     "params": [
       {
-        "nullable": null,
+        "nullable": true,
         "types": [
           "Jimple"
         ],
         "spread": false,
         "optional": false,
-        "name": "jimple",
-        "description": ""
+        "name": "A",
+        "description": "Jimple instance to wrap in a Proxy"
       }
     ],
     "generator": false
@@ -1408,7 +1439,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\nvar Jimple = require(\"../src\");\n\ndescribe(\"Jimple\", () => {\n    let jimple;\n\n    beforeEach(() => jimple = new Jimple());\n\n    it(\"should instanciate\", () => jimple.should.be.an.object);\n\n    it(\"should be empty\", () => jimple.keys().should.be.empty);\n\n    it(\"should be frozen\", () => {\n        Object.isExtensible(jimple).should.be.false;\n        (() => jimple.foo = \"bar\").should.throw(Error);\n    });\n\n    describe(\".define\", () => {\n        it(\"should return jimple instance\", () => jimple.define(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should define service\", () => jimple.define(\"service\", () => {}).keys().should.be.eql([\"service\"]));\n\n        it(\"should store callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should store value as callable\", () => {\n            let value = 42;\n\n            jimple.define(\"service\", value).raw(\"service\")().should.be.equal(value);\n        });\n\n        it(\"should tag callable\", () => jimple.define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n\n        it(\"should not tag same callable twice\", () => jimple.define(\"service\", () => {}, [\"tag\"]).define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n    });\n\n    describe(\".share\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.raw(\"service\").should.be.a.Function();\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should overwrite existing service\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"service\", () => {});\n\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should share service instance\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\").should.equal(service);\n                jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\");\n            });\n\n            it(\"should reset when service change\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\").should.equal(service);\n\n                jimple.share(\"service\", () => ({}));\n\n                jimple.get(\"service\").should.not.equal(service);\n            })\n        });\n    });\n\n    describe(\".factory\", () => {\n        it(\"should return jimple instance\", () => jimple.factory(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.factory(\"factory\", callable);\n\n            jimple.raw(\"factory\").should.be.a.Function();\n            jimple.raw(\"factory\").should.not.be.equal(callable);\n        });\n\n        it(\"should delete shared instance\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", callable).get(\"service\");\n\n            jimple.factory(\"service\", () => ({})).get(\"service\").should.not.be.equal(service);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should not share service instance\", () => {\n                let callable = () => ({});\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\").should.be.an.object;\n                jimple.get(\"factory\").should.be.eql({});\n                jimple.get(\"factory\").should.not.equal(jimple.get(\"factory\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\");\n            });\n        });\n    });\n\n    describe(\".extend\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).extend(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should extend existing service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", () => {});\n\n            jimple.extend(\"service\", callable).get(\"service\").should.be.equal(service);\n        });\n\n        it(\"should receive base service instance as first argument\", () => {\n            let service, extended,\n                callable = () => service = {},\n                extendedCallable = (arg) => arg.should.be.equal(service);\n\n            jimple.share(\"service\", callable);\n            jimple.extend(\"service\", extendedCallable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should receive jimple instance as second argument\", () => {\n            let callable = (service, arg) => arg.should.be.equal(jimple);\n\n            jimple.share(\"service\", () => {});\n            jimple.extend(\"service\", callable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should refuse to extend an already fetched service\", () => {\n            jimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jimple.extend(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to extend an already used factory\", () => {\n            jimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jimple.extend(\"factory\", () => {})).should.throw(Error);\n        });\n    });\n\n    describe(\".use\", () => {\n        it(\"should inject jimple\", () => jimple.use((arg) => arg.should.be.equal(jimple)));\n\n        it(\"should inject given service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.use([\"service\"], (arg) => arg.should.be.equal(service));\n        });\n\n        it(\"should inject given services\", () => {\n            let service, otherService,\n                callable = () => service = {},\n                otherCallable = () => otherService = {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"otherService\", otherCallable);\n\n            jimple.use([\"service\", \"otherService\"], (arg, otherArg) => {\n                arg.should.be.equal(service);\n                otherArg.should.be.equal(otherService);\n            });\n        });\n    });\n\n    describe(\".protect\", () => {\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.protect(callable).should.not.be.equal(callable);\n            jimple.protect(callable)().should.be.equal(callable);\n        });\n    });\n\n    describe(\".raw\", () => {\n        it(\"should return raw callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should return raw callable for value\", () => jimple.define(\"service\", 42).raw(\"service\").should.be.a.Function());\n    });\n\n    describe(\".tagged\", () => {\n        it(\"should return tagged service names\", () => {\n            jimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jimple.define(\"ecivres\", () => {}, [\"tag\"]);\n\n            jimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jimple.tagged(\"gat\").should.be.eql([\"service\"]);\n        });\n    });\n\n    describe(\".proxify\", () => {\n        beforeEach(() => {\n            let should = require(\"should\");\n\n            should.extend(\"then\", Proxy.prototype);\n            should.extend(\"Boolean\", Proxy.prototype);\n        });\n\n        beforeEach(() => jimple = jimple.proxify());\n\n        it(\"should return a proxified instance\", () => jimple.should.be.an.instanceof(Jimple));\n\n        it(\"should be extensible\", () => Object.isExtensible(jimple).should.be.true);\n\n        it(\"should be idempotent\", () => {\n            (jimple.proxify() === jimple).should.be.true;\n            (jimple.proxify() === jimple.proxify()).should.be.true;\n        });\n\n        describe(\"traps\", () => {\n            describe(\".get\", () => {\n                it(\"should not override native methods\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.get(\"service\").should.be.equal(service);\n                });\n\n                it(\"should fetch service\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.service.should.be.equal(service);\n                });\n\n                it(\"should execute factory\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.factory(\"service\", callable);\n\n                    jimple.service.should.be.an.object;\n                    jimple.service.should.be.eql({});\n                    jimple.service.should.not.equal(jimple.service);\n                });\n            });\n\n            describe(\".set\", () => {\n                it(\"should refuse to override native methods\", () => {\n                    (() => jimple.factory = () => {\n                    }).should.throw(Error);\n                    (() => jimple.get = () => {\n                    }).should.throw(Error);\n                });\n\n                it(\"should define a shared service\", () => {\n                    let service;\n\n                    jimple.service = () => service = {};\n\n                    jimple.get(\"service\").should.equal(service);\n                    jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n                });\n            });\n\n            describe(\".has\", () => {\n                it(\"should check if service exists\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n\n                it(\"should check if factory exists\", () => {\n                    jimple.factory(\"service\", () => {\n                    });\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n            });\n\n            describe(\".delete\", () => {\n                it(\"should prevent deletion\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (() => delete jimple.service).should.throw(Error);\n                });\n            });\n        });\n\n        describe(\".share\", () => {\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let otherService,\n                        callable = (arg) => arg.otherService.should.be.equal(otherService),\n                        otherCallable = () => otherService = {};\n\n                    jimple.share(\"service\", callable);\n                    jimple.share(\"otherService\", otherCallable);\n\n                    jimple.get(\"service\");\n                });\n            });\n        });\n\n        describe(\".factory\", () => {\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let service,\n                        callable = (arg) => arg.service.should.be.equal(service),\n                        otherCallable = () => service = {};\n\n                    jimple.share(\"service\", otherCallable);\n                    jimple.factory(\"factory\", callable);\n\n                    jimple.get(\"factory\");\n                });\n            });\n        });\n    });\n});\n"
+    "content": "\"use strict\";\n\nvar Jimple = require(\"../src\");\n\n/** @test {Jimple} */\ndescribe(\"Jimple\", () => {\n    let jimple;\n\n    beforeEach(() => jimple = new Jimple());\n\n    /** @test {Jimple#constructor} */\n    describe(\"constructor\", () => {\n        it(\"should instanciate\", () => jimple.should.be.an.object);\n\n        it(\"should be empty\", () => jimple.keys().should.be.empty);\n\n        it(\"should be sealed\", () => {\n            Object.isExtensible(jimple).should.be.false;\n            (() => jimple.foo = \"bar\").should.throw(Error);\n        });\n    });\n\n    /** @test {Jimple#define} */\n    describe(\".define\", () => {\n        it(\"should return jimple instance\", () => jimple.define(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should define service\", () => jimple.define(\"service\", () => {}).keys().should.be.eql([\"service\"]));\n\n        it(\"should store callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should store value as callable\", () => {\n            let value = 42;\n\n            jimple.define(\"service\", value).raw(\"service\")().should.be.equal(value);\n        });\n\n        it(\"should tag callable\", () => jimple.define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n\n        it(\"should not tag same callable twice\", () => jimple.define(\"service\", () => {}, [\"tag\"]).define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n    });\n\n    /** @test {Jimple#share} */\n    describe(\".share\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.raw(\"service\").should.be.a.Function();\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should overwrite existing service\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"service\", () => {});\n\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should share service instance\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\").should.equal(service);\n                jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\");\n            });\n\n            it(\"should reset when service change\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\").should.equal(service);\n\n                jimple.share(\"service\", () => ({}));\n\n                jimple.get(\"service\").should.not.equal(service);\n            })\n        });\n    });\n\n    /** @test {Jimple#factory} */\n    describe(\".factory\", () => {\n        it(\"should return jimple instance\", () => jimple.factory(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.factory(\"factory\", callable);\n\n            jimple.raw(\"factory\").should.be.a.Function();\n            jimple.raw(\"factory\").should.not.be.equal(callable);\n        });\n\n        it(\"should delete shared instance\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", callable).get(\"service\");\n\n            jimple.factory(\"service\", () => ({})).get(\"service\").should.not.be.equal(service);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should not share service instance\", () => {\n                let callable = () => ({});\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\").should.be.an.object;\n                jimple.get(\"factory\").should.be.eql({});\n                jimple.get(\"factory\").should.not.equal(jimple.get(\"factory\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\");\n            });\n        });\n    });\n\n    /** @test {Jimple#extend} */\n    describe(\".extend\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).extend(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should extend existing service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", () => {});\n\n            jimple.extend(\"service\", callable).get(\"service\").should.be.equal(service);\n        });\n\n        it(\"should receive base service instance as first argument\", () => {\n            let service, extended,\n                callable = () => service = {},\n                extendedCallable = (arg) => arg.should.be.equal(service);\n\n            jimple.share(\"service\", callable);\n            jimple.extend(\"service\", extendedCallable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should receive jimple instance as second argument\", () => {\n            let callable = (service, arg) => arg.should.be.equal(jimple);\n\n            jimple.share(\"service\", () => {});\n            jimple.extend(\"service\", callable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should refuse to extend an already fetched service\", () => {\n            jimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jimple.extend(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to extend an already used factory\", () => {\n            jimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jimple.extend(\"factory\", () => {})).should.throw(Error);\n        });\n    });\n\n    /** @test {Jimple#use} */\n    describe(\".use\", () => {\n        it(\"should inject jimple\", () => jimple.use((arg) => arg.should.be.equal(jimple)));\n\n        it(\"should inject given service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.use([\"service\"], (arg) => arg.should.be.equal(service));\n        });\n\n        it(\"should inject given services\", () => {\n            let service, otherService,\n                callable = () => service = {},\n                otherCallable = () => otherService = {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"otherService\", otherCallable);\n\n            jimple.use([\"service\", \"otherService\"], (arg, otherArg) => {\n                arg.should.be.equal(service);\n                otherArg.should.be.equal(otherService);\n            });\n        });\n    });\n\n    /** @test {Jimple#protect} */\n    describe(\".protect\", () => {\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.protect(callable).should.not.be.equal(callable);\n            jimple.protect(callable)().should.be.equal(callable);\n        });\n    });\n\n    /** @test {Jimple#raw} */\n    describe(\".raw\", () => {\n        it(\"should return raw callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should return raw callable for value\", () => jimple.define(\"service\", 42).raw(\"service\").should.be.a.Function());\n    });\n\n    /** @test {Jimple#tagged} */\n    describe(\".tagged\", () => {\n        it(\"should return tagged service names\", () => {\n            jimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jimple.define(\"ecivres\", () => {}, [\"tag\"]);\n\n            jimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jimple.tagged(\"gat\").should.be.eql([\"service\"]);\n        });\n    });\n\n    /** @test {Jimple#proxify} */\n    describe(\".proxify\", () => {\n        beforeEach(() => {\n            let should = require(\"should\");\n\n            should.extend(\"then\", Proxy.prototype);\n            should.extend(\"Boolean\", Proxy.prototype);\n        });\n\n        beforeEach(() => jimple = jimple.proxify());\n\n        it(\"should return a proxified instance\", () => jimple.should.be.an.instanceof(Jimple));\n\n        it(\"should be extensible\", () => Object.isExtensible(jimple).should.be.true);\n\n        it(\"should be idempotent\", () => {\n            (jimple.proxify() === jimple).should.be.true;\n            (jimple.proxify() === jimple.proxify()).should.be.true;\n        });\n\n        describe(\"traps\", () => {\n            describe(\".get\", () => {\n                it(\"should not override native methods\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.get(\"service\").should.be.equal(service);\n                });\n\n                it(\"should fetch service\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.service.should.be.equal(service);\n                });\n\n                it(\"should execute factory\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.factory(\"service\", callable);\n\n                    jimple.service.should.be.an.object;\n                    jimple.service.should.be.eql({});\n                    jimple.service.should.not.equal(jimple.service);\n                });\n            });\n\n            describe(\".set\", () => {\n                it(\"should refuse to override native methods\", () => {\n                    (() => jimple.factory = () => {\n                    }).should.throw(Error);\n                    (() => jimple.get = () => {\n                    }).should.throw(Error);\n                });\n\n                it(\"should define a shared service\", () => {\n                    let service;\n\n                    jimple.service = () => service = {};\n\n                    jimple.get(\"service\").should.equal(service);\n                    jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n                });\n            });\n\n            describe(\".has\", () => {\n                it(\"should check if service exists\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n\n                it(\"should check if factory exists\", () => {\n                    jimple.factory(\"service\", () => {\n                    });\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n            });\n\n            describe(\".delete\", () => {\n                it(\"should prevent deletion\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (() => delete jimple.service).should.throw(Error);\n                });\n            });\n        });\n\n        /** @test {Jimple#share} */\n        describe(\".share\", () => {\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let otherService,\n                        callable = (arg) => arg.otherService.should.be.equal(otherService),\n                        otherCallable = () => otherService = {};\n\n                    jimple.share(\"service\", callable);\n                    jimple.share(\"otherService\", otherCallable);\n\n                    jimple.get(\"service\");\n                });\n            });\n        });\n\n        /** @test {Jimple#factory} */\n        describe(\".factory\", () => {\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let service,\n                        callable = (arg) => arg.service.should.be.equal(service),\n                        otherCallable = () => service = {};\n\n                    jimple.share(\"service\", otherCallable);\n                    jimple.factory(\"factory\", callable);\n\n                    jimple.get(\"factory\");\n                });\n            });\n        });\n    });\n});\n"
   },
   {
     "kind": "testDescribe",
@@ -1421,20 +1452,38 @@
     "longname": "tests/jimple.js~describe0",
     "access": null,
     "description": "Jimple",
-    "lineNumber": 5
+    "lineNumber": 6,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple}"
+      }
+    ],
+    "testTargets": [
+      "Jimple"
+    ]
   },
   {
-    "kind": "testIt",
+    "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "it1",
+    "name": "describe1",
     "testId": 1,
     "memberof": "tests/jimple.js~describe0",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.it1",
+    "longname": "tests/jimple.js~describe0.describe1",
     "access": null,
-    "description": "should instanciate",
-    "lineNumber": 10
+    "description": "constructor",
+    "lineNumber": 12,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#constructor}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#constructor"
+    ]
   },
   {
     "kind": "testIt",
@@ -1442,12 +1491,12 @@
     "variation": null,
     "name": "it2",
     "testId": 2,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.it2",
+    "memberof": "tests/jimple.js~describe0.describe1",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe1.it2",
     "access": null,
-    "description": "should be empty",
-    "lineNumber": 12
+    "description": "should instanciate",
+    "lineNumber": 13
   },
   {
     "kind": "testIt",
@@ -1455,38 +1504,47 @@
     "variation": null,
     "name": "it3",
     "testId": 3,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.it3",
+    "memberof": "tests/jimple.js~describe0.describe1",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe1.it3",
     "access": null,
-    "description": "should be frozen",
-    "lineNumber": 14
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe4",
-    "testId": 4,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe4",
-    "access": null,
-    "description": ".define",
-    "lineNumber": 19
+    "description": "should be empty",
+    "lineNumber": 15
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it5",
-    "testId": 5,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "name": "it4",
+    "testId": 4,
+    "memberof": "tests/jimple.js~describe0.describe1",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it5",
+    "longname": "tests/jimple.js~describe0.describe1.it4",
     "access": null,
-    "description": "should return jimple instance",
-    "lineNumber": 20
+    "description": "should be sealed",
+    "lineNumber": 17
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe5",
+    "testId": 5,
+    "memberof": "tests/jimple.js~describe0",
+    "testDepth": 1,
+    "longname": "tests/jimple.js~describe0.describe5",
+    "access": null,
+    "description": ".define",
+    "lineNumber": 24,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#define}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#define"
+    ]
   },
   {
     "kind": "testIt",
@@ -1494,12 +1552,12 @@
     "variation": null,
     "name": "it6",
     "testId": 6,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it6",
+    "longname": "tests/jimple.js~describe0.describe5.it6",
     "access": null,
-    "description": "should define service",
-    "lineNumber": 22
+    "description": "should return jimple instance",
+    "lineNumber": 25
   },
   {
     "kind": "testIt",
@@ -1507,12 +1565,12 @@
     "variation": null,
     "name": "it7",
     "testId": 7,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it7",
+    "longname": "tests/jimple.js~describe0.describe5.it7",
     "access": null,
-    "description": "should store callable",
-    "lineNumber": 24
+    "description": "should define service",
+    "lineNumber": 27
   },
   {
     "kind": "testIt",
@@ -1520,12 +1578,12 @@
     "variation": null,
     "name": "it8",
     "testId": 8,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it8",
+    "longname": "tests/jimple.js~describe0.describe5.it8",
     "access": null,
-    "description": "should store value as callable",
-    "lineNumber": 30
+    "description": "should store callable",
+    "lineNumber": 29
   },
   {
     "kind": "testIt",
@@ -1533,12 +1591,12 @@
     "variation": null,
     "name": "it9",
     "testId": 9,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it9",
+    "longname": "tests/jimple.js~describe0.describe5.it9",
     "access": null,
-    "description": "should tag callable",
-    "lineNumber": 36
+    "description": "should store value as callable",
+    "lineNumber": 35
   },
   {
     "kind": "testIt",
@@ -1546,38 +1604,47 @@
     "variation": null,
     "name": "it10",
     "testId": 10,
-    "memberof": "tests/jimple.js~describe0.describe4",
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe4.it10",
+    "longname": "tests/jimple.js~describe0.describe5.it10",
     "access": null,
-    "description": "should not tag same callable twice",
-    "lineNumber": 38
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe11",
-    "testId": 11,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe11",
-    "access": null,
-    "description": ".share",
+    "description": "should tag callable",
     "lineNumber": 41
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it12",
-    "testId": 12,
-    "memberof": "tests/jimple.js~describe0.describe11",
+    "name": "it11",
+    "testId": 11,
+    "memberof": "tests/jimple.js~describe0.describe5",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe11.it12",
+    "longname": "tests/jimple.js~describe0.describe5.it11",
     "access": null,
-    "description": "should return jimple instance",
-    "lineNumber": 42
+    "description": "should not tag same callable twice",
+    "lineNumber": 43
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe12",
+    "testId": 12,
+    "memberof": "tests/jimple.js~describe0",
+    "testDepth": 1,
+    "longname": "tests/jimple.js~describe0.describe12",
+    "access": null,
+    "description": ".share",
+    "lineNumber": 47,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#share}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#share"
+    ]
   },
   {
     "kind": "testIt",
@@ -1585,12 +1652,12 @@
     "variation": null,
     "name": "it13",
     "testId": 13,
-    "memberof": "tests/jimple.js~describe0.describe11",
+    "memberof": "tests/jimple.js~describe0.describe12",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe11.it13",
+    "longname": "tests/jimple.js~describe0.describe12.it13",
     "access": null,
-    "description": "should wrap callable",
-    "lineNumber": 44
+    "description": "should return jimple instance",
+    "lineNumber": 48
   },
   {
     "kind": "testIt",
@@ -1598,38 +1665,38 @@
     "variation": null,
     "name": "it14",
     "testId": 14,
-    "memberof": "tests/jimple.js~describe0.describe11",
+    "memberof": "tests/jimple.js~describe0.describe12",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe11.it14",
+    "longname": "tests/jimple.js~describe0.describe12.it14",
     "access": null,
-    "description": "should overwrite existing service",
-    "lineNumber": 53
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe15",
-    "testId": 15,
-    "memberof": "tests/jimple.js~describe0.describe11",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe11.describe15",
-    "access": null,
-    "description": "factory",
-    "lineNumber": 62
+    "description": "should wrap callable",
+    "lineNumber": 50
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it16",
-    "testId": 16,
-    "memberof": "tests/jimple.js~describe0.describe11.describe15",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe11.describe15.it16",
+    "name": "it15",
+    "testId": 15,
+    "memberof": "tests/jimple.js~describe0.describe12",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe12.it15",
     "access": null,
-    "description": "should share service instance",
-    "lineNumber": 63
+    "description": "should overwrite existing service",
+    "lineNumber": 59
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe16",
+    "testId": 16,
+    "memberof": "tests/jimple.js~describe0.describe12",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe12.describe16",
+    "access": null,
+    "description": "factory",
+    "lineNumber": 68
   },
   {
     "kind": "testIt",
@@ -1637,12 +1704,12 @@
     "variation": null,
     "name": "it17",
     "testId": 17,
-    "memberof": "tests/jimple.js~describe0.describe11.describe15",
+    "memberof": "tests/jimple.js~describe0.describe12.describe16",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe11.describe15.it17",
+    "longname": "tests/jimple.js~describe0.describe12.describe16.it17",
     "access": null,
-    "description": "should receive jimple instance as an argument",
-    "lineNumber": 73
+    "description": "should share service instance",
+    "lineNumber": 69
   },
   {
     "kind": "testIt",
@@ -1650,38 +1717,47 @@
     "variation": null,
     "name": "it18",
     "testId": 18,
-    "memberof": "tests/jimple.js~describe0.describe11.describe15",
+    "memberof": "tests/jimple.js~describe0.describe12.describe16",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe11.describe15.it18",
+    "longname": "tests/jimple.js~describe0.describe12.describe16.it18",
     "access": null,
-    "description": "should reset when service change",
-    "lineNumber": 81
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe19",
-    "testId": 19,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe19",
-    "access": null,
-    "description": ".factory",
-    "lineNumber": 96
+    "description": "should receive jimple instance as an argument",
+    "lineNumber": 79
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it20",
-    "testId": 20,
-    "memberof": "tests/jimple.js~describe0.describe19",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe19.it20",
+    "name": "it19",
+    "testId": 19,
+    "memberof": "tests/jimple.js~describe0.describe12.describe16",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe12.describe16.it19",
     "access": null,
-    "description": "should return jimple instance",
-    "lineNumber": 97
+    "description": "should reset when service change",
+    "lineNumber": 87
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe20",
+    "testId": 20,
+    "memberof": "tests/jimple.js~describe0",
+    "testDepth": 1,
+    "longname": "tests/jimple.js~describe0.describe20",
+    "access": null,
+    "description": ".factory",
+    "lineNumber": 103,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#factory}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#factory"
+    ]
   },
   {
     "kind": "testIt",
@@ -1689,12 +1765,12 @@
     "variation": null,
     "name": "it21",
     "testId": 21,
-    "memberof": "tests/jimple.js~describe0.describe19",
+    "memberof": "tests/jimple.js~describe0.describe20",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe19.it21",
+    "longname": "tests/jimple.js~describe0.describe20.it21",
     "access": null,
-    "description": "should wrap callable",
-    "lineNumber": 99
+    "description": "should return jimple instance",
+    "lineNumber": 104
   },
   {
     "kind": "testIt",
@@ -1702,38 +1778,38 @@
     "variation": null,
     "name": "it22",
     "testId": 22,
-    "memberof": "tests/jimple.js~describe0.describe19",
+    "memberof": "tests/jimple.js~describe0.describe20",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe19.it22",
+    "longname": "tests/jimple.js~describe0.describe20.it22",
     "access": null,
-    "description": "should delete shared instance",
-    "lineNumber": 108
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe23",
-    "testId": 23,
-    "memberof": "tests/jimple.js~describe0.describe19",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe19.describe23",
-    "access": null,
-    "description": "factory",
-    "lineNumber": 117
+    "description": "should wrap callable",
+    "lineNumber": 106
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it24",
-    "testId": 24,
-    "memberof": "tests/jimple.js~describe0.describe19.describe23",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe19.describe23.it24",
+    "name": "it23",
+    "testId": 23,
+    "memberof": "tests/jimple.js~describe0.describe20",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe20.it23",
     "access": null,
-    "description": "should not share service instance",
-    "lineNumber": 118
+    "description": "should delete shared instance",
+    "lineNumber": 115
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe24",
+    "testId": 24,
+    "memberof": "tests/jimple.js~describe0.describe20",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe20.describe24",
+    "access": null,
+    "description": "factory",
+    "lineNumber": 124
   },
   {
     "kind": "testIt",
@@ -1741,38 +1817,47 @@
     "variation": null,
     "name": "it25",
     "testId": 25,
-    "memberof": "tests/jimple.js~describe0.describe19.describe23",
+    "memberof": "tests/jimple.js~describe0.describe20.describe24",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe19.describe23.it25",
+    "longname": "tests/jimple.js~describe0.describe20.describe24.it25",
     "access": null,
-    "description": "should receive jimple instance as an argument",
-    "lineNumber": 128
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe26",
-    "testId": 26,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe26",
-    "access": null,
-    "description": ".extend",
-    "lineNumber": 138
+    "description": "should not share service instance",
+    "lineNumber": 125
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it27",
-    "testId": 27,
-    "memberof": "tests/jimple.js~describe0.describe26",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it27",
+    "name": "it26",
+    "testId": 26,
+    "memberof": "tests/jimple.js~describe0.describe20.describe24",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe20.describe24.it26",
     "access": null,
-    "description": "should return jimple instance",
-    "lineNumber": 139
+    "description": "should receive jimple instance as an argument",
+    "lineNumber": 135
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe27",
+    "testId": 27,
+    "memberof": "tests/jimple.js~describe0",
+    "testDepth": 1,
+    "longname": "tests/jimple.js~describe0.describe27",
+    "access": null,
+    "description": ".extend",
+    "lineNumber": 146,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#extend}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#extend"
+    ]
   },
   {
     "kind": "testIt",
@@ -1780,12 +1865,12 @@
     "variation": null,
     "name": "it28",
     "testId": 28,
-    "memberof": "tests/jimple.js~describe0.describe26",
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it28",
+    "longname": "tests/jimple.js~describe0.describe27.it28",
     "access": null,
-    "description": "should extend existing service",
-    "lineNumber": 141
+    "description": "should return jimple instance",
+    "lineNumber": 147
   },
   {
     "kind": "testIt",
@@ -1793,12 +1878,12 @@
     "variation": null,
     "name": "it29",
     "testId": 29,
-    "memberof": "tests/jimple.js~describe0.describe26",
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it29",
+    "longname": "tests/jimple.js~describe0.describe27.it29",
     "access": null,
-    "description": "should receive base service instance as first argument",
-    "lineNumber": 150
+    "description": "should extend existing service",
+    "lineNumber": 149
   },
   {
     "kind": "testIt",
@@ -1806,12 +1891,12 @@
     "variation": null,
     "name": "it30",
     "testId": 30,
-    "memberof": "tests/jimple.js~describe0.describe26",
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it30",
+    "longname": "tests/jimple.js~describe0.describe27.it30",
     "access": null,
-    "description": "should receive jimple instance as second argument",
-    "lineNumber": 161
+    "description": "should receive base service instance as first argument",
+    "lineNumber": 158
   },
   {
     "kind": "testIt",
@@ -1819,12 +1904,12 @@
     "variation": null,
     "name": "it31",
     "testId": 31,
-    "memberof": "tests/jimple.js~describe0.describe26",
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it31",
+    "longname": "tests/jimple.js~describe0.describe27.it31",
     "access": null,
-    "description": "should refuse to extend an already fetched service",
-    "lineNumber": 170
+    "description": "should receive jimple instance as second argument",
+    "lineNumber": 169
   },
   {
     "kind": "testIt",
@@ -1832,38 +1917,47 @@
     "variation": null,
     "name": "it32",
     "testId": 32,
-    "memberof": "tests/jimple.js~describe0.describe26",
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe26.it32",
+    "longname": "tests/jimple.js~describe0.describe27.it32",
     "access": null,
-    "description": "should refuse to extend an already used factory",
-    "lineNumber": 176
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe33",
-    "testId": 33,
-    "memberof": "tests/jimple.js~describe0",
-    "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe33",
-    "access": null,
-    "description": ".use",
-    "lineNumber": 183
+    "description": "should refuse to extend an already fetched service",
+    "lineNumber": 178
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it34",
-    "testId": 34,
-    "memberof": "tests/jimple.js~describe0.describe33",
+    "name": "it33",
+    "testId": 33,
+    "memberof": "tests/jimple.js~describe0.describe27",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe33.it34",
+    "longname": "tests/jimple.js~describe0.describe27.it33",
     "access": null,
-    "description": "should inject jimple",
+    "description": "should refuse to extend an already used factory",
     "lineNumber": 184
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe34",
+    "testId": 34,
+    "memberof": "tests/jimple.js~describe0",
+    "testDepth": 1,
+    "longname": "tests/jimple.js~describe0.describe34",
+    "access": null,
+    "description": ".use",
+    "lineNumber": 192,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#use}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#use"
+    ]
   },
   {
     "kind": "testIt",
@@ -1871,12 +1965,12 @@
     "variation": null,
     "name": "it35",
     "testId": 35,
-    "memberof": "tests/jimple.js~describe0.describe33",
+    "memberof": "tests/jimple.js~describe0.describe34",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe33.it35",
+    "longname": "tests/jimple.js~describe0.describe34.it35",
     "access": null,
-    "description": "should inject given service",
-    "lineNumber": 186
+    "description": "should inject jimple",
+    "lineNumber": 193
   },
   {
     "kind": "testIt",
@@ -1884,64 +1978,82 @@
     "variation": null,
     "name": "it36",
     "testId": 36,
-    "memberof": "tests/jimple.js~describe0.describe33",
+    "memberof": "tests/jimple.js~describe0.describe34",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe33.it36",
+    "longname": "tests/jimple.js~describe0.describe34.it36",
     "access": null,
-    "description": "should inject given services",
+    "description": "should inject given service",
     "lineNumber": 195
   },
   {
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it37",
+    "testId": 37,
+    "memberof": "tests/jimple.js~describe0.describe34",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe34.it37",
+    "access": null,
+    "description": "should inject given services",
+    "lineNumber": 204
+  },
+  {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe37",
-    "testId": 37,
+    "name": "describe38",
+    "testId": 38,
     "memberof": "tests/jimple.js~describe0",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe37",
+    "longname": "tests/jimple.js~describe0.describe38",
     "access": null,
     "description": ".protect",
-    "lineNumber": 210
+    "lineNumber": 220,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#protect}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#protect"
+    ]
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it38",
-    "testId": 38,
-    "memberof": "tests/jimple.js~describe0.describe37",
+    "name": "it39",
+    "testId": 39,
+    "memberof": "tests/jimple.js~describe0.describe38",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe37.it38",
+    "longname": "tests/jimple.js~describe0.describe38.it39",
     "access": null,
     "description": "should wrap callable",
-    "lineNumber": 211
+    "lineNumber": 221
   },
   {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe39",
-    "testId": 39,
+    "name": "describe40",
+    "testId": 40,
     "memberof": "tests/jimple.js~describe0",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe39",
+    "longname": "tests/jimple.js~describe0.describe40",
     "access": null,
     "description": ".raw",
-    "lineNumber": 219
-  },
-  {
-    "kind": "testIt",
-    "static": true,
-    "variation": null,
-    "name": "it40",
-    "testId": 40,
-    "memberof": "tests/jimple.js~describe0.describe39",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe39.it40",
-    "access": null,
-    "description": "should return raw callable",
-    "lineNumber": 220
+    "lineNumber": 230,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#raw}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#raw"
+    ]
   },
   {
     "kind": "testIt",
@@ -1949,64 +2061,82 @@
     "variation": null,
     "name": "it41",
     "testId": 41,
-    "memberof": "tests/jimple.js~describe0.describe39",
+    "memberof": "tests/jimple.js~describe0.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe39.it41",
+    "longname": "tests/jimple.js~describe0.describe40.it41",
+    "access": null,
+    "description": "should return raw callable",
+    "lineNumber": 231
+  },
+  {
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it42",
+    "testId": 42,
+    "memberof": "tests/jimple.js~describe0.describe40",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe40.it42",
     "access": null,
     "description": "should return raw callable for value",
-    "lineNumber": 226
+    "lineNumber": 237
   },
   {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe42",
-    "testId": 42,
+    "name": "describe43",
+    "testId": 43,
     "memberof": "tests/jimple.js~describe0",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe42",
+    "longname": "tests/jimple.js~describe0.describe43",
     "access": null,
     "description": ".tagged",
-    "lineNumber": 229
+    "lineNumber": 241,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#tagged}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#tagged"
+    ]
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it43",
-    "testId": 43,
-    "memberof": "tests/jimple.js~describe0.describe42",
+    "name": "it44",
+    "testId": 44,
+    "memberof": "tests/jimple.js~describe0.describe43",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe42.it43",
+    "longname": "tests/jimple.js~describe0.describe43.it44",
     "access": null,
     "description": "should return tagged service names",
-    "lineNumber": 230
+    "lineNumber": 242
   },
   {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe44",
-    "testId": 44,
+    "name": "describe45",
+    "testId": 45,
     "memberof": "tests/jimple.js~describe0",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe44",
+    "longname": "tests/jimple.js~describe0.describe45",
     "access": null,
     "description": ".proxify",
-    "lineNumber": 239
-  },
-  {
-    "kind": "testIt",
-    "static": true,
-    "variation": null,
-    "name": "it45",
-    "testId": 45,
-    "memberof": "tests/jimple.js~describe0.describe44",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.it45",
-    "access": null,
-    "description": "should return a proxified instance",
-    "lineNumber": 249
+    "lineNumber": 252,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#proxify}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#proxify"
+    ]
   },
   {
     "kind": "testIt",
@@ -2014,12 +2144,12 @@
     "variation": null,
     "name": "it46",
     "testId": 46,
-    "memberof": "tests/jimple.js~describe0.describe44",
+    "memberof": "tests/jimple.js~describe0.describe45",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.it46",
+    "longname": "tests/jimple.js~describe0.describe45.it46",
     "access": null,
-    "description": "should be extensible",
-    "lineNumber": 251
+    "description": "should return a proxified instance",
+    "lineNumber": 262
   },
   {
     "kind": "testIt",
@@ -2027,25 +2157,25 @@
     "variation": null,
     "name": "it47",
     "testId": 47,
-    "memberof": "tests/jimple.js~describe0.describe44",
+    "memberof": "tests/jimple.js~describe0.describe45",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.it47",
+    "longname": "tests/jimple.js~describe0.describe45.it47",
     "access": null,
-    "description": "should be idempotent",
-    "lineNumber": 253
+    "description": "should be extensible",
+    "lineNumber": 264
   },
   {
-    "kind": "testDescribe",
+    "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "describe48",
+    "name": "it48",
     "testId": 48,
-    "memberof": "tests/jimple.js~describe0.describe44",
+    "memberof": "tests/jimple.js~describe0.describe45",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.describe48",
+    "longname": "tests/jimple.js~describe0.describe45.it48",
     "access": null,
-    "description": "traps",
-    "lineNumber": 258
+    "description": "should be idempotent",
+    "lineNumber": 266
   },
   {
     "kind": "testDescribe",
@@ -2053,25 +2183,25 @@
     "variation": null,
     "name": "describe49",
     "testId": 49,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe49",
+    "memberof": "tests/jimple.js~describe0.describe45",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe45.describe49",
     "access": null,
-    "description": ".get",
-    "lineNumber": 259
+    "description": "traps",
+    "lineNumber": 271
   },
   {
-    "kind": "testIt",
+    "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "it50",
+    "name": "describe50",
     "testId": 50,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe49",
-    "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe49.it50",
+    "memberof": "tests/jimple.js~describe0.describe45.describe49",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe50",
     "access": null,
-    "description": "should not override native methods",
-    "lineNumber": 260
+    "description": ".get",
+    "lineNumber": 272
   },
   {
     "kind": "testIt",
@@ -2079,12 +2209,12 @@
     "variation": null,
     "name": "it51",
     "testId": 51,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe49",
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe50",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe49.it51",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe50.it51",
     "access": null,
-    "description": "should fetch service",
-    "lineNumber": 269
+    "description": "should not override native methods",
+    "lineNumber": 273
   },
   {
     "kind": "testIt",
@@ -2092,38 +2222,38 @@
     "variation": null,
     "name": "it52",
     "testId": 52,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe49",
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe50",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe49.it52",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe50.it52",
     "access": null,
-    "description": "should execute factory",
-    "lineNumber": 278
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe53",
-    "testId": 53,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe53",
-    "access": null,
-    "description": ".set",
-    "lineNumber": 290
+    "description": "should fetch service",
+    "lineNumber": 282
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it54",
-    "testId": 54,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe53",
+    "name": "it53",
+    "testId": 53,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe50",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe53.it54",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe50.it53",
     "access": null,
-    "description": "should refuse to override native methods",
+    "description": "should execute factory",
     "lineNumber": 291
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe54",
+    "testId": 54,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe54",
+    "access": null,
+    "description": ".set",
+    "lineNumber": 303
   },
   {
     "kind": "testIt",
@@ -2131,38 +2261,38 @@
     "variation": null,
     "name": "it55",
     "testId": 55,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe53",
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe54",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe53.it55",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe54.it55",
     "access": null,
-    "description": "should define a shared service",
-    "lineNumber": 298
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe56",
-    "testId": 56,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe56",
-    "access": null,
-    "description": ".has",
-    "lineNumber": 308
+    "description": "should refuse to override native methods",
+    "lineNumber": 304
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it57",
-    "testId": 57,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe56",
+    "name": "it56",
+    "testId": 56,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe54",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe56.it57",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe54.it56",
     "access": null,
-    "description": "should check if service exists",
-    "lineNumber": 309
+    "description": "should define a shared service",
+    "lineNumber": 311
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe57",
+    "testId": 57,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe57",
+    "access": null,
+    "description": ".has",
+    "lineNumber": 321
   },
   {
     "kind": "testIt",
@@ -2170,51 +2300,51 @@
     "variation": null,
     "name": "it58",
     "testId": 58,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe56",
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe57",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe56.it58",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe57.it58",
     "access": null,
-    "description": "should check if factory exists",
-    "lineNumber": 317
-  },
-  {
-    "kind": "testDescribe",
-    "static": true,
-    "variation": null,
-    "name": "describe59",
-    "testId": 59,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe59",
-    "access": null,
-    "description": ".delete",
-    "lineNumber": 326
+    "description": "should check if service exists",
+    "lineNumber": 322
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it60",
-    "testId": 60,
-    "memberof": "tests/jimple.js~describe0.describe44.describe48.describe59",
+    "name": "it59",
+    "testId": 59,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe57",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe48.describe59.it60",
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe57.it59",
     "access": null,
-    "description": "should prevent deletion",
-    "lineNumber": 327
+    "description": "should check if factory exists",
+    "lineNumber": 330
   },
   {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe61",
-    "testId": 61,
-    "memberof": "tests/jimple.js~describe0.describe44",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.describe61",
+    "name": "describe60",
+    "testId": 60,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe60",
     "access": null,
-    "description": ".share",
-    "lineNumber": 336
+    "description": ".delete",
+    "lineNumber": 339
+  },
+  {
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it61",
+    "testId": 61,
+    "memberof": "tests/jimple.js~describe0.describe45.describe49.describe60",
+    "testDepth": 4,
+    "longname": "tests/jimple.js~describe0.describe45.describe49.describe60.it61",
+    "access": null,
+    "description": "should prevent deletion",
+    "lineNumber": 340
   },
   {
     "kind": "testDescribe",
@@ -2222,38 +2352,47 @@
     "variation": null,
     "name": "describe62",
     "testId": 62,
-    "memberof": "tests/jimple.js~describe0.describe44.describe61",
-    "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe61.describe62",
+    "memberof": "tests/jimple.js~describe0.describe45",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe45.describe62",
     "access": null,
-    "description": "factory",
-    "lineNumber": 337
-  },
-  {
-    "kind": "testIt",
-    "static": true,
-    "variation": null,
-    "name": "it63",
-    "testId": 63,
-    "memberof": "tests/jimple.js~describe0.describe44.describe61.describe62",
-    "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe61.describe62.it63",
-    "access": null,
-    "description": "should receive jimple proxy instance as an argument",
-    "lineNumber": 338
+    "description": ".share",
+    "lineNumber": 350,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#share}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#share"
+    ]
   },
   {
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe64",
-    "testId": 64,
-    "memberof": "tests/jimple.js~describe0.describe44",
-    "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.describe64",
+    "name": "describe63",
+    "testId": 63,
+    "memberof": "tests/jimple.js~describe0.describe45.describe62",
+    "testDepth": 3,
+    "longname": "tests/jimple.js~describe0.describe45.describe62.describe63",
     "access": null,
-    "description": ".factory",
+    "description": "factory",
     "lineNumber": 351
+  },
+  {
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it64",
+    "testId": 64,
+    "memberof": "tests/jimple.js~describe0.describe45.describe62.describe63",
+    "testDepth": 4,
+    "longname": "tests/jimple.js~describe0.describe45.describe62.describe63.it64",
+    "access": null,
+    "description": "should receive jimple proxy instance as an argument",
+    "lineNumber": 352
   },
   {
     "kind": "testDescribe",
@@ -2261,24 +2400,46 @@
     "variation": null,
     "name": "describe65",
     "testId": 65,
-    "memberof": "tests/jimple.js~describe0.describe44.describe64",
+    "memberof": "tests/jimple.js~describe0.describe45",
+    "testDepth": 2,
+    "longname": "tests/jimple.js~describe0.describe45.describe65",
+    "access": null,
+    "description": ".factory",
+    "lineNumber": 366,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Jimple#factory}"
+      }
+    ],
+    "testTargets": [
+      "Jimple#factory"
+    ]
+  },
+  {
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe66",
+    "testId": 66,
+    "memberof": "tests/jimple.js~describe0.describe45.describe65",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe44.describe64.describe65",
+    "longname": "tests/jimple.js~describe0.describe45.describe65.describe66",
     "access": null,
     "description": "factory",
-    "lineNumber": 352
+    "lineNumber": 367
   },
   {
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it66",
-    "testId": 66,
-    "memberof": "tests/jimple.js~describe0.describe44.describe64.describe65",
+    "name": "it67",
+    "testId": 67,
+    "memberof": "tests/jimple.js~describe0.describe45.describe65.describe66",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe44.describe64.describe65.it66",
+    "longname": "tests/jimple.js~describe0.describe45.describe65.describe66.it67",
     "access": null,
     "description": "should receive jimple proxy instance as an argument",
-    "lineNumber": 353
+    "lineNumber": 368
   }
 ]
