@@ -65,6 +65,12 @@ describe("Jimple", () => {
             jimple.raw("service").should.not.be.equal(callable);
         });
 
+        it("should refuse to override an already fetched service", () => {
+            jimple.share("service", () => {}).get("service");
+
+            (() => jimple.share("service", () => {})).should.throw(Error);
+        });
+
         describe("factory", () => {
             it("should share service instance", () => {
                 let service,
@@ -83,19 +89,6 @@ describe("Jimple", () => {
 
                 jimple.get("service");
             });
-
-            it("should reset when service change", () => {
-                let service,
-                    callable = () => service = {};
-
-                jimple.share("service", callable);
-
-                jimple.get("service").should.equal(service);
-
-                jimple.share("service", () => ({}));
-
-                jimple.get("service").should.not.equal(service);
-            })
         });
     });
 
@@ -112,13 +105,16 @@ describe("Jimple", () => {
             jimple.raw("factory").should.not.be.equal(callable);
         });
 
-        it("should delete shared instance", () => {
-            let service,
-                callable = () => service = {};
+        it("should refuse to override an already fetched service", () => {
+            jimple.share("service", () => {}).get("service");
 
-            jimple.share("service", callable).get("service");
+            (() => jimple.factory("service", () => {})).should.throw(Error);
+        });
 
-            jimple.factory("service", () => ({})).get("service").should.not.be.equal(service);
+        it("should refuse to override an already executed factory", () => {
+            jimple.factory("factory", () => {}).get("factory");
+
+            (() => jimple.factory("factory", () => {})).should.throw(Error);
         });
 
         describe("factory", () => {

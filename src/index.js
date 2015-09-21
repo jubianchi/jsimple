@@ -72,6 +72,10 @@ class Jimple {
             throw new Error("Argument #1 passed to Jimple.define must be a string identifier")
         }
 
+        if (this.frozen.has(name)) {
+            throw new Error("Cannot override an already executed factory or fetched service");
+        }
+
         if (this.values.has(name)) {
             (this.values.get(name).tags || []).forEach(tag => {
                 this.tagmap.get(tag).delete(name);
@@ -181,10 +185,6 @@ class Jimple {
 
         if (typeof code !== "function") {
             throw new Error("Argument #2 passed to Jimple.extend must be a function")
-        }
-
-        if (this.frozen.has(name)) {
-            throw new Error("Cannot extend an already fetched service");
         }
 
         let service = this.raw(name);
