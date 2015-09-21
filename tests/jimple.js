@@ -391,7 +391,7 @@ describe("Jimple", () => {
             });
         });
 
-        /** @test {JimpleProxified#fromJimple} */
+        /** @test {JimpleProxified.fromJimple} */
         describe("cast", () => {
             it("should keep current state", () => {
                 jimple.share("service", () => ({}));
