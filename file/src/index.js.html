@@ -32,6 +32,7 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -39,7 +40,13 @@
 
 
 
-
+<div data-ice="variableWrap">
+  <h2><a href="variable/">Variable</a></h2>
+  <ul>
+    
+  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
+</ul>
+</div>
 
 
 
@@ -55,6 +62,9 @@ class Jimple {
         this.tagmap = new Map();
         this.shared = new Map();
         this.frozen = new Set();
+        this.proxified = false;
+
+        Object.seal(this);
     }
 
     /**
@@ -303,6 +313,18 @@ class Jimple {
         }
 
         return this.values.get(name);
+    }
+
+    proxify() {
+        var Proxy = require(&quot;./proxy.js&quot;);
+
+        if (this.proxified === false) {
+            this.proxified = true;
+
+            return new Proxy(this);
+        }
+
+        return this;
     }
 }
 

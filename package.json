@@ -14,14 +14,15 @@
   },
   "devDependencies": {
     "esdoc": "^0.2.6",
+    "harmony-reflect": "^1.4.2",
     "istanbul": "^0.3.20",
     "jscs": "^1.7.3",
     "mocha": "^2.3.2",
     "should": "^7.1.0"
   },
   "scripts": {
-    "test": "mocha -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
+    "test": "mocha --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
     "cs": "node_modules/.bin/jscs src/ test/",
     "doc": "node_modules/.bin/esdoc -c esdoc.json",
     "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run test",

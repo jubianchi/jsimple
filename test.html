@@ -32,6 +32,7 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -39,7 +40,13 @@
 
 
 
-
+<div data-ice="variableWrap">
+  <h2><a href="variable/">Variable</a></h2>
+  <ul>
+    
+  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
+</ul>
+</div>
 
 
 
@@ -61,7 +68,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber5"><p>Jimple</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">32</td>
+  <td data-ice="testCount">46</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="1">
@@ -76,47 +83,8 @@
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
-
-
-<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber14"><p>.define</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">6</td>
-</tr>
-
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber15"><p>should return jimple instance</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber17"><p>should define service</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber19"><p>should store callable</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber25"><p>should store value as callable</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber31"><p>should tag callable</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber33"><p>should not tag same callable twice</p>
+<tr data-ice="testIt" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/tests/jimple.js.html#lineNumber14"><p>should be frozen</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -124,26 +92,71 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber36"><p>.share</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber19"><p>.define</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">6</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber37"><p>should return jimple instance</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber20"><p>should return jimple instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber39"><p>should wrap callable</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber22"><p>should define service</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber48"><p>should overwrite existing service</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber24"><p>should store callable</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber30"><p>should store value as callable</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber36"><p>should tag callable</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber38"><p>should not tag same callable twice</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber41"><p>.share</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">6</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber42"><p>should return jimple instance</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber44"><p>should wrap callable</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber53"><p>should overwrite existing service</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -151,26 +164,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber57"><p>factory</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber62"><p>factory</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber58"><p>should share service instance</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber63"><p>should share service instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber68"><p>should receive jimple instance as an argument</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber73"><p>should receive jimple instance as an argument</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber76"><p>should reset when service change</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber81"><p>should reset when service change</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -178,26 +191,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber91"><p>.factory</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber96"><p>.factory</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">5</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber92"><p>should return jimple instance</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber97"><p>should return jimple instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber94"><p>should wrap callable</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber99"><p>should wrap callable</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber103"><p>should delete shared instance</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber108"><p>should delete shared instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -205,20 +218,20 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber112"><p>factory</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber117"><p>factory</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">2</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber113"><p>should not share service instance</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber118"><p>should not share service instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber121"><p>should receive jimple instance as an argument</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/tests/jimple.js.html#lineNumber128"><p>should receive jimple instance as an argument</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -226,44 +239,44 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber131"><p>.extend</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber138"><p>.extend</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">6</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber132"><p>should return jimple instance</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber139"><p>should return jimple instance</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber134"><p>should extend existing service</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber141"><p>should extend existing service</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber143"><p>should receive base service instance as first argument</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber150"><p>should receive base service instance as first argument</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber154"><p>should receive jimple instance as second argument</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber161"><p>should receive jimple instance as second argument</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber163"><p>should refuse to extend an already fetched service</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber170"><p>should refuse to extend an already fetched service</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber169"><p>should refuse to extend an already used factory</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber176"><p>should refuse to extend an already used factory</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -271,26 +284,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber176"><p>.use</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber183"><p>.use</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber177"><p>should inject jimple</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber184"><p>should inject jimple</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber179"><p>should inject given service</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber186"><p>should inject given service</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber188"><p>should inject given services</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber195"><p>should inject given services</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -298,14 +311,14 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber203"><p>.protect</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber210"><p>.protect</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">1</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber204"><p>should wrap callable</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber211"><p>should wrap callable</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -313,20 +326,20 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber212"><p>.raw</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber219"><p>.raw</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">2</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber213"><p>should return raw callable</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber220"><p>should return raw callable</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber219"><p>should return raw callable for value</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber226"><p>should return raw callable for value</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -334,14 +347,182 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber222"><p>.tagged</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber229"><p>.tagged</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">1</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber223"><p>should return tagged service names</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber230"><p>should return tagged service names</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber239"><p>.proxify</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">13</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber249"><p>should return a proxified instance</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber251"><p>should be extensible</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/tests/jimple.js.html#lineNumber253"><p>should be idempotent</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber258"><p>traps</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">8</td>
+</tr>
+
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber259"><p>.get</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">3</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber260"><p>should not override native methods</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber269"><p>should fetch service</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber278"><p>should execute factory</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber290"><p>.set</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">2</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber291"><p>should refuse to override native methods</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber298"><p>should define a shared service</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber308"><p>.has</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">2</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber309"><p>should check if service exists</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber317"><p>should check if factory exists</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber326"><p>.delete</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber327"><p>should prevent deletion</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber336"><p>.share</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber337"><p>factory</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber338"><p>should receive jimple proxy instance as an argument</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber351"><p>.factory</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/tests/jimple.js.html#lineNumber352"><p>factory</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/tests/jimple.js.html#lineNumber353"><p>should receive jimple proxy instance as an argument</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>

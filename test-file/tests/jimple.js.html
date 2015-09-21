@@ -32,6 +32,7 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -39,7 +40,13 @@
 
 
 
-
+<div data-ice="variableWrap">
+  <h2><a href="variable/">Variable</a></h2>
+  <ul>
+    
+  <li data-ice="variableDoc"><span><a href="variable/index.html#static-variable-Jimple">Jimple</a></span></li>
+</ul>
+</div>
 
 
 
@@ -59,6 +66,11 @@ describe(&quot;Jimple&quot;, () =&gt; {
     it(&quot;should instanciate&quot;, () =&gt; jimple.should.be.an.object);
 
     it(&quot;should be empty&quot;, () =&gt; jimple.keys().should.be.empty);
+
+    it(&quot;should be frozen&quot;, () =&gt; {
+        Object.isExtensible(jimple).should.be.false;
+        (() =&gt; jimple.foo = &quot;bar&quot;).should.throw(Error);
+    });
 
     describe(&quot;.define&quot;, () =&gt; {
         it(&quot;should return jimple instance&quot;, () =&gt; jimple.define(&quot;service&quot;, () =&gt; {}).should.be.equal(jimple));
@@ -164,6 +176,8 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
                 jimple.factory(&quot;factory&quot;, callable);
 
+                jimple.get(&quot;factory&quot;).should.be.an.object;
+                jimple.get(&quot;factory&quot;).should.be.eql({});
                 jimple.get(&quot;factory&quot;).should.not.equal(jimple.get(&quot;factory&quot;));
             });
 
@@ -275,6 +289,134 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
             jimple.tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;, &quot;ecivres&quot;]);
             jimple.tagged(&quot;gat&quot;).should.be.eql([&quot;service&quot;]);
+        });
+    });
+
+    describe(&quot;.proxify&quot;, () =&gt; {
+        beforeEach(() =&gt; {
+            let should = require(&quot;should&quot;);
+
+            should.extend(&quot;then&quot;, Proxy.prototype);
+            should.extend(&quot;Boolean&quot;, Proxy.prototype);
+        });
+
+        beforeEach(() =&gt; jimple = jimple.proxify());
+
+        it(&quot;should return a proxified instance&quot;, () =&gt; jimple.should.be.an.instanceof(Jimple));
+
+        it(&quot;should be extensible&quot;, () =&gt; Object.isExtensible(jimple).should.be.true);
+
+        it(&quot;should be idempotent&quot;, () =&gt; {
+            (jimple.proxify() === jimple).should.be.true;
+            (jimple.proxify() === jimple.proxify()).should.be.true;
+        });
+
+        describe(&quot;traps&quot;, () =&gt; {
+            describe(&quot;.get&quot;, () =&gt; {
+                it(&quot;should not override native methods&quot;, () =&gt; {
+                    let service,
+                        callable = () =&gt; service = {};
+
+                    jimple.share(&quot;service&quot;, callable);
+
+                    jimple.get(&quot;service&quot;).should.be.equal(service);
+                });
+
+                it(&quot;should fetch service&quot;, () =&gt; {
+                    let service,
+                        callable = () =&gt; service = {};
+
+                    jimple.share(&quot;service&quot;, callable);
+
+                    jimple.service.should.be.equal(service);
+                });
+
+                it(&quot;should execute factory&quot;, () =&gt; {
+                    let service,
+                        callable = () =&gt; service = {};
+
+                    jimple.factory(&quot;service&quot;, callable);
+
+                    jimple.service.should.be.an.object;
+                    jimple.service.should.be.eql({});
+                    jimple.service.should.not.equal(jimple.service);
+                });
+            });
+
+            describe(&quot;.set&quot;, () =&gt; {
+                it(&quot;should refuse to override native methods&quot;, () =&gt; {
+                    (() =&gt; jimple.factory = () =&gt; {
+                    }).should.throw(Error);
+                    (() =&gt; jimple.get = () =&gt; {
+                    }).should.throw(Error);
+                });
+
+                it(&quot;should define a shared service&quot;, () =&gt; {
+                    let service;
+
+                    jimple.service = () =&gt; service = {};
+
+                    jimple.get(&quot;service&quot;).should.equal(service);
+                    jimple.get(&quot;service&quot;).should.be.equal(jimple.get(&quot;service&quot;));
+                });
+            });
+
+            describe(&quot;.has&quot;, () =&gt; {
+                it(&quot;should check if service exists&quot;, () =&gt; {
+                    jimple.service = () =&gt; {
+                    };
+
+                    (&quot;service&quot; in jimple).should.be.true;
+                    (&quot;factory&quot; in jimple).should.be.false;
+                });
+
+                it(&quot;should check if factory exists&quot;, () =&gt; {
+                    jimple.factory(&quot;service&quot;, () =&gt; {
+                    });
+
+                    (&quot;service&quot; in jimple).should.be.true;
+                    (&quot;factory&quot; in jimple).should.be.false;
+                });
+            });
+
+            describe(&quot;.delete&quot;, () =&gt; {
+                it(&quot;should prevent deletion&quot;, () =&gt; {
+                    jimple.service = () =&gt; {
+                    };
+
+                    (() =&gt; delete jimple.service).should.throw(Error);
+                });
+            });
+        });
+
+        describe(&quot;.share&quot;, () =&gt; {
+            describe(&quot;factory&quot;, () =&gt; {
+                it(&quot;should receive jimple proxy instance as an argument&quot;, () =&gt; {
+                    let otherService,
+                        callable = (arg) =&gt; arg.otherService.should.be.equal(otherService),
+                        otherCallable = () =&gt; otherService = {};
+
+                    jimple.share(&quot;service&quot;, callable);
+                    jimple.share(&quot;otherService&quot;, otherCallable);
+
+                    jimple.get(&quot;service&quot;);
+                });
+            });
+        });
+
+        describe(&quot;.factory&quot;, () =&gt; {
+            describe(&quot;factory&quot;, () =&gt; {
+                it(&quot;should receive jimple proxy instance as an argument&quot;, () =&gt; {
+                    let service,
+                        callable = (arg) =&gt; arg.service.should.be.equal(service),
+                        otherCallable = () =&gt; service = {};
+
+                    jimple.share(&quot;service&quot;, otherCallable);
+                    jimple.factory(&quot;factory&quot;, callable);
+
+                    jimple.get(&quot;factory&quot;);
+                });
+            });
         });
     });
 });
