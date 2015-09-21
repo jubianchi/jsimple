@@ -3,6 +3,7 @@
     "source": "./src",
     "destination": "./docs",
     "unexportIdentifier": true,
+    "access": ["public", "protected", "private"],
     "test": {
         "type": "mocha",
         "source": "./tests",

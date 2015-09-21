@@ -9,19 +9,20 @@ try {
 require("harmony-reflect");
 
 /**
- * @access private
+ * @ignore
  */
 let Jimple = require(".");
 
 /**
  * @access private
  * @extends {Jimple}
+ * @extends {Proxy}
  */
 class JimpleProxy extends Proxy {
     /**
      * Builds a proxy on a Jimple instance
      *
-     * @param {?Jimple} jimple A Jimple instance to wrap in a Proxy
+     * @param {Jimple} [jimple] A Jimple instance to wrap in a Proxy
      */
     constructor(jimple) {
         let handler = {
