@@ -176,7 +176,7 @@ container[&quot;app.static&quot;] = container.protect(express.static(&quot;publi
 container[&quot;app.static&quot;] = container.protect(express.static(&quot;files&quot;)), [&quot;middleware&quot;]);
 
 container.extend(&quot;app&quot;, (app, c) =&gt; {
-    c.tagged(&quot;middleware&quot;).forEach(middleware =&gt; app.use(c.[middleware]));
+    c.tagged(&quot;middleware&quot;).forEach(middleware =&gt; app.use(c[middleware]));
 
     return app;
 });</code>
