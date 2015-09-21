@@ -15,12 +15,13 @@ let Jimple = require(".");
 
 /**
  * @access private
+ * @extends {Jimple}
  */
 class JimpleProxy extends Proxy {
     /**
      * Builds a proxy on a Jimple instance
      *
-     * @param {?Jimple} A Jimple instance to wrap in a Proxy
+     * @param {?Jimple} jimple A Jimple instance to wrap in a Proxy
      */
     constructor(jimple) {
         let handler = {

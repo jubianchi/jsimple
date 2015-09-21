@@ -14,7 +14,7 @@ describe("Jimple", () => {
 
         it("should be empty", () => jimple.keys().should.be.empty);
 
-        it("should be sealed", () => {
+        it("should be frozen", () => {
             Object.isExtensible(jimple).should.be.false;
             (() => jimple.foo = "bar").should.throw(Error);
         });
@@ -257,18 +257,18 @@ describe("Jimple", () => {
             should.extend("Boolean", Proxy.prototype);
         });
 
-        beforeEach(() => jimple = jimple.proxify());
+        it("should return a proxified instance", () => jimple.proxify().should.be.an.instanceof(Jimple));
 
-        it("should return a proxified instance", () => jimple.should.be.an.instanceof(Jimple));
-
-        it("should be extensible", () => Object.isExtensible(jimple).should.be.true);
+        it("should be extensible", () => Object.isExtensible(jimple.proxify()).should.be.true);
 
         it("should be idempotent", () => {
-            (jimple.proxify() === jimple).should.be.true;
-            (jimple.proxify() === jimple.proxify()).should.be.true;
+            (jimple.proxify().proxify() === jimple).should.be.true;
+            (jimple.proxify().proxify() === jimple.proxify()).should.be.true;
         });
 
         describe("traps", () => {
+            beforeEach(() => jimple = jimple.proxify());
+
             describe(".get", () => {
                 it("should not override native methods", () => {
                     let service,
@@ -348,6 +348,8 @@ describe("Jimple", () => {
 
         /** @test {Jimple#share} */
         describe(".share", () => {
+            beforeEach(() => jimple = jimple.proxify());
+
             describe("factory", () => {
                 it("should receive jimple proxy instance as an argument", () => {
                     let otherService,
@@ -364,6 +366,8 @@ describe("Jimple", () => {
 
         /** @test {Jimple#factory} */
         describe(".factory", () => {
+            beforeEach(() => jimple = jimple.proxify());
+
             describe("factory", () => {
                 it("should receive jimple proxy instance as an argument", () => {
                     let service,
@@ -377,5 +381,21 @@ describe("Jimple", () => {
                 });
             });
         });
+
+        /** @test {JimpleProxified#fromJimple} */
+        describe("cast", () => {
+            it("should keep current state", () => {
+                jimple.share("service", () => ({}));
+                jimple.share("otherService", () => {});
+                jimple.share("taggedService", () => {}, ["tag"]);
+
+                let fetchedService = jimple.get("service");
+                jimple = jimple.proxify();
+
+                jimple.service.should.be.equal(fetchedService);
+                ("otherService" in jimple).should.be.true;
+                jimple.tagged("tag").should.be.eql(["taggedService"]);
+            });
+        })
     });
 });

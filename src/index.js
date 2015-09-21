@@ -8,22 +8,31 @@ class Jimple {
      * Builds a new Jimple instance
      */
     constructor() {
-        /** @type {Map<String, *>} */
+        /**
+         * @type {Map<String, *>}
+         * @access protected
+         */
         this.values = new Map();
 
-        /** @type {Map<String, Set>} */
+        /**
+         * @type {Map<String, Set>}
+         * @access protected
+         */
         this.tagmap = new Map();
 
-        /** @type {Map<String, *>} */
+        /**
+         * @type {Map<String, *>}
+         * @access protected
+         */
         this.shared = new Map();
 
-        /** @type {Set<String>} */
+        /**
+         * @type {Set<String>}
+         * @access protected
+         */
         this.frozen = new Set();
 
-        /** @type {boolean} */
-        this.proxified = false;
-
-        Object.seal(this);
+        Object.freeze(this);
     }
 
     /**
@@ -289,15 +298,42 @@ class Jimple {
      * @returns {Jimple} The current Jimple instance wrapped in a Proxy
      */
     proxify() {
-        var Proxy = require("./proxy.js");
+        return JimpleProxified.fromJimple(this);
+    }
+}
 
-        if (this.proxified === false) {
-            this.proxified = true;
-
-            return new Proxy(this);
+/**
+ * @access private
+ */
+class JimpleProxified extends Jimple {
+    /**
+     * Builds a proxified Jimple instance from a Jimple instance
+     *
+     * @param {Jimple} jimple The jimple instance to proxify
+     *
+     * @returns {Jimple} A proxified Jimple instance
+     */
+    static fromJimple(jimple) {
+        if (jimple instanceof JimpleProxified) {
+            return jimple;
         }
 
-        return this;
+        let Proxy = require("./proxy.js"),
+            proxified = new JimpleProxified();
+
+        Object.getOwnPropertyNames(jimple).forEach(property => {
+            jimple[property].forEach((value, key) => {
+                if (proxified[property] instanceof Map) {
+                    proxified[property].set(key, value);
+                }
+
+                if (proxified[property] instanceof Set) {
+                    proxified[property].add(value);
+                }
+            });
+        });
+
+        return new Proxy(proxified);
     }
 }
 
