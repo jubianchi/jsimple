@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "jimple~jimpleproxified",
+    "class/src/index.js~JimpleProxified.html",
+    "<span>JimpleProxified</span> <span class=\"search-result-import-path\">jimple</span>",
+    "class"
+  ],
+  [
     "jimple/src/proxy.js~jimpleproxy",
     "class/src/proxy.js~JimpleProxy.html",
     "<span>JimpleProxy</span> <span class=\"search-result-import-path\">jimple/src/proxy.js</span>",
@@ -868,6 +874,12 @@ window.esdocSearchIndex = [
     "class/src/index.js~Jimple.html#instance-member-values",
     "src/index.js~Jimple#values",
     "member"
+  ],
+  [
+    "src/index.js~jimpleproxified.fromjimple",
+    "class/src/index.js~JimpleProxified.html#static-method-fromJimple",
+    "src/index.js~JimpleProxified.fromJimple",
+    "method"
   ],
   [
     "src/proxy.js",

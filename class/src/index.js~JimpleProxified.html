@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">JimpleProxy | Jimple API Document</title>
+  <title data-ice="title">JimpleProxified | Jimple API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -55,17 +55,17 @@
   
   
   
-  <span data-ice="source">| <span><a href="file/src/proxy.js.html#lineNumber21">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/index.js.html#lineNumber308">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
-  <h1 data-ice="name">JimpleProxy</h1>
+  <h1 data-ice="name">JimpleProxified</h1>
 
   
 
   
-  <div class="flat-list" data-ice="mixinExtends"><h4>Mixin Extends:</h4><div><span><a href="class/src/index.js~Jimple.html">Jimple</a></span>, <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">Proxy</a></span></div></div>
   
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/src/index.js~Jimple.html">Jimple</a></span> &#x2192; JimpleProxified</div></div>
   
   
   
@@ -87,15 +87,14 @@
 </div>
 
 
-
-<div data-ice="constructorSummary"><h2>Constructor Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Public Constructor</td></tr></thead>
+<div data-ice="staticMethodSummary"><h2>Static Method Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Static Public Methods</td></tr></thead>
   <tbody>
   
   <tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
-      
+      <span data-ice="static">static</span>
       
       
       <span class="override" data-ice="override"></span>
@@ -103,13 +102,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/proxy.js~JimpleProxy.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(jimple: <span><a href="class/src/index.js~Jimple.html">Jimple</a></span>)</span>
+           <span data-ice="name"><span><a href="class/src/index.js~JimpleProxified.html#static-method-fromJimple">fromJimple</a></span></span><span data-ice="signature">(jimple: <span><a href="class/src/index.js~Jimple.html">Jimple</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Builds a proxy on a Jimple instance</p>
+        <div data-ice="description"><p>Builds a proxified Jimple instance from a Jimple instance</p>
 </div>
       </div>
     </td>
@@ -121,6 +120,7 @@
 </tbody>
 </table>
 </div>
+
 
 
 
@@ -559,31 +559,30 @@
 </div>
 
 
-
-<div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
+<div data-ice="staticMethodDetails"><h2 data-ice="title">Static Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-constructor-constructor">
+  <h3 data-ice="anchor" id="static-method-fromJimple">
     <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
     
     
     
-    
-    <span data-ice="name">constructor</span><span data-ice="signature">(jimple: <span><a href="class/src/index.js~Jimple.html">Jimple</a></span>)</span>
+    <span data-ice="name">fromJimple</span><span data-ice="signature">(jimple: <span><a href="class/src/index.js~Jimple.html">Jimple</a></span>): <span><a href="class/src/index.js~Jimple.html">Jimple</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/proxy.js.html#lineNumber27">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/index.js.html#lineNumber316">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Builds a proxy on a Jimple instance</p>
+  <div data-ice="description"><p>Builds a proxified Jimple instance from a Jimple instance</p>
 </div>
 
-  <div data-ice="override"><h4>Override:</h4><span><a href="class/src/index.js~Jimple.html#instance-constructor-constructor">Jimple#constructor</a></span></div>
+  
 
   <div data-ice="properties"><div data-ice="properties">
   <h4 data-ice="title">Params:</h4>
@@ -596,8 +595,8 @@
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">jimple</td>
       <td data-ice="type"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>A Jimple instance to wrap in a Proxy</p>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The jimple instance to proxify</p>
 </td>
     </tr>
 </tbody>
@@ -605,7 +604,18 @@
 </div>
 </div>
 
-  
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>A proxified Jimple instance</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
 
   
 
@@ -621,6 +631,7 @@
   
 </div>
 </div>
+
 
 
 </div>

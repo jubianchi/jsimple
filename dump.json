@@ -738,7 +738,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\n/**\n * @access private\n */\nlet Jimple = require(\".\");\n\n/**\n * @access public\n * @extends {Jimple}\n */\nclass JimpleProxy extends Proxy {\n    /**\n     * Builds a proxy on a Jimple instance\n     *\n     * @param {?Jimple} A Jimple instance to wrap in a Proxy\n     */\n    constructor(jimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jimple || new Jimple(), handler);\n    }\n}\n\nmodule.exports = JimpleProxy;\n"
+    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\n/**\n * @ignore\n */\nlet Jimple = require(\".\");\n\n/**\n * @access private\n * @extends {Jimple}\n * @extends {Proxy}\n */\nclass JimpleProxy extends Proxy {\n    /**\n     * Builds a proxy on a Jimple instance\n     *\n     * @param {Jimple} [jimple] A Jimple instance to wrap in a Proxy\n     */\n    constructor(jimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jimple || new Jimple(), handler);\n    }\n}\n\nmodule.exports = JimpleProxy;\n"
   },
   {
     "kind": "variable",
@@ -747,12 +747,13 @@
     "name": "Jimple",
     "memberof": "src/proxy.js",
     "longname": "src/proxy.js~Jimple",
-    "access": "private",
+    "access": null,
     "export": false,
     "importPath": "jimple/src/proxy.js",
     "importStyle": null,
     "description": null,
     "lineNumber": 14,
+    "ignore": true,
     "type": {
       "types": [
         "*"
@@ -766,15 +767,16 @@
     "name": "JimpleProxy",
     "memberof": "src/proxy.js",
     "longname": "src/proxy.js~JimpleProxy",
-    "access": "public",
+    "access": "private",
     "export": false,
     "importPath": "jimple/src/proxy.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 20,
+    "lineNumber": 21,
     "interface": false,
     "extends": [
-      "Jimple"
+      "Jimple",
+      "Proxy"
     ]
   },
   {
@@ -786,17 +788,17 @@
     "longname": "src/proxy.js~JimpleProxy#constructor",
     "access": null,
     "description": "Builds a proxy on a Jimple instance",
-    "lineNumber": 26,
+    "lineNumber": 27,
     "params": [
       {
-        "nullable": true,
+        "nullable": null,
         "types": [
           "Jimple"
         ],
         "spread": false,
-        "optional": false,
-        "name": "A",
-        "description": "Jimple instance to wrap in a Proxy"
+        "optional": true,
+        "name": "jimple",
+        "description": "A Jimple instance to wrap in a Proxy"
       }
     ],
     "generator": false
