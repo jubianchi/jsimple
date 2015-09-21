@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">tests/jimple.js | Jimple API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://gitlab.com/jubianchi/laboard.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">tests/jimple.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+var Jimple = require(&quot;../src&quot;);
+
+describe(&quot;Jimple&quot;, () =&gt; {
+    let jimple;
+
+    beforeEach(() =&gt; jimple = new Jimple());
+
+    it(&quot;should instanciate&quot;, () =&gt; jimple.should.be.an.object);
+
+    it(&quot;should be empty&quot;, () =&gt; jimple.keys().should.be.empty);
+
+    describe(&quot;.define&quot;, () =&gt; {
+        it(&quot;should return jimple instance&quot;, () =&gt; jimple.define(&quot;service&quot;, () =&gt; {}).should.be.equal(jimple));
+
+        it(&quot;should define service&quot;, () =&gt; jimple.define(&quot;service&quot;, () =&gt; {}).keys().should.be.eql([&quot;service&quot;]));
+
+        it(&quot;should store callable&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.define(&quot;service&quot;, callable).raw(&quot;service&quot;).should.be.equal(callable);
+        });
+
+        it(&quot;should store value as callable&quot;, () =&gt; {
+            let value = 42;
+
+            jimple.define(&quot;service&quot;, value).raw(&quot;service&quot;)().should.be.equal(value);
+        });
+
+        it(&quot;should tag callable&quot;, () =&gt; jimple.define(&quot;service&quot;, () =&gt; {}, [&quot;tag&quot;]).tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;]));
+
+        it(&quot;should not tag same callable twice&quot;, () =&gt; jimple.define(&quot;service&quot;, () =&gt; {}, [&quot;tag&quot;]).define(&quot;service&quot;, () =&gt; {}, [&quot;tag&quot;]).tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;]));
+    });
+
+    describe(&quot;.share&quot;, () =&gt; {
+        it(&quot;should return jimple instance&quot;, () =&gt; jimple.share(&quot;service&quot;, () =&gt; {}).should.be.equal(jimple));
+
+        it(&quot;should wrap callable&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.share(&quot;service&quot;, callable);
+
+            jimple.raw(&quot;service&quot;).should.be.a.Function();
+            jimple.raw(&quot;service&quot;).should.not.be.equal(callable);
+        });
+
+        it(&quot;should overwrite existing service&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.share(&quot;service&quot;, callable);
+            jimple.share(&quot;service&quot;, () =&gt; {});
+
+            jimple.raw(&quot;service&quot;).should.not.be.equal(callable);
+        });
+
+        describe(&quot;factory&quot;, () =&gt; {
+            it(&quot;should share service instance&quot;, () =&gt; {
+                let service,
+                    callable = () =&gt; service = {};
+
+                jimple.share(&quot;service&quot;, callable);
+
+                jimple.get(&quot;service&quot;).should.equal(service);
+                jimple.get(&quot;service&quot;).should.be.equal(jimple.get(&quot;service&quot;));
+            });
+
+            it(&quot;should receive jimple instance as an argument&quot;, () =&gt; {
+                let callable = (arg) =&gt; arg.should.be.equal(jimple);
+
+                jimple.share(&quot;service&quot;, callable);
+
+                jimple.get(&quot;service&quot;);
+            });
+
+            it(&quot;should reset when service change&quot;, () =&gt; {
+                let service,
+                    callable = () =&gt; service = {};
+
+                jimple.share(&quot;service&quot;, callable);
+
+                jimple.get(&quot;service&quot;).should.equal(service);
+
+                jimple.share(&quot;service&quot;, () =&gt; ({}));
+
+                jimple.get(&quot;service&quot;).should.not.equal(service);
+            })
+        });
+    });
+
+    describe(&quot;.factory&quot;, () =&gt; {
+        it(&quot;should return jimple instance&quot;, () =&gt; jimple.factory(&quot;service&quot;, () =&gt; {}).should.be.equal(jimple));
+
+        it(&quot;should wrap callable&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.factory(&quot;factory&quot;, callable);
+
+            jimple.raw(&quot;factory&quot;).should.be.a.Function();
+            jimple.raw(&quot;factory&quot;).should.not.be.equal(callable);
+        });
+
+        it(&quot;should delete shared instance&quot;, () =&gt; {
+            let service,
+                callable = () =&gt; service = {};
+
+            jimple.share(&quot;service&quot;, callable).get(&quot;service&quot;);
+
+            jimple.factory(&quot;service&quot;, () =&gt; ({})).get(&quot;service&quot;).should.not.be.equal(service);
+        });
+
+        describe(&quot;factory&quot;, () =&gt; {
+            it(&quot;should not share service instance&quot;, () =&gt; {
+                let callable = () =&gt; ({});
+
+                jimple.factory(&quot;factory&quot;, callable);
+
+                jimple.get(&quot;factory&quot;).should.not.equal(jimple.get(&quot;factory&quot;));
+            });
+
+            it(&quot;should receive jimple instance as an argument&quot;, () =&gt; {
+                let callable = (arg) =&gt; arg.should.be.equal(jimple);
+
+                jimple.factory(&quot;factory&quot;, callable);
+
+                jimple.get(&quot;factory&quot;);
+            });
+        });
+    });
+
+    describe(&quot;.extend&quot;, () =&gt; {
+        it(&quot;should return jimple instance&quot;, () =&gt; jimple.share(&quot;service&quot;, () =&gt; {}).extend(&quot;service&quot;, () =&gt; {}).should.be.equal(jimple));
+
+        it(&quot;should extend existing service&quot;, () =&gt; {
+            let service,
+                callable = () =&gt; service = {};
+
+            jimple.share(&quot;service&quot;, () =&gt; {});
+
+            jimple.extend(&quot;service&quot;, callable).get(&quot;service&quot;).should.be.equal(service);
+        });
+
+        it(&quot;should receive base service instance as first argument&quot;, () =&gt; {
+            let service, extended,
+                callable = () =&gt; service = {},
+                extendedCallable = (arg) =&gt; arg.should.be.equal(service);
+
+            jimple.share(&quot;service&quot;, callable);
+            jimple.extend(&quot;service&quot;, extendedCallable);
+
+            jimple.get(&quot;service&quot;);
+        });
+
+        it(&quot;should receive jimple instance as second argument&quot;, () =&gt; {
+            let callable = (service, arg) =&gt; arg.should.be.equal(jimple);
+
+            jimple.share(&quot;service&quot;, () =&gt; {});
+            jimple.extend(&quot;service&quot;, callable);
+
+            jimple.get(&quot;service&quot;);
+        });
+
+        it(&quot;should refuse to extend an already fetched service&quot;, () =&gt; {
+            jimple.share(&quot;service&quot;, () =&gt; {}).get(&quot;service&quot;);
+
+            (() =&gt; jimple.extend(&quot;service&quot;, () =&gt; {})).should.throw(Error);
+        });
+
+        it(&quot;should refuse to extend an already used factory&quot;, () =&gt; {
+            jimple.factory(&quot;factory&quot;, () =&gt; {}).get(&quot;factory&quot;);
+
+            (() =&gt; jimple.extend(&quot;factory&quot;, () =&gt; {})).should.throw(Error);
+        });
+    });
+
+    describe(&quot;.use&quot;, () =&gt; {
+        it(&quot;should inject jimple&quot;, () =&gt; jimple.use((arg) =&gt; arg.should.be.equal(jimple)));
+
+        it(&quot;should inject given service&quot;, () =&gt; {
+            let service,
+                callable = () =&gt; service = {};
+
+            jimple.share(&quot;service&quot;, callable);
+
+            jimple.use([&quot;service&quot;], (arg) =&gt; arg.should.be.equal(service));
+        });
+
+        it(&quot;should inject given services&quot;, () =&gt; {
+            let service, otherService,
+                callable = () =&gt; service = {},
+                otherCallable = () =&gt; otherService = {};
+
+            jimple.share(&quot;service&quot;, callable);
+            jimple.share(&quot;otherService&quot;, otherCallable);
+
+            jimple.use([&quot;service&quot;, &quot;otherService&quot;], (arg, otherArg) =&gt; {
+                arg.should.be.equal(service);
+                otherArg.should.be.equal(otherService);
+            });
+        });
+    });
+
+    describe(&quot;.protect&quot;, () =&gt; {
+        it(&quot;should wrap callable&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.protect(callable).should.not.be.equal(callable);
+            jimple.protect(callable)().should.be.equal(callable);
+        });
+    });
+
+    describe(&quot;.raw&quot;, () =&gt; {
+        it(&quot;should return raw callable&quot;, () =&gt; {
+            let callable = () =&gt; {};
+
+            jimple.define(&quot;service&quot;, callable).raw(&quot;service&quot;).should.be.equal(callable);
+        });
+
+        it(&quot;should return raw callable for value&quot;, () =&gt; jimple.define(&quot;service&quot;, 42).raw(&quot;service&quot;).should.be.a.Function());
+    });
+
+    describe(&quot;.tagged&quot;, () =&gt; {
+        it(&quot;should return tagged service names&quot;, () =&gt; {
+            jimple.define(&quot;service&quot;, () =&gt; {}, [&quot;tag&quot;, &quot;gat&quot;]);
+            jimple.define(&quot;ecivres&quot;, () =&gt; {}, [&quot;tag&quot;]);
+
+            jimple.tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;, &quot;ecivres&quot;]);
+            jimple.tagged(&quot;gat&quot;).should.be.eql([&quot;service&quot;]);
+        });
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/index.js | Jimple API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://gitlab.com/jubianchi/laboard.git">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+class Jimple {
+    constructor() {
+        this.values = new Map();
+        this.tagmap = new Map();
+        this.shared = new Map();
+        this.frozen = new Set();
+    }
+
+    /**
+     *
+     * @param {Array} deps
+     * @param {String} module
+     *
+     * @returns {*}
+     */
+    use(deps, module) {
+        if (deps.constructor.name === &quot;Array&quot;) {
+            deps = deps || [];
+            deps.forEach((value, key) =&gt; deps[key] = this.get(value));
+            deps.push(this);
+
+            return module.apply(null, deps);
+        }
+
+        if (typeof deps === &quot;function&quot;) {
+            return deps(this);
+        } else {
+            return module(this);
+        }
+    }
+
+    /**
+     *
+     * @param {String} name
+     * @param {*} value
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
+    define(name, value, tags) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.define must be a string identifier&quot;)
+        }
+
+        if (this.values.has(name)) {
+            (this.values.get(name).tags ||&#xA0;[]).forEach(tag =&gt; {
+                this.tagmap.get(tag).delete(name);
+            });
+
+            this.values.delete(name);
+        }
+
+        if (typeof value !== &quot;function&quot;) {
+            this.values.set(name, () =&gt; value);
+        } else {
+            this.values.set(name, value);
+        }
+
+        this.values.get(name).tags = tags || [];
+        this.values.get(name).tags.forEach(tag =&gt; {
+            if (this.tagmap.has(tag) === false) {
+                this.tagmap.set(tag, new Set());
+            }
+
+            this.tagmap.get(tag).add(name);
+        });
+
+        if (this.shared.has(name)) {
+            this.shared.delete(name);
+        }
+
+        return this;
+    }
+
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
+    share(name, code, tags) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.share must be a string identifier&quot;)
+        }
+
+        if (typeof code !== &quot;function&quot;) {
+            throw new Error(&quot;Argument #2 passed to Jimple.share must be a function&quot;)
+        }
+
+        return this.define(
+            name,
+            jimple =&gt; {
+                if (jimple.shared.has(name) === false) {
+                    jimple.shared.set(name, code(jimple));
+                }
+
+                let instance = jimple.shared.get(name);
+
+                this.frozen.add(name);
+
+                return instance;
+            },
+            tags ||&#xA0;[]
+        );
+    }
+
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
+    factory(name, code, tags) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.factory must be a string identifier&quot;)
+        }
+
+        if (typeof code !== &quot;function&quot;) {
+            throw new Error(&quot;Argument #2 passed to Jimple.factory must be a function&quot;)
+        }
+
+        return this.define(
+            name,
+            jimple =&gt; {
+                let instance = code(jimple);
+
+                this.frozen.add(name);
+
+                return instance;
+            },
+            tags ||&#xA0;[]
+        );
+    }
+
+    /**
+     *
+     * @param {String} name
+     * @param {Function} code
+     * @param {Array} tags
+     *
+     * @returns {Jimple}
+     */
+    extend(name, code, tags) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.extend must be a string identifier&quot;)
+        }
+
+        if (typeof code !== &quot;function&quot;) {
+            throw new Error(&quot;Argument #2 passed to Jimple.extend must be a function&quot;)
+        }
+
+        if (this.frozen.has(name)) {
+            throw new Error(&quot;Cannot extend an already fetched service&quot;);
+        }
+
+        let service = this.raw(name);
+
+        return this.share(
+            name,
+            jimple =&gt; code(service(jimple), jimple),
+            tags || this.values.get(name).tags
+        );
+    }
+
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {Boolean}
+     */
+    exists(name) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.exists must be a string identifier&quot;)
+        }
+
+        return this.values.has(name);
+    }
+
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {*}
+     */
+    get(name) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.get must be a string identifier&quot;)
+        }
+
+        return this.raw(name)(this);
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param {String} tag
+     *
+     * @return {Array}
+     */
+    getTagged(tag) {
+        return this.tagged(tag);
+    }
+
+    tagged(tag) {
+        if (typeof tag !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.tagged must be a string identifier&quot;)
+        }
+
+        return Array.from(this.tagmap.get(tag) || []);
+    }
+
+    /**
+     * @deprecated
+     *
+     * @return {Array}
+     */
+    keys() {
+        return Array.from(this.values.keys());
+    }
+
+    /**
+     *
+     * @param {Function} code
+     *
+     * @returns {Function}
+     */
+    protect(code) {
+        if (typeof code !== &quot;function&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.protect must be a function&quot;)
+        }
+
+        return () =&gt; code;
+    }
+
+    /**
+     *
+     * @param {String} name
+     *
+     * @returns {Function}
+     */
+    raw(name) {
+        if (typeof name !== &quot;string&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.raw must be a string identifier&quot;)
+        }
+
+        if (this.exists(name) === false) {
+            throw new Error(`Identifier ${name} is not defined`);
+        }
+
+        return this.values.get(name);
+    }
+}
+
+module.exports = Jimple;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
