@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "jimple/src/proxy.js~jimpleproxy",
+    "class/src/proxy.js~JimpleProxy.html",
+    "<span>JimpleProxy</span> <span class=\"search-result-import-path\">jimple/src/proxy.js</span>",
+    "class"
+  ],
+  [
     "builtinexternal/ecmascriptexternal.js~array",
     "external/index.html",
     "BuiltinExternal/ECMAScriptExternal.js~Array",
@@ -481,19 +487,19 @@ window.esdocSearchIndex = [
   ],
   [
     "jimple#factory src/index.js~jimple#factory,jimple#factory",
-    "test-file/tests/jimple.js.html#lineNumber366",
+    "test-file/tests/jimple.js.html#lineNumber368",
     "Jimple .proxify .factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber367",
+    "test-file/tests/jimple.js.html#lineNumber371",
     "Jimple .proxify .factory factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber368",
+    "test-file/tests/jimple.js.html#lineNumber372",
     "Jimple .proxify .factory factory should receive jimple proxy instance as an argument",
     "test"
   ],
@@ -505,37 +511,49 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber351",
+    "test-file/tests/jimple.js.html#lineNumber353",
     "Jimple .proxify .share factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber352",
+    "test-file/tests/jimple.js.html#lineNumber354",
     "Jimple .proxify .share factory should receive jimple proxy instance as an argument",
     "test"
   ],
   [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber264",
-    "Jimple .proxify should be extensible",
+    "jimpleproxified#fromjimple jimpleproxified#fromjimple,jimpleproxified#fromjimple",
+    "test-file/tests/jimple.js.html#lineNumber386",
+    "Jimple .proxify cast",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber266",
-    "Jimple .proxify should be idempotent",
+    "test-file/tests/jimple.js.html#lineNumber387",
+    "Jimple .proxify cast should keep current state",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber262",
+    "Jimple .proxify should be extensible",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/jimple.js.html#lineNumber264",
+    "Jimple .proxify should be idempotent",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/jimple.js.html#lineNumber260",
     "Jimple .proxify should return a proxified instance",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber271",
+    "test-file/tests/jimple.js.html#lineNumber269",
     "Jimple .proxify traps",
     "test"
   ],
@@ -728,7 +746,7 @@ window.esdocSearchIndex = [
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber17",
-    "Jimple constructor should be sealed",
+    "Jimple constructor should be frozen",
     "test"
   ],
   [
@@ -804,12 +822,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/index.js~jimple#proxified",
-    "class/src/index.js~Jimple.html#instance-member-proxified",
-    "src/index.js~Jimple#proxified",
-    "member"
-  ],
-  [
     "src/index.js~jimple#proxify",
     "class/src/index.js~Jimple.html#instance-method-proxify",
     "src/index.js~Jimple#proxify",
@@ -862,6 +874,12 @@ window.esdocSearchIndex = [
     "file/src/proxy.js.html",
     "src/proxy.js",
     "file"
+  ],
+  [
+    "src/proxy.js~jimpleproxy#constructor",
+    "class/src/proxy.js~JimpleProxy.html#instance-constructor-constructor",
+    "src/proxy.js~JimpleProxy#constructor",
+    "method"
   ],
   [
     "tests/jimple.js",

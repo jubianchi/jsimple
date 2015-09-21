@@ -32,6 +32,7 @@
   <ul>
     
   <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
 </ul>
 </div>
 
@@ -63,7 +64,7 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
         it(&quot;should be empty&quot;, () =&gt; jimple.keys().should.be.empty);
 
-        it(&quot;should be sealed&quot;, () =&gt; {
+        it(&quot;should be frozen&quot;, () =&gt; {
             Object.isExtensible(jimple).should.be.false;
             (() =&gt; jimple.foo = &quot;bar&quot;).should.throw(Error);
         });
@@ -306,18 +307,18 @@ describe(&quot;Jimple&quot;, () =&gt; {
             should.extend(&quot;Boolean&quot;, Proxy.prototype);
         });
 
-        beforeEach(() =&gt; jimple = jimple.proxify());
+        it(&quot;should return a proxified instance&quot;, () =&gt; jimple.proxify().should.be.an.instanceof(Jimple));
 
-        it(&quot;should return a proxified instance&quot;, () =&gt; jimple.should.be.an.instanceof(Jimple));
-
-        it(&quot;should be extensible&quot;, () =&gt; Object.isExtensible(jimple).should.be.true);
+        it(&quot;should be extensible&quot;, () =&gt; Object.isExtensible(jimple.proxify()).should.be.true);
 
         it(&quot;should be idempotent&quot;, () =&gt; {
-            (jimple.proxify() === jimple).should.be.true;
-            (jimple.proxify() === jimple.proxify()).should.be.true;
+            (jimple.proxify().proxify() === jimple).should.be.true;
+            (jimple.proxify().proxify() === jimple.proxify()).should.be.true;
         });
 
         describe(&quot;traps&quot;, () =&gt; {
+            beforeEach(() =&gt; jimple = jimple.proxify());
+
             describe(&quot;.get&quot;, () =&gt; {
                 it(&quot;should not override native methods&quot;, () =&gt; {
                     let service,
@@ -397,6 +398,8 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
         /** @test {Jimple#share} */
         describe(&quot;.share&quot;, () =&gt; {
+            beforeEach(() =&gt; jimple = jimple.proxify());
+
             describe(&quot;factory&quot;, () =&gt; {
                 it(&quot;should receive jimple proxy instance as an argument&quot;, () =&gt; {
                     let otherService,
@@ -413,6 +416,8 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
         /** @test {Jimple#factory} */
         describe(&quot;.factory&quot;, () =&gt; {
+            beforeEach(() =&gt; jimple = jimple.proxify());
+
             describe(&quot;factory&quot;, () =&gt; {
                 it(&quot;should receive jimple proxy instance as an argument&quot;, () =&gt; {
                     let service,
@@ -426,6 +431,22 @@ describe(&quot;Jimple&quot;, () =&gt; {
                 });
             });
         });
+
+        /** @test {JimpleProxified#fromJimple} */
+        describe(&quot;cast&quot;, () =&gt; {
+            it(&quot;should keep current state&quot;, () =&gt; {
+                jimple.share(&quot;service&quot;, () =&gt; ({}));
+                jimple.share(&quot;otherService&quot;, () =&gt; {});
+                jimple.share(&quot;taggedService&quot;, () =&gt; {}, [&quot;tag&quot;]);
+
+                let fetchedService = jimple.get(&quot;service&quot;);
+                jimple = jimple.proxify();
+
+                jimple.service.should.be.equal(fetchedService);
+                (&quot;otherService&quot; in jimple).should.be.true;
+                jimple.tagged(&quot;tag&quot;).should.be.eql([&quot;taggedService&quot;]);
+            });
+        })
     });
 });
 </code></pre>
