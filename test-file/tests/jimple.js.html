@@ -116,6 +116,12 @@ describe(&quot;Jimple&quot;, () =&gt; {
             jimple.raw(&quot;service&quot;).should.not.be.equal(callable);
         });
 
+        it(&quot;should refuse to override an already fetched service&quot;, () =&gt; {
+            jimple.share(&quot;service&quot;, () =&gt; {}).get(&quot;service&quot;);
+
+            (() =&gt; jimple.share(&quot;service&quot;, () =&gt; {})).should.throw(Error);
+        });
+
         describe(&quot;factory&quot;, () =&gt; {
             it(&quot;should share service instance&quot;, () =&gt; {
                 let service,
@@ -134,19 +140,6 @@ describe(&quot;Jimple&quot;, () =&gt; {
 
                 jimple.get(&quot;service&quot;);
             });
-
-            it(&quot;should reset when service change&quot;, () =&gt; {
-                let service,
-                    callable = () =&gt; service = {};
-
-                jimple.share(&quot;service&quot;, callable);
-
-                jimple.get(&quot;service&quot;).should.equal(service);
-
-                jimple.share(&quot;service&quot;, () =&gt; ({}));
-
-                jimple.get(&quot;service&quot;).should.not.equal(service);
-            })
         });
     });
 
@@ -163,13 +156,16 @@ describe(&quot;Jimple&quot;, () =&gt; {
             jimple.raw(&quot;factory&quot;).should.not.be.equal(callable);
         });
 
-        it(&quot;should delete shared instance&quot;, () =&gt; {
-            let service,
-                callable = () =&gt; service = {};
+        it(&quot;should refuse to override an already fetched service&quot;, () =&gt; {
+            jimple.share(&quot;service&quot;, () =&gt; {}).get(&quot;service&quot;);
 
-            jimple.share(&quot;service&quot;, callable).get(&quot;service&quot;);
+            (() =&gt; jimple.factory(&quot;service&quot;, () =&gt; {})).should.throw(Error);
+        });
 
-            jimple.factory(&quot;service&quot;, () =&gt; ({})).get(&quot;service&quot;).should.not.be.equal(service);
+        it(&quot;should refuse to override an already executed factory&quot;, () =&gt; {
+            jimple.factory(&quot;factory&quot;, () =&gt; {}).get(&quot;factory&quot;);
+
+            (() =&gt; jimple.factory(&quot;factory&quot;, () =&gt; {})).should.throw(Error);
         });
 
         describe(&quot;factory&quot;, () =&gt; {
@@ -297,6 +293,15 @@ describe(&quot;Jimple&quot;, () =&gt; {
             jimple.tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;, &quot;ecivres&quot;]);
             jimple.tagged(&quot;gat&quot;).should.be.eql([&quot;service&quot;]);
         });
+
+        it(&quot;should return service names associated with several tags&quot;, () =&gt; {
+            jimple.define(&quot;service&quot;, () =&gt; {}, [&quot;tag&quot;, &quot;gat&quot;]);
+            jimple.define(&quot;ecivres&quot;, () =&gt; {}, [&quot;tag&quot;]);
+            jimple.define(&quot;vreseci&quot;, () =&gt; {}, [&quot;gat&quot;]);
+
+            jimple.tagged(&quot;tag&quot;).should.be.eql([&quot;service&quot;, &quot;ecivres&quot;]);
+            jimple.tagged([&quot;tag&quot;, &quot;gat&quot;]).should.be.eql([&quot;service&quot;]);
+        })
     });
 
     /** @test {Jimple#proxify} */
@@ -433,7 +438,7 @@ describe(&quot;Jimple&quot;, () =&gt; {
             });
         });
 
-        /** @test {JimpleProxified#fromJimple} */
+        /** @test {JimpleProxified.fromJimple} */
         describe(&quot;cast&quot;, () =&gt; {
             it(&quot;should keep current state&quot;, () =&gt; {
                 jimple.share(&quot;service&quot;, () =&gt; ({}));

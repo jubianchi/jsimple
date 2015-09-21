@@ -123,6 +123,10 @@ class Jimple {
             throw new Error(&quot;Argument #1 passed to Jimple.define must be a string identifier&quot;)
         }
 
+        if (this.frozen.has(name)) {
+            throw new Error(&quot;Cannot override an already executed factory or fetched service&quot;);
+        }
+
         if (this.values.has(name)) {
             (this.values.get(name).tags ||&#xA0;[]).forEach(tag =&gt; {
                 this.tagmap.get(tag).delete(name);
@@ -234,10 +238,6 @@ class Jimple {
             throw new Error(&quot;Argument #2 passed to Jimple.extend must be a function&quot;)
         }
 
-        if (this.frozen.has(name)) {
-            throw new Error(&quot;Cannot extend an already fetched service&quot;);
-        }
-
         let service = this.raw(name);
 
         return this.share(
@@ -290,16 +290,32 @@ class Jimple {
 
     /**
      *
-     * @param {String} tag tag The tag name for which to fetch parameters, services or factories
+     * @param {String|Array&lt;String&gt;} tags tag The tag names for which to fetch parameters, services or factories
      *
-     * @returns {Array} Service names associated with the provided tag
+     * @returns {Array} Service names associated with the provided tags
      */
-    tagged(tag) {
-        if (typeof tag !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.tagged must be a string identifier&quot;)
+    tagged(tags) {
+        if (typeof tags !== &quot;string&quot; &amp;&amp; tags.constructor.name !== &quot;Array&quot;) {
+            throw new Error(&quot;Argument #1 passed to Jimple.tagged must be a string identifier or an array of string identifiers&quot;)
         }
 
-        return Array.from(this.tagmap.get(tag) || []);
+        if (typeof tags === &quot;string&quot;) {
+            tags = [tags];
+        }
+
+        let tagged;
+
+        tags.forEach(tag =&gt; {
+            let services = Array.from(this.tagmap.get(tag) || []);
+
+            if (!tagged) {
+                tagged = services;
+            } else {
+                tagged = services.filter(service =&gt; tagged.indexOf(service) &gt; -1);
+            }
+        });
+
+        return tagged;
     }
 
     /**
