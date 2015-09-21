@@ -5,6 +5,7 @@ class Jimple {
         this.values = new Map();
         this.tagmap = new Map();
         this.shared = new Map();
+        this.frozen = new Set();
     }
 
     /**
@@ -97,7 +98,11 @@ class Jimple {
                     jimple.shared.set(name, code(jimple));
                 }
 
-                return jimple.shared.get(name);
+                let instance = jimple.shared.get(name);
+
+                this.frozen.add(name);
+
+                return instance;
             },
             tags || []
         );
@@ -120,7 +125,17 @@ class Jimple {
             throw new Error("Argument #2 passed to Jimple.factory must be a function")
         }
 
-        return this.define(name, code, tags || []);
+        return this.define(
+            name,
+            jimple => {
+                let instance = code(jimple);
+
+                this.frozen.add(name);
+
+                return instance;
+            },
+            tags || []
+        );
     }
 
     /**
@@ -138,6 +153,10 @@ class Jimple {
 
         if (typeof code !== "function") {
             throw new Error("Argument #2 passed to Jimple.extend must be a function")
+        }
+
+        if (this.frozen.has(name)) {
+            throw new Error("Cannot extend an already fetched service");
         }
 
         let service = this.raw(name);

@@ -91,10 +91,13 @@ describe("Jimple", () => {
     describe(".factory", () => {
         it("should return jimple instance", () => jimple.factory("service", () => {}).should.be.equal(jimple));
 
-        it("should not wrap callable", () => {
+        it("should wrap callable", () => {
             let callable = () => {};
 
-            jimple.factory("service", callable).raw("service").should.be.equal(callable);
+            jimple.factory("factory", callable);
+
+            jimple.raw("factory").should.be.a.Function();
+            jimple.raw("factory").should.not.be.equal(callable);
         });
 
         it("should delete shared instance", () => {
@@ -110,17 +113,17 @@ describe("Jimple", () => {
             it("should not share service instance", () => {
                 let callable = () => ({});
 
-                jimple.factory("service", callable);
+                jimple.factory("factory", callable);
 
-                jimple.get("service").should.not.equal(jimple.get("service"));
+                jimple.get("factory").should.not.equal(jimple.get("factory"));
             });
 
             it("should receive jimple instance as an argument", () => {
                 let callable = (arg) => arg.should.be.equal(jimple);
 
-                jimple.factory("service", callable);
+                jimple.factory("factory", callable);
 
-                jimple.get("service");
+                jimple.get("factory");
             });
         });
     });
@@ -155,6 +158,18 @@ describe("Jimple", () => {
             jimple.extend("service", callable);
 
             jimple.get("service");
+        });
+
+        it("should refuse to extend an already fetched service", () => {
+            jimple.share("service", () => {}).get("service");
+
+            (() => jimple.extend("service", () => {})).should.throw(Error);
+        });
+
+        it("should refuse to extend an already used factory", () => {
+            jimple.factory("factory", () => {}).get("factory");
+
+            (() => jimple.extend("factory", () => {})).should.throw(Error);
         });
     });
 
