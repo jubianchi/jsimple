@@ -10,7 +10,8 @@
     "url": "https://gitlab.com/jubianchi/laboard.git"
   },
   "engines": {
-    "node": "^4.0"
+    "node": "^4.0",
+    "npm" : "<3.0"
   },
   "devDependencies": {
     "esdoc": "^0.2.6",
@@ -23,9 +24,9 @@
     "harmony-reflect": "^1.4.2"
   },
   "scripts": {
-    "test": "mocha --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
-    "cs": "node_modules/.bin/jscs src/ test/",
+    "test": "node_modules/.bin/mocha --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
+    "cover": "node --harmony_proxies node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- --harmony_proxies --globals Reflect,Proxy -s 1 --require should --reporter spec --check-leaks tests/**/*.js",
+    "cs": "node_modules/.bin/jscs src/ tests/",
     "doc": "node_modules/.bin/esdoc -c esdoc.json",
     "dtest": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run test",
     "dcover": "docker run --rm -it -v $(pwd):/app -w /app jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm run cover",

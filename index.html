@@ -48,7 +48,121 @@
 
 </nav>
 
-<div class="content" data-ice="content">Please create README.md</div>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="jimple-a-js-dependency-injection-container-service-locator-build-status-https-travis-ci-org-jubianchi-jimple-svg-branch-master-https-travis-ci-org-jubianchi-jimple-">jimple - a JS dependency injection container/service locator <a href="https://travis-ci.org/jubianchi/jimple"><img src="https://travis-ci.org/jubianchi/jimple.svg?branch=master" alt="Build Status"></a></h1>
+<h2 id="installation">Installation</h2>
+<p>Before using jimple in your project, add it to your <code>package.json</code>:</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save --no-optional jimple</code>
+</code></pre>
+<p>Using <code>--no-optional</code> will prevent NPM from installing the <code>harmony-reflect</code> package and you won&apos;t be able to use the
+Proxy features of jimple. If you want them simply remove the flag:</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save jimple</code>
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Creating a jimple container is as simple as instanciating it:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Jimple = require(&quot;jimple&quot;),
+    container = new Jimple();</code>
+</code></pre>
+<h3 id="defining-services">Defining services</h3>
+<p>There are four ways to defines services with jimple:</p>
+<ul>
+<li>Defining them as <em>shared</em> services</li>
+<li>Defining them through <em>factory</em> functions</li>
+<li>Defining <em>function</em> as services</li>
+<li>Defining <em>parameters</em> as services</li>
+</ul>
+<h4 id="shared-services">Shared services</h4>
+<p>Shared services are defined through a function which will build them once and jimple will then share the same instance
+across every call:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;app&quot;, () =&gt; {
+    let express = require(&quot;express&quot;);
+
+    return express();
+});</code>
+</code></pre>
+<p>This will define a service called <code>app</code> which is an Express application. Now everytime you request this service you will get
+the exact same instance:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;app&quot;) === container.get(&quot;app&quot;)); //true</code>
+</code></pre>
+<h4 id="service-factories">Service factories</h4>
+<p>Sometime you will want to have a new instance of a service each time you fetch it from jimple. This is where factories are useful:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.factory(&quot;session&quot;, (c) =&gt; {
+    return {
+        id: c.get(&quot;session.id_generator&quot;)()
+    };
+});</code>
+</code></pre>
+<p>This will define a factory called <code>session</code> which will return a new fresh object each time you fetch it from jimple:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;session&quot;) === container.get(&quot;session&quot;)); //false</code>
+</code></pre>
+<p>As you can see in the previous example, the factory function received one argument (<code>c</code>): this is the current jimple instance.
+Jimple will automatically pass itself as an argument of both factories and shared service factories.</p>
+<h4 id="function-services">Function services</h4>
+<p>Sometimes you will need to store a function inside jimple to use it later. For example, in our previous example (the <code>session</code> factory)
+the <code>session.id_generator</code> is just a plain function. But how did we do that ?</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;session.id_generator&quot;, container.protect(require(&apos;uuid&apos;).v4));</code>
+</code></pre>
+<p>Doing so we store the <code>uuid#v4</code> function in the container and we can use it later.</p>
+<h4 id="parameters-as-services">Parameters as services</h4>
+<p>Defining parameters as services is the process of storing simple values inside jimple. This can be usefull to store configuration values.
+They can be of any kind but not function (scalars, objects, arrays):</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;port&quot;, 4242);
+
+container.get(&quot;app&quot;).listen(container.get(&quot;port&quot;));</code>
+</code></pre>
+<h3 id="extending-overriding-services">Extending/Overriding services</h3>
+<p>Any service of any kind defined insde jimple can be extended or overridden. <strong>The only rule here is you can&apos;t modify a service
+of any kind once it has been fetched from jimple.</strong></p>
+<h4 id="extending-shared-services">Extending shared services</h4>
+<p>Let&apos;s see how we would extend our <code>app</code> service:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.extend(&quot;app&quot;, (app, c) =&gt; {
+    app.locals.title = &quot;My Jimple Powered App&quot;;
+
+    return app;
+});</code>
+</code></pre>
+<p>Now everytime we fetch the <code>app</code> service it will automatically have its <code>title</code> defined:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;app&quot;).locals.title); //My Jimple Powered App</code>
+</code></pre>
+<h4 id="extending-service-factories">Extending service factories</h4>
+<p>Extending service factories is as simple as extending shared services:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.extend(&quot;session&quot;, (session, c) =&gt; {
+    session.start = new Date();
+
+    return session;
+});</code>
+</code></pre>
+<p>Now everytime we fetch a <code>session</code> instance it will automatically have its <code>start</code> date defined:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;session&quot;).start); //Mon Sep 21 2015 16:52:51 GMT+0200 (CEST)</code>
+</code></pre>
+<h3 id="overriding-services">Overriding services</h3>
+<p>Overriding services is just the process of replacing any service&apos;s definition in the container:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">container.factory(&quot;session&quot;, (c) =&gt; {
+    return {};
+});</code>
+</code></pre>
+<p>Now if we fetch the <code>session</code> from jimple we&apos;ll just get an empty object:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;session&quot;)); //{}</code>
+</code></pre>
+<p>No more <code>id</code> nor <code>start</code> attributes.</p>
+<h3 id="using-tags">Using tags</h3>
+<p>In jimple each service can have one or more associated tags. This is useful to create groups of services. Let&apos;s see an example:</p>
+<pre><code><code class="source-code prettyprint">container.share(&quot;app.static&quot;, container.protect(express.static(&quot;public&quot;)), [&quot;middleware&quot;]);
+container.share(&quot;app.static&quot;, container.protect(express.static(&quot;files&quot;)), [&quot;middleware&quot;]);
+
+container.extend(&quot;app&quot;, (app, c) =&gt; {
+    c.tagged(&quot;middleware&quot;).forEach(middleware =&gt; app.use(c.get(middleware)));
+
+    return app;
+});</code>
+</code></pre><p>Our Express app will now have the <code>static</code> middleware configured to lookup the <code>public</code> and <code>files</code> folders when we request
+resources.</p>
+<h2 id="license">License</h2>
+<p><a href="LICENSE">The MIT License (MIT)</a></p>
+<p>Copyright (c) 2015 jubianchi</p>
+</div>
+</div>
 
 <footer class="footer">
   Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
