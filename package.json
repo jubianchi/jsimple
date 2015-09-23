@@ -1,13 +1,13 @@
 {
   "name": "jsimple",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "jsimple - a JS dependency injection/service locator highly inspired from Pimple for PHP",
   "main": "src/index.js",
-  "author": "Julien Bianchi <julien.bianchi@pmsipilot.com>",
+  "author": "Julien Bianchi <contact@jubianchi.fr>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/jubianchi/jsimple.git"
+    "url": "https://github.com/jubianchi/jsimple.git"
   },
   "devDependencies": {
     "atoum.js": "~0.0.11",
