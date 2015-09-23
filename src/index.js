@@ -3,9 +3,9 @@
 /**
  * @access public
  */
-class Jimple {
+class Jsimple {
     /**
-     * Builds a new Jimple instance
+     * Builds a new Jsimple instance
      */
     constructor() {
         /**
@@ -37,8 +37,8 @@ class Jimple {
 
     /**
      *
-     * @param {Array<String>|Function(deps: *, container: Jimple): *} deps   List of dependencies to inject or executable function
-     * @param {Function(deps: *, container: Jimple): *}               [code] Executable function
+     * @param {Array<String>|Function(deps: *, container: Jsimple): *} deps   List of dependencies to inject or executable function
+     * @param {Function(deps: *, container: Jsimple): *}               [code] Executable function
      *
      * @returns {*} Result of executing the provided function as code
      */
@@ -62,14 +62,14 @@ class Jimple {
      * Sets a parameter or an object factory
      *
      * @param {String}                           name   The unique identifier for the parameter or factory
-     * @param {*|Function(container: Jimple): *} value  The parameter value or a factory function
+     * @param {*|Function(container: Jsimple): *} value  The parameter value or a factory function
      * @param {Array<String>}                    [tags] An array of tags to associate to the parameter or factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     define(name, value, tags) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.define must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.define must be a string identifier")
         }
 
         if (this.frozen.has(name)) {
@@ -109,28 +109,28 @@ class Jimple {
     /**
      *
      * @param {String}                         name   The unique identifier for the factory
-     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Function(container: Jsimple): *} code   The executable factory function
      * @param {Array<String>}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     share(name, code, tags) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.share must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.share must be a string identifier")
         }
 
         if (typeof code !== "function") {
-            throw new Error("Argument #2 passed to Jimple.share must be a function")
+            throw new Error("Argument #2 passed to Jsimple.share must be a function")
         }
 
         return this.define(
             name,
-            jimple => {
-                if (jimple.shared.has(name) === false) {
-                    jimple.shared.set(name, code(jimple));
+            jsimple => {
+                if (jsimple.shared.has(name) === false) {
+                    jsimple.shared.set(name, code(jsimple));
                 }
 
-                let instance = jimple.shared.get(name);
+                let instance = jsimple.shared.get(name);
 
                 this.frozen.add(name);
 
@@ -143,24 +143,24 @@ class Jimple {
     /**
      *
      * @param {String}                         name   The unique identifier for the factory
-     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Function(container: Jsimple): *} code   The executable factory function
      * @param {Array<String>}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     factory(name, code, tags) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.factory must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.factory must be a string identifier")
         }
 
         if (typeof code !== "function") {
-            throw new Error("Argument #2 passed to Jimple.factory must be a function")
+            throw new Error("Argument #2 passed to Jsimple.factory must be a function")
         }
 
         return this.define(
             name,
-            jimple => {
-                let instance = code(jimple);
+            jsimple => {
+                let instance = code(jsimple);
 
                 this.frozen.add(name);
 
@@ -173,25 +173,25 @@ class Jimple {
     /**
      *
      * @param {String}                                     name   The unique identifier for the parameter or factory to extend
-     * @param {Function(service: *, container: Jimple): *} code   The executable extended function
+     * @param {Function(service: *, container: Jsimple): *} code   The executable extended function
      * @param {Array<String>}                              [tags] An array of tags to associate to the the parameter or factory to extend
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     extend(name, code, tags) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.extend must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.extend must be a string identifier")
         }
 
         if (typeof code !== "function") {
-            throw new Error("Argument #2 passed to Jimple.extend must be a function")
+            throw new Error("Argument #2 passed to Jsimple.extend must be a function")
         }
 
         let service = this.raw(name);
 
         return this.share(
             name,
-            jimple => code(service(jimple), jimple),
+            jsimple => code(service(jsimple), jsimple),
             tags || this.values.get(name).tags
         );
     }
@@ -204,7 +204,7 @@ class Jimple {
      */
     exists(name) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.exists must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.exists must be a string identifier")
         }
 
         return this.values.has(name);
@@ -218,7 +218,7 @@ class Jimple {
      */
     get(name) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.get must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.get must be a string identifier")
         }
 
         return this.raw(name)(this);
@@ -226,8 +226,8 @@ class Jimple {
 
     /**
      *
-     * @deprecated Use {@link Jimple#tagged} instead
-     * @see Jimple#tagged
+     * @deprecated Use {@link Jsimple#tagged} instead
+     * @see Jsimple#tagged
      *
      * @param {String} tag The tag name for which to fetch parameters, services or factories
      *
@@ -245,7 +245,7 @@ class Jimple {
      */
     tagged(tags) {
         if (typeof tags !== "string" && tags.constructor.name !== "Array") {
-            throw new Error("Argument #1 passed to Jimple.tagged must be a string identifier or an array of string identifiers")
+            throw new Error("Argument #1 passed to Jsimple.tagged must be a string identifier or an array of string identifiers")
         }
 
         if (typeof tags === "string") {
@@ -285,7 +285,7 @@ class Jimple {
      */
     protect(code) {
         if (typeof code !== "function") {
-            throw new Error("Argument #1 passed to Jimple.protect must be a function")
+            throw new Error("Argument #1 passed to Jsimple.protect must be a function")
         }
 
         return () => code;
@@ -295,11 +295,11 @@ class Jimple {
      *
      * @param {String} name The unique identifier for the factory to fetch
      *
-     * @returns {Function(container: Jimple): *} The declared factory function
+     * @returns {Function(container: Jsimple): *} The declared factory function
      */
     raw(name) {
         if (typeof name !== "string") {
-            throw new Error("Argument #1 passed to Jimple.raw must be a string identifier")
+            throw new Error("Argument #1 passed to Jsimple.raw must be a string identifier")
         }
 
         if (this.exists(name) === false) {
@@ -311,34 +311,34 @@ class Jimple {
 
     /**
      *
-     * @returns {Jimple} The current Jimple instance wrapped in a Proxy
+     * @returns {Jsimple} The current Jsimple instance wrapped in a Proxy
      */
     proxify() {
-        return JimpleProxified.fromJimple(this);
+        return JsimpleProxified.fromJsimple(this);
     }
 }
 
 /**
  * @access private
  */
-class JimpleProxified extends Jimple {
+class JsimpleProxified extends Jsimple {
     /**
-     * Builds a proxified Jimple instance from a Jimple instance
+     * Builds a proxified Jsimple instance from a Jsimple instance
      *
-     * @param {Jimple} jimple The jimple instance to proxify
+     * @param {Jsimple} jsimple The jsimple instance to proxify
      *
-     * @returns {Jimple} A proxified Jimple instance
+     * @returns {Jsimple} A proxified Jsimple instance
      */
-    static fromJimple(jimple) {
-        if (jimple instanceof JimpleProxified) {
-            return jimple;
+    static fromJsimple(jsimple) {
+        if (jsimple instanceof JsimpleProxified) {
+            return jsimple;
         }
 
         let Proxy = require("./proxy.js"),
-            proxified = new JimpleProxified();
+            proxified = new JsimpleProxified();
 
-        Object.getOwnPropertyNames(jimple).forEach(property => {
-            jimple[property].forEach((value, key) => {
+        Object.getOwnPropertyNames(jsimple).forEach(property => {
+            jsimple[property].forEach((value, key) => {
                 if (proxified[property] instanceof Map) {
                     proxified[property].set(key, value);
                 }
@@ -353,4 +353,4 @@ class JimpleProxified extends Jimple {
     }
 }
 
-module.exports = Jimple;
+module.exports = Jsimple;

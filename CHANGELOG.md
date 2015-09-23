@@ -1,5 +1,6 @@
 # 2.0.0
 
+* Renamed library from `jimple` to `jsimple`
 * Find services associated with several tags
 * Added proxy traps
 * Freeze services and factories once they are fetched

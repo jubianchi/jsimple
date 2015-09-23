@@ -11,20 +11,20 @@ require("harmony-reflect");
 /**
  * @ignore
  */
-let Jimple = require(".");
+let Jsimple = require(".");
 
 /**
  * @access private
- * @extends {Jimple}
+ * @extends {Jsimple}
  * @extends {Proxy}
  */
-class JimpleProxy extends Proxy {
+class JsimpleProxy extends Proxy {
     /**
-     * Builds a proxy on a Jimple instance
+     * Builds a proxy on a Jsimple instance
      *
-     * @param {Jimple} [jimple] A Jimple instance to wrap in a Proxy
+     * @param {Jsimple} [jsimple] A Jsimple instance to wrap in a Proxy
      */
-    constructor(jimple) {
+    constructor(jsimple) {
         let handler = {
             get: (target, name) => {
                 return name in target ? target[name] : target.get(name);
@@ -45,8 +45,8 @@ class JimpleProxy extends Proxy {
             deleteProperty: () => false
         };
 
-        super(jimple || new Jimple(), handler);
+        super(jsimple || new Jsimple(), handler);
     }
 }
 
-module.exports = JimpleProxy;
+module.exports = JsimpleProxy;

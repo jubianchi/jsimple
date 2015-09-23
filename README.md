@@ -1,34 +1,34 @@
-# jimple - a JS dependency injection container/service locator [![Build Status](https://travis-ci.org/jubianchi/jimple.svg?branch=master)](https://travis-ci.org/jubianchi/jimple)
+# jsimple - a JS dependency injection container/service locator [![Build Status](https://travis-ci.org/jubianchi/jsimple.svg?branch=master)](https://travis-ci.org/jubianchi/jsimple)
 
 ## Installation
 
-Before using jimple in your project, add it to your `package.json`:
+Before using jsimple in your project, add it to your `package.json`:
 
 ```sh
-npm install --save --no-optional jimple
+npm install --save --no-optional jsimple
 ```
 
 Using `--no-optional` will prevent NPM from installing the `harmony-reflect` package and you won't be able to use the
-Proxy features of jimple. If you want them simply remove the flag:
+Proxy features of jsimple. If you want them simply remove the flag:
 
 ```sh
-npm install --save jimple
+npm install --save jsimple
 ```
 
 ## Usage
 
-Creating a jimple container is as simple as instanciating it:
+Creating a jsimple container is as simple as instanciating it:
 
 ```js
 "use strict";
 
-let Jimple = require("jimple"),
-    container = new Jimple();
+let Jsimple = require("jsimple"),
+    container = new Jsimple();
 ```
 
 ### Defining services
 
-There are four ways to defines services with jimple:
+There are four ways to defines services with jsimple:
 
 * Defining them as *shared* services
 * Defining them through *factory* functions
@@ -37,7 +37,7 @@ There are four ways to defines services with jimple:
 
 #### Shared services
 
-Shared services are defined through a function which will build them once and jimple will then share the same instance
+Shared services are defined through a function which will build them once and jsimple will then share the same instance
 across every call:
 
 ```js
@@ -57,7 +57,7 @@ console.log(container.get("app") === container.get("app")); //true
 
 #### Service factories
 
-Sometime you will want to have a new instance of a service each time you fetch it from jimple. This is where factories are useful:
+Sometime you will want to have a new instance of a service each time you fetch it from jsimple. This is where factories are useful:
 
 ```js
 container.factory("session", (c) => {
@@ -67,18 +67,18 @@ container.factory("session", (c) => {
 });
 ```
 
-This will define a factory called `session` which will return a new fresh object each time you fetch it from jimple:
+This will define a factory called `session` which will return a new fresh object each time you fetch it from jsimple:
 
 ```js
 console.log(container.get("session") === container.get("session")); //false
 ```
 
-As you can see in the previous example, the factory function received one argument (`c`): this is the current jimple instance.
-Jimple will automatically pass itself as an argument of both factories and shared service factories.
+As you can see in the previous example, the factory function received one argument (`c`): this is the current jsimple instance.
+Jsimple will automatically pass itself as an argument of both factories and shared service factories.
 
 #### Function services
 
-Sometimes you will need to store a function inside jimple to use it later. For example, in our previous example (the `session` factory)
+Sometimes you will need to store a function inside jsimple to use it later. For example, in our previous example (the `session` factory)
 the `session.id_generator` is just a plain function. But how did we do that ?
 
 ```js
@@ -89,7 +89,7 @@ Doing so we store the `uuid#v4` function in the container and we can use it late
 
 #### Parameters as services
 
-Defining parameters as services is the process of storing simple values inside jimple. This can be usefull to store configuration values.
+Defining parameters as services is the process of storing simple values inside jsimple. This can be usefull to store configuration values.
 They can be of any kind but not function (scalars, objects, arrays):
 
 ```js
@@ -100,8 +100,8 @@ container.get("app").listen(container.get("port"));
 
 ### Extending/Overriding services
 
-Any service of any kind defined insde jimple can be extended or overridden. **The only rule here is you can't modify a service
-of any kind once it has been fetched from jimple.**
+Any service of any kind defined insde jsimple can be extended or overridden. **The only rule here is you can't modify a service
+of any kind once it has been fetched from jsimple.**
 
 #### Extending shared services
 
@@ -109,7 +109,7 @@ Let's see how we would extend our `app` service:
 
 ```js
 container.extend("app", (app, c) => {
-    app.locals.title = "My Jimple Powered App";
+    app.locals.title = "My Jsimple Powered App";
 
     return app;
 });
@@ -118,7 +118,7 @@ container.extend("app", (app, c) => {
 Now everytime we fetch the `app` service it will automatically have its `title` defined:
 
 ```js
-console.log(container.get("app").locals.title); //My Jimple Powered App
+console.log(container.get("app").locals.title); //My Jsimple Powered App
 ```
 
 #### Extending service factories
@@ -149,7 +149,7 @@ container.factory("session", (c) => {
 });
 ```
 
-Now if we fetch the `session` from jimple we'll just get an empty object:
+Now if we fetch the `session` from jsimple we'll just get an empty object:
 
 ```js
 console.log(container.get("session")); //{}
@@ -159,7 +159,7 @@ No more `id` nor `start` attributes.
 
 ### Using tags
 
-In jimple each service can have one or more associated tags. This is useful to create groups of services. Let's see an example:
+In jsimple each service can have one or more associated tags. This is useful to create groups of services. Let's see an example:
 
 ```
 container.share("app.static", container.protect(express.static("public")), ["middleware"]);
@@ -177,14 +177,14 @@ resources.
 
 ### Using the proxy
 
-Jimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to `Jimple#get`
-or `Jimple#share`:
+Jsimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to `Jsimple#get`
+or `Jsimple#share`:
 
 ```js
 "use strict";
 
-let Jimple = require("jimple"),
-    container = (new Jimple()).proxify(); //Here the magic happens!
+let Jsimple = require("jsimple"),
+    container = (new Jsimple()).proxify(); //Here the magic happens!
 
 container.app = () => {
     let express = require("express");

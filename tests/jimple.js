@@ -1,74 +1,74 @@
 "use strict";
 
-var Jimple = require("../src");
+var Jsimple = require("../src");
 
-/** @test {Jimple} */
-describe("Jimple", () => {
-    let jimple;
+/** @test {Jsimple} */
+describe("Jsimple", () => {
+    let jsimple;
 
-    beforeEach(() => jimple = new Jimple());
+    beforeEach(() => jsimple = new Jsimple());
 
-    /** @test {Jimple#constructor} */
+    /** @test {Jsimple#constructor} */
     describe("constructor", () => {
-        it("should instanciate", () => jimple.should.be.an.object);
+        it("should instanciate", () => jsimple.should.be.an.object);
 
-        it("should be empty", () => jimple.keys().should.be.empty);
+        it("should be empty", () => jsimple.keys().should.be.empty);
 
         it("should be frozen", () => {
-            Object.isExtensible(jimple).should.be.false;
-            (() => jimple.foo = "bar").should.throw(Error);
+            Object.isExtensible(jsimple).should.be.false;
+            (() => jsimple.foo = "bar").should.throw(Error);
         });
     });
 
-    /** @test {Jimple#define} */
+    /** @test {Jsimple#define} */
     describe(".define", () => {
-        it("should return jimple instance", () => jimple.define("service", () => {}).should.be.equal(jimple));
+        it("should return jsimple instance", () => jsimple.define("service", () => {}).should.be.equal(jsimple));
 
-        it("should define service", () => jimple.define("service", () => {}).keys().should.be.eql(["service"]));
+        it("should define service", () => jsimple.define("service", () => {}).keys().should.be.eql(["service"]));
 
         it("should store callable", () => {
             let callable = () => {};
 
-            jimple.define("service", callable).raw("service").should.be.equal(callable);
+            jsimple.define("service", callable).raw("service").should.be.equal(callable);
         });
 
         it("should store value as callable", () => {
             let value = 42;
 
-            jimple.define("service", value).raw("service")().should.be.equal(value);
+            jsimple.define("service", value).raw("service")().should.be.equal(value);
         });
 
-        it("should tag callable", () => jimple.define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
+        it("should tag callable", () => jsimple.define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
 
-        it("should not tag same callable twice", () => jimple.define("service", () => {}, ["tag"]).define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
+        it("should not tag same callable twice", () => jsimple.define("service", () => {}, ["tag"]).define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
     });
 
-    /** @test {Jimple#share} */
+    /** @test {Jsimple#share} */
     describe(".share", () => {
-        it("should return jimple instance", () => jimple.share("service", () => {}).should.be.equal(jimple));
+        it("should return jsimple instance", () => jsimple.share("service", () => {}).should.be.equal(jsimple));
 
         it("should wrap callable", () => {
             let callable = () => {};
 
-            jimple.share("service", callable);
+            jsimple.share("service", callable);
 
-            jimple.raw("service").should.be.a.Function();
-            jimple.raw("service").should.not.be.equal(callable);
+            jsimple.raw("service").should.be.a.Function();
+            jsimple.raw("service").should.not.be.equal(callable);
         });
 
         it("should overwrite existing service", () => {
             let callable = () => {};
 
-            jimple.share("service", callable);
-            jimple.share("service", () => {});
+            jsimple.share("service", callable);
+            jsimple.share("service", () => {});
 
-            jimple.raw("service").should.not.be.equal(callable);
+            jsimple.raw("service").should.not.be.equal(callable);
         });
 
         it("should refuse to override an already fetched service", () => {
-            jimple.share("service", () => {}).get("service");
+            jsimple.share("service", () => {}).get("service");
 
-            (() => jimple.share("service", () => {})).should.throw(Error);
+            (() => jsimple.share("service", () => {})).should.throw(Error);
         });
 
         describe("factory", () => {
@@ -76,79 +76,79 @@ describe("Jimple", () => {
                 let service,
                     callable = () => service = {};
 
-                jimple.share("service", callable);
+                jsimple.share("service", callable);
 
-                jimple.get("service").should.equal(service);
-                jimple.get("service").should.be.equal(jimple.get("service"));
+                jsimple.get("service").should.equal(service);
+                jsimple.get("service").should.be.equal(jsimple.get("service"));
             });
 
-            it("should receive jimple instance as an argument", () => {
-                let callable = (arg) => arg.should.be.equal(jimple);
+            it("should receive jsimple instance as an argument", () => {
+                let callable = (arg) => arg.should.be.equal(jsimple);
 
-                jimple.share("service", callable);
+                jsimple.share("service", callable);
 
-                jimple.get("service");
+                jsimple.get("service");
             });
         });
     });
 
-    /** @test {Jimple#factory} */
+    /** @test {Jsimple#factory} */
     describe(".factory", () => {
-        it("should return jimple instance", () => jimple.factory("service", () => {}).should.be.equal(jimple));
+        it("should return jsimple instance", () => jsimple.factory("service", () => {}).should.be.equal(jsimple));
 
         it("should wrap callable", () => {
             let callable = () => {};
 
-            jimple.factory("factory", callable);
+            jsimple.factory("factory", callable);
 
-            jimple.raw("factory").should.be.a.Function();
-            jimple.raw("factory").should.not.be.equal(callable);
+            jsimple.raw("factory").should.be.a.Function();
+            jsimple.raw("factory").should.not.be.equal(callable);
         });
 
         it("should refuse to override an already fetched service", () => {
-            jimple.share("service", () => {}).get("service");
+            jsimple.share("service", () => {}).get("service");
 
-            (() => jimple.factory("service", () => {})).should.throw(Error);
+            (() => jsimple.factory("service", () => {})).should.throw(Error);
         });
 
         it("should refuse to override an already executed factory", () => {
-            jimple.factory("factory", () => {}).get("factory");
+            jsimple.factory("factory", () => {}).get("factory");
 
-            (() => jimple.factory("factory", () => {})).should.throw(Error);
+            (() => jsimple.factory("factory", () => {})).should.throw(Error);
         });
 
         describe("factory", () => {
             it("should not share service instance", () => {
                 let callable = () => ({});
 
-                jimple.factory("factory", callable);
+                jsimple.factory("factory", callable);
 
-                jimple.get("factory").should.be.an.object;
-                jimple.get("factory").should.be.eql({});
-                jimple.get("factory").should.not.equal(jimple.get("factory"));
+                jsimple.get("factory").should.be.an.object;
+                jsimple.get("factory").should.be.eql({});
+                jsimple.get("factory").should.not.equal(jsimple.get("factory"));
             });
 
-            it("should receive jimple instance as an argument", () => {
-                let callable = (arg) => arg.should.be.equal(jimple);
+            it("should receive jsimple instance as an argument", () => {
+                let callable = (arg) => arg.should.be.equal(jsimple);
 
-                jimple.factory("factory", callable);
+                jsimple.factory("factory", callable);
 
-                jimple.get("factory");
+                jsimple.get("factory");
             });
         });
     });
 
-    /** @test {Jimple#extend} */
+    /** @test {Jsimple#extend} */
     describe(".extend", () => {
-        it("should return jimple instance", () => jimple.share("service", () => {}).extend("service", () => {}).should.be.equal(jimple));
+        it("should return jsimple instance", () => jsimple.share("service", () => {}).extend("service", () => {}).should.be.equal(jsimple));
 
         it("should extend existing service", () => {
             let service,
                 callable = () => service = {};
 
-            jimple.share("service", () => {});
+            jsimple.share("service", () => {});
 
-            jimple.extend("service", callable).get("service").should.be.equal(service);
+            jsimple.extend("service", callable).get("service").should.be.equal(service);
         });
 
         it("should receive base service instance as first argument", () => {
@@ -156,45 +156,45 @@ describe("Jimple", () => {
                 callable = () => service = {},
                 extendedCallable = (arg) => arg.should.be.equal(service);
 
-            jimple.share("service", callable);
-            jimple.extend("service", extendedCallable);
+            jsimple.share("service", callable);
+            jsimple.extend("service", extendedCallable);
 
-            jimple.get("service");
+            jsimple.get("service");
         });
 
-        it("should receive jimple instance as second argument", () => {
-            let callable = (service, arg) => arg.should.be.equal(jimple);
+        it("should receive jsimple instance as second argument", () => {
+            let callable = (service, arg) => arg.should.be.equal(jsimple);
 
-            jimple.share("service", () => {});
-            jimple.extend("service", callable);
+            jsimple.share("service", () => {});
+            jsimple.extend("service", callable);
 
-            jimple.get("service");
+            jsimple.get("service");
         });
 
         it("should refuse to extend an already fetched service", () => {
-            jimple.share("service", () => {}).get("service");
+            jsimple.share("service", () => {}).get("service");
 
-            (() => jimple.extend("service", () => {})).should.throw(Error);
+            (() => jsimple.extend("service", () => {})).should.throw(Error);
         });
 
         it("should refuse to extend an already used factory", () => {
-            jimple.factory("factory", () => {}).get("factory");
+            jsimple.factory("factory", () => {}).get("factory");
 
-            (() => jimple.extend("factory", () => {})).should.throw(Error);
+            (() => jsimple.extend("factory", () => {})).should.throw(Error);
         });
     });
 
-    /** @test {Jimple#use} */
+    /** @test {Jsimple#use} */
     describe(".use", () => {
-        it("should inject jimple", () => jimple.use((arg) => arg.should.be.equal(jimple)));
+        it("should inject jsimple", () => jsimple.use((arg) => arg.should.be.equal(jsimple)));
 
         it("should inject given service", () => {
             let service,
                 callable = () => service = {};
 
-            jimple.share("service", callable);
+            jsimple.share("service", callable);
 
-            jimple.use(["service"], (arg) => arg.should.be.equal(service));
+            jsimple.use(["service"], (arg) => arg.should.be.equal(service));
         });
 
         it("should inject given services", () => {
@@ -202,58 +202,58 @@ describe("Jimple", () => {
                 callable = () => service = {},
                 otherCallable = () => otherService = {};
 
-            jimple.share("service", callable);
-            jimple.share("otherService", otherCallable);
+            jsimple.share("service", callable);
+            jsimple.share("otherService", otherCallable);
 
-            jimple.use(["service", "otherService"], (arg, otherArg) => {
+            jsimple.use(["service", "otherService"], (arg, otherArg) => {
                 arg.should.be.equal(service);
                 otherArg.should.be.equal(otherService);
             });
         });
     });
 
-    /** @test {Jimple#protect} */
+    /** @test {Jsimple#protect} */
     describe(".protect", () => {
         it("should wrap callable", () => {
             let callable = () => {};
 
-            jimple.protect(callable).should.not.be.equal(callable);
-            jimple.protect(callable)().should.be.equal(callable);
+            jsimple.protect(callable).should.not.be.equal(callable);
+            jsimple.protect(callable)().should.be.equal(callable);
         });
     });
 
-    /** @test {Jimple#raw} */
+    /** @test {Jsimple#raw} */
     describe(".raw", () => {
         it("should return raw callable", () => {
             let callable = () => {};
 
-            jimple.define("service", callable).raw("service").should.be.equal(callable);
+            jsimple.define("service", callable).raw("service").should.be.equal(callable);
         });
 
-        it("should return raw callable for value", () => jimple.define("service", 42).raw("service").should.be.a.Function());
+        it("should return raw callable for value", () => jsimple.define("service", 42).raw("service").should.be.a.Function());
     });
 
-    /** @test {Jimple#tagged} */
+    /** @test {Jsimple#tagged} */
     describe(".tagged", () => {
         it("should return tagged service names", () => {
-            jimple.define("service", () => {}, ["tag", "gat"]);
-            jimple.define("ecivres", () => {}, ["tag"]);
+            jsimple.define("service", () => {}, ["tag", "gat"]);
+            jsimple.define("ecivres", () => {}, ["tag"]);
 
-            jimple.tagged("tag").should.be.eql(["service", "ecivres"]);
-            jimple.tagged("gat").should.be.eql(["service"]);
+            jsimple.tagged("tag").should.be.eql(["service", "ecivres"]);
+            jsimple.tagged("gat").should.be.eql(["service"]);
         });
 
         it("should return service names associated with several tags", () => {
-            jimple.define("service", () => {}, ["tag", "gat"]);
-            jimple.define("ecivres", () => {}, ["tag"]);
-            jimple.define("vreseci", () => {}, ["gat"]);
+            jsimple.define("service", () => {}, ["tag", "gat"]);
+            jsimple.define("ecivres", () => {}, ["tag"]);
+            jsimple.define("vreseci", () => {}, ["gat"]);
 
-            jimple.tagged("tag").should.be.eql(["service", "ecivres"]);
-            jimple.tagged(["tag", "gat"]).should.be.eql(["service"]);
+            jsimple.tagged("tag").should.be.eql(["service", "ecivres"]);
+            jsimple.tagged(["tag", "gat"]).should.be.eql(["service"]);
         })
     });
 
-    /** @test {Jimple#proxify} */
+    /** @test {Jsimple#proxify} */
     describe(".proxify", () => {
         beforeEach(() => {
             let should = require("should");
@@ -262,144 +262,144 @@ describe("Jimple", () => {
             should.extend("Boolean", Proxy.prototype);
         });
 
-        it("should return a proxified instance", () => jimple.proxify().should.be.an.instanceof(Jimple));
+        it("should return a proxified instance", () => jsimple.proxify().should.be.an.instanceof(Jsimple));
 
-        it("should be extensible", () => Object.isExtensible(jimple.proxify()).should.be.true);
+        it("should be extensible", () => Object.isExtensible(jsimple.proxify()).should.be.true);
 
         it("should be idempotent", () => {
-            (jimple.proxify().proxify() === jimple).should.be.true;
-            (jimple.proxify().proxify() === jimple.proxify()).should.be.true;
+            (jsimple.proxify().proxify() === jsimple).should.be.true;
+            (jsimple.proxify().proxify() === jsimple.proxify()).should.be.true;
         });
 
         describe("traps", () => {
-            beforeEach(() => jimple = jimple.proxify());
+            beforeEach(() => jsimple = jsimple.proxify());
 
             describe(".get", () => {
                 it("should not override native methods", () => {
                     let service,
                         callable = () => service = {};
 
-                    jimple.share("service", callable);
+                    jsimple.share("service", callable);
 
-                    jimple.get("service").should.be.equal(service);
+                    jsimple.get("service").should.be.equal(service);
                 });
 
                 it("should fetch service", () => {
                     let service,
                         callable = () => service = {};
 
-                    jimple.share("service", callable);
+                    jsimple.share("service", callable);
 
-                    jimple.service.should.be.equal(service);
+                    jsimple.service.should.be.equal(service);
                 });
 
                 it("should execute factory", () => {
                     let service,
                         callable = () => service = {};
 
-                    jimple.factory("service", callable);
+                    jsimple.factory("service", callable);
 
-                    jimple.service.should.be.an.object;
-                    jimple.service.should.be.eql({});
-                    jimple.service.should.not.equal(jimple.service);
+                    jsimple.service.should.be.an.object;
+                    jsimple.service.should.be.eql({});
+                    jsimple.service.should.not.equal(jsimple.service);
                 });
             });
 
             describe(".set", () => {
                 it("should refuse to override native methods", () => {
-                    (() => jimple.factory = () => {
+                    (() => jsimple.factory = () => {
                     }).should.throw(Error);
-                    (() => jimple.get = () => {
+                    (() => jsimple.get = () => {
                     }).should.throw(Error);
                 });
 
                 it("should define a shared service", () => {
                     let service;
 
-                    jimple.service = () => service = {};
+                    jsimple.service = () => service = {};
 
-                    jimple.get("service").should.equal(service);
-                    jimple.get("service").should.be.equal(jimple.get("service"));
+                    jsimple.get("service").should.equal(service);
+                    jsimple.get("service").should.be.equal(jsimple.get("service"));
                 });
             });
 
             describe(".has", () => {
                 it("should check if service exists", () => {
-                    jimple.service = () => {
+                    jsimple.service = () => {
                     };
 
-                    ("service" in jimple).should.be.true;
-                    ("factory" in jimple).should.be.false;
+                    ("service" in jsimple).should.be.true;
+                    ("factory" in jsimple).should.be.false;
                 });
 
                 it("should check if factory exists", () => {
-                    jimple.factory("service", () => {
+                    jsimple.factory("service", () => {
                     });
 
-                    ("service" in jimple).should.be.true;
-                    ("factory" in jimple).should.be.false;
+                    ("service" in jsimple).should.be.true;
+                    ("factory" in jsimple).should.be.false;
                 });
             });
 
             describe(".delete", () => {
                 it("should prevent deletion", () => {
-                    jimple.service = () => {
+                    jsimple.service = () => {
                     };
 
-                    (() => delete jimple.service).should.throw(Error);
+                    (() => delete jsimple.service).should.throw(Error);
                 });
             });
         });
 
-        /** @test {Jimple#share} */
+        /** @test {Jsimple#share} */
         describe(".share", () => {
-            beforeEach(() => jimple = jimple.proxify());
+            beforeEach(() => jsimple = jsimple.proxify());
 
             describe("factory", () => {
-                it("should receive jimple proxy instance as an argument", () => {
+                it("should receive jsimple proxy instance as an argument", () => {
                     let otherService,
                         callable = (arg) => arg.otherService.should.be.equal(otherService),
                         otherCallable = () => otherService = {};
 
-                    jimple.share("service", callable);
-                    jimple.share("otherService", otherCallable);
+                    jsimple.share("service", callable);
+                    jsimple.share("otherService", otherCallable);
 
-                    jimple.get("service");
+                    jsimple.get("service");
                 });
             });
         });
 
-        /** @test {Jimple#factory} */
+        /** @test {Jsimple#factory} */
         describe(".factory", () => {
-            beforeEach(() => jimple = jimple.proxify());
+            beforeEach(() => jsimple = jsimple.proxify());
 
             describe("factory", () => {
-                it("should receive jimple proxy instance as an argument", () => {
+                it("should receive jsimple proxy instance as an argument", () => {
                     let service,
                         callable = (arg) => arg.service.should.be.equal(service),
                         otherCallable = () => service = {};
 
-                    jimple.share("service", otherCallable);
-                    jimple.factory("factory", callable);
+                    jsimple.share("service", otherCallable);
+                    jsimple.factory("factory", callable);
 
-                    jimple.get("factory");
+                    jsimple.get("factory");
                 });
             });
         });
 
-        /** @test {JimpleProxified.fromJimple} */
+        /** @test {JsimpleProxified.fromJsimple} */
         describe("cast", () => {
             it("should keep current state", () => {
-                jimple.share("service", () => ({}));
-                jimple.share("otherService", () => {});
-                jimple.share("taggedService", () => {}, ["tag"]);
+                jsimple.share("service", () => ({}));
+                jsimple.share("otherService", () => {});
+                jsimple.share("taggedService", () => {}, ["tag"]);
 
-                let fetchedService = jimple.get("service");
-                jimple = jimple.proxify();
+                let fetchedService = jsimple.get("service");
+                jsimple = jsimple.proxify();
 
-                jimple.service.should.be.equal(fetchedService);
-                ("otherService" in jimple).should.be.true;
-                jimple.tagged("tag").should.be.eql(["taggedService"]);
+                jsimple.service.should.be.equal(fetchedService);
+                ("otherService" in jsimple).should.be.true;
+                jsimple.tagged("tag").should.be.eql(["taggedService"]);
             });
         })
     });

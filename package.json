@@ -1,6 +1,6 @@
 {
   "name": "jsimple",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "jsimple - a JS dependency injection/service locator highly inspired from Pimple for PHP",
   "main": "src/index.js",
   "author": "Julien Bianchi <contact@jubianchi.fr>",
