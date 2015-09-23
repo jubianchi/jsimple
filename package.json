@@ -1,7 +1,7 @@
 {
-  "name": "jimple",
+  "name": "jsimple",
   "version": "1.0.0",
-  "description": "jimple - a JS dependency injection/service locator",
+  "description": "jsimple - a JS dependency injection/service locator highly inspired from Pimple for PHP",
   "main": "src/index.js",
   "author": "Julien Bianchi <julien.bianchi@pmsipilot.com>",
   "license": "MIT",
