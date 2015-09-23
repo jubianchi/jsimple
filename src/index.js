@@ -239,7 +239,7 @@ class Jimple {
 
     /**
      *
-     * @param {String|Array<String>} tags tag The tag names for which to fetch parameters, services or factories
+     * @param {String|Array<String>} tags The tag names for which to fetch parameters, services or factories
      *
      * @returns {Array} Service names associated with the provided tags
      */
