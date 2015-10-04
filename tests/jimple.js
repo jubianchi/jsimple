@@ -210,6 +210,26 @@ describe("Jsimple", () => {
                 otherArg.should.be.equal(otherService);
             });
         });
+
+        it("should inject tagged services", () => {
+            let service, otherService,
+                callable = () => service = {},
+                otherCallable = () => otherService = {};
+
+            jsimple.share("service", callable, ["tag", "gat"]);
+            jsimple.share("otherService", otherCallable, ["tag"]);
+
+            jsimple.use(["@gat"], (arg) => {
+                arg.length.should.equal(1);
+                arg[0].should.equal(service);
+            });
+
+            jsimple.use(["@tag"], (arg) => {
+                arg.length.should.equal(2);
+                arg[0].should.equal(service);
+                arg[1].should.equal(otherService);
+            });
+        });
     });
 
     /** @test {Jsimple#protect} */

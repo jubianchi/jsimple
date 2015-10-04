@@ -1,5 +1,6 @@
 # 2.0.0
 
+* Introduced `@` notation to fetch tagged services
 * Added decorators
 * Renamed library from `jimple` to `jsimple`
 * Find services associated with several tags

@@ -52,7 +52,13 @@ class Jsimple {
     use(deps, code) {
         if (deps.constructor.name === "Array") {
             deps = deps || [];
-            deps.forEach((value, key) => deps[key] = this.get(value));
+            deps.forEach((value, key) => {
+                if (value.match(/^@/)) {
+                    deps[key] = this.tagged(value.replace(/^@/, "")).map(dep => this.get(dep));
+                } else {
+                    deps[key] = this.get(value);
+                }
+            });
             deps.push(this);
 
             return code.apply(null, deps);

@@ -121,14 +121,19 @@ describe("Decorator", () => {
             @Decorator.share({ id: "service" })
             class Service {}
 
+            @Decorator.share({ id: "otherService", tags: ["tag"] })
+            class TaggedService {}
+
             @Decorator.factory({ id: "factory" })
             class Factory {}
 
-            @Decorator.use(["service", "factory"])
+            @Decorator.use(["service", "factory", "@tag"])
             class OtherService {
-                constructor(service, factory) {
+                constructor(service, factory, tagged) {
                     service.should.be.an.instanceof(Service);
                     factory.should.be.an.instanceof(Factory);
+                    tagged.length.should.equal(1);
+                    tagged[0].should.be.an.instanceof(TaggedService);
                 }
             }
 

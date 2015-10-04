@@ -128,12 +128,16 @@ class Decorator {
         return function(target) {
             return new Proxy(target, {
                 construct: (target, ctorArgs) => {
-                    return Reflect.construct(target, args.deps.map((dep, index) => {
+                    return Reflect.construct(target, args.deps.map((value, index) => {
                         if (ctorArgs[index]) {
                             return ctorArgs[index];
                         }
 
-                        return args.jsimple.get(dep);
+                        if (value.match(/^@/)) {
+                            return args.jsimple.tagged(value.replace(/^@/, "")).map(dep => args.jsimple.get(dep));
+                        }
+
+                        return args.jsimple.get(value);
                     }));
                 }
             });
