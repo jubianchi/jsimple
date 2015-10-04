@@ -74,7 +74,7 @@ console.log(container.get("session") === container.get("session")); //false
 ```
 
 As you can see in the previous example, the factory function received one argument (`c`): this is the current jsimple instance.
-Jsimple will automatically pass itself as an argument of both factories and shared service factories.
+jsimple will automatically pass itself as an argument of both factories and shared service factories.
 
 #### Function services
 
@@ -93,7 +93,7 @@ Defining parameters as services is the process of storing simple values inside j
 They can be of any kind but not function (scalars, objects, arrays):
 
 ```js
-container.share("port", 4242);
+container.define("port", 4242);
 
 container.get("app").listen(container.get("port"));
 ```
@@ -109,7 +109,7 @@ Let's see how we would extend our `app` service:
 
 ```js
 container.extend("app", (app, c) => {
-    app.locals.title = "My Jsimple Powered App";
+    app.locals.title = "My jsimple Powered App";
 
     return app;
 });
@@ -118,7 +118,7 @@ container.extend("app", (app, c) => {
 Now everytime we fetch the `app` service it will automatically have its `title` defined:
 
 ```js
-console.log(container.get("app").locals.title); //My Jsimple Powered App
+console.log(container.get("app").locals.title); //My jsimple Powered App
 ```
 
 #### Extending service factories
@@ -177,7 +177,7 @@ resources.
 
 ### Using the proxy
 
-Jsimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to `Jsimple#get`
+jsimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to `Jsimple#get`
 or `Jsimple#share`:
 
 ```js
@@ -207,16 +207,16 @@ See how we removed every call to `share` and `get`! We now call services as if t
 
 ### Using decorators
 
-Jsimple also take advantage of [ES7 decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) and
+jsimple also take advantage of [ES7 decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) and
 provides some usefull annotations to help you define services and factories.
 
-All decorators apply to the last instanciated Jsimple instance. This can be customized using the `jsimple` argument on decorators.
+All decorators apply to the last instanciated `Jsimple` instance. This can be customized using the `jsimple` argument on decorators.
 
 **Keep in mind that decorators are experimental and support is provided through Babel which only supports class decorators.**
 
 #### Shared services
 
-Given a file where you create your Jsimple instance:
+Given a file where you create your `Jsimple` instance:
 
 ```js
 "use strict";
@@ -240,11 +240,11 @@ class MyService {
 }
 ```
 
-This will declare a shared service identified by `myService` in the Jsimple instance.
+This will declare a shared service identified by `myService` in the `Jsimple` instance.
 
 #### Service factories
 
-Declaring factory services is not really different from the previous example. Once you have created your Jsimple instance,
+Declaring factory services is not really different from the previous example. Once you have created your `Jsimple` instance,
 use the `Factory` decorator:
 
 ```js
@@ -324,9 +324,9 @@ class MyService {
 ```
 
 The `Inject` decorator will create a Proxy around the annotated class so that when it's instanciated it will automatically fetch
-its dependencies through Jsimple.
+its dependencies through jsimple.
 
-**Note that using `Inject` applies a Proxy on the class itself so even when you instanciate it by hand, it will try to fetch its dependencies through Jsimple:**
+**Note that using `Inject` applies a Proxy on the class itself so even when you instanciate it by hand, it will try to fetch its dependencies through jsimple:**
 
 ```js
 "use strict";
@@ -372,7 +372,7 @@ class MyService {
 let myService = new MyService(new OtherService());
 ```
 
-This will never call Jsimple as all the constructor arguments are manually provided.
+This will never call jsimple as all the constructor arguments are manually provided.
 
 ## License
 
