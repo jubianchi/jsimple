@@ -1,6 +1,6 @@
 "use strict";
 
-var Jsimple = require("../src");
+var Jsimple = require("../");
 
 /** @test {Jsimple} */
 describe("Jsimple", () => {

@@ -3,7 +3,7 @@
 /**
  * @ignore
  */
-let Decorator = require("./decorator.js").Decorator;
+let Decorator = require("./decorator").Decorator;
 
 /**
  * @access public

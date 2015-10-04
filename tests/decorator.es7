@@ -1,7 +1,7 @@
 "use strict";
 
-var Jsimple = require("../src"),
-    Decorators = require("../src/decorator.js"),
+var Jsimple = require("../"),
+    Decorators = require("../decorator"),
     Decorator = Decorators.Decorator;
 
 /** @test {Decorator} */
@@ -170,8 +170,6 @@ describe("Decorator", () => {
         let Shared, Factory, Inject;
 
         beforeEach(() => {
-            let Decorators = require("../src/decorator.js");
-
             Shared = Decorators.Shared;
             Factory = Decorators.Factory;
             Inject = Decorators.Inject;

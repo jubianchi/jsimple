@@ -11,7 +11,7 @@ require("harmony-reflect");
 /**
  * @ignore
  */
-let Jsimple = require(".");
+let Jsimple = require("./jsimple");
 
 /**
  * @access private
