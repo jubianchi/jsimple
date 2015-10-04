@@ -2,7 +2,7 @@
 
 let container = require("./src/container");
 
-require("babel/register")({ optional: "es7.decorators" });
+require("babel/register")(require("./config/babel"));
 require("./src/application");
 require("./src/application/middlewares");
 require("./src/application/controllers");

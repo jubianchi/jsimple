@@ -7,16 +7,16 @@ let Shared = require("jsimple/decorator").Shared,
     id: "app.static",
     tags: ["middleware"]
 })
-@Inject(["static.dir", "static.path"])
+@Inject(["config.static"])
 class Static {
-    constructor(directory, path) {
-        this.directory = directory;
-        this.path = path;
+    constructor(config) {
+        this.directory = config.directory;
+        this.url = config.url;
     }
 
     mount(app) {
         let express = require("express");
 
-        app.use(this.path, express.static(this.directory));
+        app.use(this.url, express.static(this.directory));
     }
 }

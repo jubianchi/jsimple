@@ -7,10 +7,10 @@ let Shared = require("jsimple/decorator").Shared,
     id: "app.logger",
     tags: ["middleware"]
 })
-@Inject(["logger.format"])
+@Inject(["config.logger"])
 class Logger {
-    constructor(format) {
-        this.format = format;
+    constructor(config) {
+        this.format = config.format;
     }
 
     mount(app) {
