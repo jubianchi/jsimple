@@ -1,20 +1,21 @@
 {
-  "name": "jimple",
-  "version": "2.0.0",
-  "description": "jimple - a JS dependency injection container/service locator",
+  "name": "jsimple",
+  "version": "2.0.0-alpha.4",
+  "description": "jsimple - a JS dependency injection/service locator highly inspired from Pimple for PHP",
   "main": "src/index.js",
   "author": "Julien Bianchi <contact@jubianchi.fr>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/jubianchi/laboard.git"
+    "url": "https://github.com/jubianchi/jsimple.git"
   },
   "engines": {
     "node": "^4.0",
-    "npm" : "<3.0"
+    "npm": "<3.0"
   },
   "devDependencies": {
-    "esdoc": "^0.2.6",
+    "esdoc": "^0.4",
+    "esdoc-es7-plugin": "0.0.2",
     "istanbul": "^0.3.20",
     "jscs": "^1.7.3",
     "mocha": "^2.3.2",
@@ -24,6 +25,7 @@
     "harmony-reflect": "^1.4.2"
   },
   "scripts": {
+    "pretest": "node_modules/.bin/babel --optional es7.decorators -o tests/decorator.js tests/decorator.es7",
     "test": "node_modules/.bin/mocha --harmony_proxies --globals Reflect,Proxy -s 5 --require should --reporter spec --check-leaks tests/**/*.js",
     "cover": "node --harmony_proxies node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- --harmony_proxies --globals Reflect,Proxy -s 5 --require should --reporter spec --check-leaks tests/**/*.js",
     "cs": "node_modules/.bin/jscs src/ tests/",

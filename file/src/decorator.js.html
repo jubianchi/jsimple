@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/decorator.js | Jimple API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/jubianchi/jsimple.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Extend">Extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Factory">Factory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Inject">Inject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Shared">Shared</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Use">Use</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/decorator.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+/**
+ * @ignore
+ */
+let factory = (target, args) =&gt; {
+    return (service, jsimple) =&gt; {
+        if (service &amp;&amp; jsimple) {
+            args.use = [service].concat(args);
+        }
+
+        if (!jsimple) {
+            jsimple = service;
+        }
+
+        if (args.use.length === 0) {
+            return new target();
+        }
+
+        try {
+            require.resolve(&quot;harmony-reflect&quot;);
+        } catch (err) {
+            throw new Error(&quot;You should install harmony-reflect module and use the --harmony_proxies flag to use this feature&quot;);
+        }
+
+        require(&quot;harmony-reflect&quot;);
+
+        return Reflect.construct(target, args.use.map(arg =&gt; {
+            if (typeof arg === &quot;string&quot;) {
+                return jsimple.get(arg)
+            }
+
+            return arg;
+        }));
+    }
+};
+
+/**
+ * @access public
+ */
+class Decorator {
+    /**
+     * Sets the default Jsimple instance
+     *
+     * @param {Jsimple} jsimple
+     */
+    static setJsimple(jsimple) {
+        Decorator.jsimple = jsimple;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     *
+     * @returns {Function}
+     */
+    static share(args) {
+        args.use = args.use ||&#xA0;[];
+        args.tags = args.tags ||&#xA0;[];
+        args.jsimple = args.jsimple ||&#xA0;Decorator.jsimple;
+
+        return function(target) {
+            args.jsimple.share(args.id, factory(target, args), args.tags);
+
+            return target;
+        }
+    }
+
+    /**
+     *
+     * @param {Object} args
+     *
+     * @returns {Function}
+     */
+    static factory(args) {
+        args.use = args.use ||&#xA0;[];
+        args.tags = args.tags ||&#xA0;[];
+        args.jsimple = args.jsimple ||&#xA0;Decorator.jsimple;
+
+        return function(target) {
+            args.jsimple.factory(args.id, factory(target, args), args.tags);
+
+            return target;
+        }
+    }
+
+    /**
+     *
+     * @param {Object} args
+     *
+     * @returns {Function}
+     */
+    static extend(args) {
+        args.use = args.use ||&#xA0;[];
+        args.tags = args.tags ||&#xA0;[];
+        args.jsimple = args.jsimple ||&#xA0;Decorator.jsimple;
+
+        return function(target) {
+            args.jsimple.extend(args.id, factory(target, args), args.tags);
+
+            return target;
+        }
+    }
+
+    /**
+     *
+     * @param {Array&lt;String&gt;|Object} args
+     *
+     * @returns {Function}
+     */
+    static use(args) {
+        if (args instanceof Array) {
+            args = {
+                deps: args
+            };
+        }
+
+        args.jsimple = args.jsimple ||&#xA0;Decorator.jsimple;
+
+        try {
+            require.resolve(&quot;harmony-reflect&quot;);
+        } catch (err) {
+            throw new Error(&quot;You should install harmony-reflect module and use the --harmony_proxies flag to use this feature&quot;);
+        }
+
+        require(&quot;harmony-reflect&quot;);
+
+        return function(target) {
+            return new Proxy(target, {
+                construct: (target, ctorArgs) =&gt; {
+                    return Reflect.construct(target, args.deps.map((dep, index) =&gt; {
+                        if (ctorArgs[index]) {
+                            return ctorArgs[index];
+                        }
+
+                        return args.jsimple.get(dep);
+                    }));
+                }
+            });
+        };
+    }
+}
+
+/**
+ *
+ * @see Decorator.share
+ *
+ * @param {Object} args
+ *
+ * @returns {Function}
+ */
+let Shared = Decorator.share;
+
+/**
+ *
+ * @see Decorator.factory
+ *
+ * @param {Object} args
+ *
+ * @returns {Function}
+ */
+let Factory = Decorator.factory;
+
+/**
+ *
+ * @see Decorator.extend
+ *
+ * @param {Object} args
+ *
+ * @returns {Function}
+ */
+let Extend = Decorator.extend;
+
+/**
+ *
+ * @see Decorator.use
+ *
+ * @param {Array&lt;String&gt;|Object} args
+ *
+ * @returns {Function}
+ */
+let Use = Decorator.use;
+
+/**
+ *
+ * @see Decorator.use
+ *
+ * @param {Array&lt;String&gt;|Object} args
+ *
+ * @returns {Function}
+ */
+let Inject = Decorator.use;
+
+module.exports = { Decorator, Shared, Factory, Extend, Use, Inject };
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.0)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

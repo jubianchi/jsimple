@@ -1,21 +1,57 @@
 window.esdocSearchIndex = [
   [
-    "jimple~jimple",
-    "class/src/index.js~Jimple.html",
-    "<span>Jimple</span> <span class=\"search-result-import-path\">jimple</span>",
+    "jsimple/src/decorator.js~decorator",
+    "class/src/decorator.js~Decorator.html",
+    "<span>Decorator</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
     "class"
   ],
   [
-    "jimple~jimpleproxified",
-    "class/src/index.js~JimpleProxified.html",
-    "<span>JimpleProxified</span> <span class=\"search-result-import-path\">jimple</span>",
+    "jsimple/src/decorator.js~extend",
+    "variable/index.html#static-variable-Extend",
+    "<span>Extend</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
+    "variable"
+  ],
+  [
+    "jsimple/src/decorator.js~factory",
+    "variable/index.html#static-variable-Factory",
+    "<span>Factory</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
+    "variable"
+  ],
+  [
+    "jsimple/src/decorator.js~inject",
+    "variable/index.html#static-variable-Inject",
+    "<span>Inject</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
+    "variable"
+  ],
+  [
+    "jsimple~jsimple",
+    "class/src/index.js~Jsimple.html",
+    "<span>Jsimple</span> <span class=\"search-result-import-path\">jsimple</span>",
     "class"
   ],
   [
-    "jimple/src/proxy.js~jimpleproxy",
-    "class/src/proxy.js~JimpleProxy.html",
-    "<span>JimpleProxy</span> <span class=\"search-result-import-path\">jimple/src/proxy.js</span>",
+    "jsimple~jsimpleproxified",
+    "class/src/index.js~JsimpleProxified.html",
+    "<span>JsimpleProxified</span> <span class=\"search-result-import-path\">jsimple</span>",
     "class"
+  ],
+  [
+    "jsimple/src/proxy.js~jsimpleproxy",
+    "class/src/proxy.js~JsimpleProxy.html",
+    "<span>JsimpleProxy</span> <span class=\"search-result-import-path\">jsimple/src/proxy.js</span>",
+    "class"
+  ],
+  [
+    "jsimple/src/decorator.js~shared",
+    "variable/index.html#static-variable-Shared",
+    "<span>Shared</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
+    "variable"
+  ],
+  [
+    "jsimple/src/decorator.js~use",
+    "variable/index.html#static-variable-Use",
+    "<span>Use</span> <span class=\"search-result-import-path\">jsimple/src/decorator.js</span>",
+    "variable"
   ],
   [
     "builtinexternal/ecmascriptexternal.js~array",
@@ -342,436 +378,640 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "jimple src/index.js~jimple,jimple",
-    "test-file/tests/jimple.js.html#lineNumber6",
-    "Jimple",
+    "decorator src/decorator.js~decorator,decorator",
+    "test-file/tests/decorator.es7.html#lineNumber8",
+    "Decorator",
     "test"
   ],
   [
-    "jimple#define src/index.js~jimple#define,jimple#define",
+    "decorator.extend src/decorator.js~decorator.extend,decorator.extend",
+    "test-file/tests/decorator.es7.html#lineNumber83",
+    "Decorator .extend",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber84",
+    "Decorator .extend should extend a service",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber96",
+    "Decorator .extend should pass extended service as first constructor argument",
+    "test"
+  ],
+  [
+    "decorator.factory src/decorator.js~decorator.factory,decorator.factory",
+    "test-file/tests/decorator.es7.html#lineNumber52",
+    "Decorator .factory",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber53",
+    "Decorator .factory should declare a factory service",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber62",
+    "Decorator .factory should declare a factory service with dependencies",
+    "test"
+  ],
+  [
+    "decorator.share src/decorator.js~decorator.share,decorator.share",
+    "test-file/tests/decorator.es7.html#lineNumber21",
+    "Decorator .share",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber22",
+    "Decorator .share should declare a shared service",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber31",
+    "Decorator .share should declare a shared service with dependencies",
+    "test"
+  ],
+  [
+    "decorator.use src/decorator.js~decorator.use,decorator.use",
+    "test-file/tests/decorator.es7.html#lineNumber119",
+    "Decorator .use",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber120",
+    "Decorator .use should inject dependencies",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber138",
+    "Decorator .use should use provided arguments",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber169",
+    "Decorator Combined",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber197",
+    "Decorator Combined Factory + Inject",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber198",
+    "Decorator Combined Factory + Inject should declare a shared service with dependencies",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber180",
+    "Decorator Combined Shared + Inject",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber181",
+    "Decorator Combined Shared + Inject should declare a shared service with dependencies",
+    "test"
+  ],
+  [
+    "extend src/decorator.js~extend,extend",
+    "test-file/tests/decorator.es7.html#lineNumber114",
+    "Decorator Extend",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber115",
+    "Decorator Extend should expose a Extend decorator",
+    "test"
+  ],
+  [
+    "factory src/decorator.js~factory,factory",
+    "test-file/tests/decorator.es7.html#lineNumber78",
+    "Decorator Factory",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber79",
+    "Decorator Factory should expose a Factory decorator",
+    "test"
+  ],
+  [
+    "inject src/decorator.js~inject,inject",
+    "test-file/tests/decorator.es7.html#lineNumber165",
+    "Decorator Inject",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber166",
+    "Decorator Inject should expose a Inject decorator",
+    "test"
+  ],
+  [
+    "shared src/decorator.js~shared,shared",
+    "test-file/tests/decorator.es7.html#lineNumber47",
+    "Decorator Shared",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber48",
+    "Decorator Shared should expose a Shared decorator",
+    "test"
+  ],
+  [
+    "use src/decorator.js~use,use",
+    "test-file/tests/decorator.es7.html#lineNumber160",
+    "Decorator Use",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/decorator.es7.html#lineNumber161",
+    "Decorator Use should expose a Use decorator",
+    "test"
+  ],
+  [
+    "jsimple src/index.js~jsimple,jsimple",
+    "test-file/tests/jimple.js.html#lineNumber6",
+    "Jsimple",
+    "test"
+  ],
+  [
+    "jsimple#define src/index.js~jsimple#define,jsimple#define",
     "test-file/tests/jimple.js.html#lineNumber24",
-    "Jimple .define",
+    "Jsimple .define",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber27",
-    "Jimple .define should define service",
+    "Jsimple .define should define service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber43",
-    "Jimple .define should not tag same callable twice",
+    "Jsimple .define should not tag same callable twice",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber25",
-    "Jimple .define should return jimple instance",
+    "Jsimple .define should return jsimple instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber29",
-    "Jimple .define should store callable",
+    "Jsimple .define should store callable",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber35",
-    "Jimple .define should store value as callable",
+    "Jsimple .define should store value as callable",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber41",
-    "Jimple .define should tag callable",
+    "Jsimple .define should tag callable",
     "test"
   ],
   [
-    "jimple#extend src/index.js~jimple#extend,jimple#extend",
+    "jsimple#extend src/index.js~jsimple#extend,jsimple#extend",
     "test-file/tests/jimple.js.html#lineNumber142",
-    "Jimple .extend",
+    "Jsimple .extend",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber145",
-    "Jimple .extend should extend existing service",
+    "Jsimple .extend should extend existing service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber154",
-    "Jimple .extend should receive base service instance as first argument",
+    "Jsimple .extend should receive base service instance as first argument",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber165",
-    "Jimple .extend should receive jimple instance as second argument",
+    "Jsimple .extend should receive jsimple instance as second argument",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber174",
-    "Jimple .extend should refuse to extend an already fetched service",
+    "Jsimple .extend should refuse to extend an already fetched service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber180",
-    "Jimple .extend should refuse to extend an already used factory",
+    "Jsimple .extend should refuse to extend an already used factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber143",
-    "Jimple .extend should return jimple instance",
+    "Jsimple .extend should return jsimple instance",
     "test"
   ],
   [
-    "jimple#factory src/index.js~jimple#factory,jimple#factory",
+    "jsimple#factory src/index.js~jsimple#factory,jsimple#factory",
     "test-file/tests/jimple.js.html#lineNumber96",
-    "Jimple .factory",
+    "Jsimple .factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber120",
-    "Jimple .factory factory",
+    "Jsimple .factory factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber121",
-    "Jimple .factory factory should not share service instance",
+    "Jsimple .factory factory should not share service instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber131",
-    "Jimple .factory factory should receive jimple instance as an argument",
+    "Jsimple .factory factory should receive jsimple instance as an argument",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber114",
-    "Jimple .factory should refuse to override an already executed factory",
+    "Jsimple .factory should refuse to override an already executed factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber108",
-    "Jimple .factory should refuse to override an already fetched service",
+    "Jsimple .factory should refuse to override an already fetched service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber97",
-    "Jimple .factory should return jimple instance",
+    "Jsimple .factory should return jsimple instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber99",
-    "Jimple .factory should wrap callable",
+    "Jsimple .factory should wrap callable",
     "test"
   ],
   [
-    "jimple#protect src/index.js~jimple#protect,jimple#protect",
+    "jsimple#protect src/index.js~jsimple#protect,jsimple#protect",
     "test-file/tests/jimple.js.html#lineNumber216",
-    "Jimple .protect",
+    "Jsimple .protect",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber217",
-    "Jimple .protect should wrap callable",
+    "Jsimple .protect should wrap callable",
     "test"
   ],
   [
-    "jimple#proxify src/index.js~jimple#proxify,jimple#proxify",
+    "jsimple#proxify src/index.js~jsimple#proxify,jsimple#proxify",
     "test-file/tests/jimple.js.html#lineNumber257",
-    "Jimple .proxify",
+    "Jsimple .proxify",
     "test"
   ],
   [
-    "jimple#factory src/index.js~jimple#factory,jimple#factory",
-    "test-file/tests/jimple.js.html#lineNumber373",
-    "Jimple .proxify .factory",
-    "test"
-  ],
-  [
-    "",
-    "test-file/tests/jimple.js.html#lineNumber376",
-    "Jimple .proxify .factory factory",
+    "jsimple#factory src/index.js~jsimple#factory,jsimple#factory",
+    "test-file/tests/jimple.js.html#lineNumber368",
+    "Jsimple .proxify .factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber377",
-    "Jimple .proxify .factory factory should receive jimple proxy instance as an argument",
-    "test"
-  ],
-  [
-    "jimple#share src/index.js~jimple#share,jimple#share",
-    "test-file/tests/jimple.js.html#lineNumber355",
-    "Jimple .proxify .share",
+    "test-file/tests/jimple.js.html#lineNumber371",
+    "Jsimple .proxify .factory factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber358",
-    "Jimple .proxify .share factory",
+    "test-file/tests/jimple.js.html#lineNumber372",
+    "Jsimple .proxify .factory factory should receive jsimple proxy instance as an argument",
+    "test"
+  ],
+  [
+    "jsimple#share src/index.js~jsimple#share,jsimple#share",
+    "test-file/tests/jimple.js.html#lineNumber350",
+    "Jsimple .proxify .share",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber359",
-    "Jimple .proxify .share factory should receive jimple proxy instance as an argument",
-    "test"
-  ],
-  [
-    "jimpleproxified.fromjimple src/index.js~jimpleproxified.fromjimple,jimpleproxified.fromjimple",
-    "test-file/tests/jimple.js.html#lineNumber391",
-    "Jimple .proxify cast",
+    "test-file/tests/jimple.js.html#lineNumber353",
+    "Jsimple .proxify .share factory",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber392",
-    "Jimple .proxify cast should keep current state",
+    "test-file/tests/jimple.js.html#lineNumber354",
+    "Jsimple .proxify .share factory should receive jsimple proxy instance as an argument",
+    "test"
+  ],
+  [
+    "jsimpleproxified.fromjsimple src/index.js~jsimpleproxified.fromjsimple,jsimpleproxified.fromjsimple",
+    "test-file/tests/jimple.js.html#lineNumber386",
+    "Jsimple .proxify cast",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/jimple.js.html#lineNumber387",
+    "Jsimple .proxify cast should keep current state",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber267",
-    "Jimple .proxify should be extensible",
+    "Jsimple .proxify should be extensible",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber269",
-    "Jimple .proxify should be idempotent",
+    "Jsimple .proxify should be idempotent",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber265",
-    "Jimple .proxify should return a proxified instance",
+    "Jsimple .proxify should return a proxified instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber274",
-    "Jimple .proxify traps",
+    "Jsimple .proxify traps",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber344",
-    "Jimple .proxify traps .delete",
+    "test-file/tests/jimple.js.html#lineNumber340",
+    "Jsimple .proxify traps .delete",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber345",
-    "Jimple .proxify traps .delete should prevent deletion",
+    "test-file/tests/jimple.js.html#lineNumber341",
+    "Jsimple .proxify traps .delete should prevent deletion",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber277",
-    "Jimple .proxify traps .get",
+    "Jsimple .proxify traps .get",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber296",
-    "Jimple .proxify traps .get should execute factory",
+    "Jsimple .proxify traps .get should execute factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber287",
-    "Jimple .proxify traps .get should fetch service",
+    "Jsimple .proxify traps .get should fetch service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber278",
-    "Jimple .proxify traps .get should not override native methods",
+    "Jsimple .proxify traps .get should not override native methods",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber326",
-    "Jimple .proxify traps .has",
+    "test-file/tests/jimple.js.html#lineNumber324",
+    "Jsimple .proxify traps .has",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber335",
-    "Jimple .proxify traps .has should check if factory exists",
+    "test-file/tests/jimple.js.html#lineNumber332",
+    "Jsimple .proxify traps .has should check if factory exists",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber327",
-    "Jimple .proxify traps .has should check if service exists",
+    "test-file/tests/jimple.js.html#lineNumber325",
+    "Jsimple .proxify traps .has should check if service exists",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber308",
-    "Jimple .proxify traps .set",
+    "Jsimple .proxify traps .set",
     "test"
   ],
   [
     "",
-    "test-file/tests/jimple.js.html#lineNumber316",
-    "Jimple .proxify traps .set should define a shared service",
+    "test-file/tests/jimple.js.html#lineNumber314",
+    "Jsimple .proxify traps .set should define a shared service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber309",
-    "Jimple .proxify traps .set should refuse to override native methods",
+    "Jsimple .proxify traps .set should refuse to override native methods",
     "test"
   ],
   [
-    "jimple#raw src/index.js~jimple#raw,jimple#raw",
+    "jsimple#raw src/index.js~jsimple#raw,jsimple#raw",
     "test-file/tests/jimple.js.html#lineNumber226",
-    "Jimple .raw",
+    "Jsimple .raw",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber227",
-    "Jimple .raw should return raw callable",
+    "Jsimple .raw should return raw callable",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber233",
-    "Jimple .raw should return raw callable for value",
+    "Jsimple .raw should return raw callable for value",
     "test"
   ],
   [
-    "jimple#share src/index.js~jimple#share,jimple#share",
+    "jsimple#share src/index.js~jsimple#share,jsimple#share",
     "test-file/tests/jimple.js.html#lineNumber47",
-    "Jimple .share",
+    "Jsimple .share",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber74",
-    "Jimple .share factory",
+    "Jsimple .share factory",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber85",
-    "Jimple .share factory should receive jimple instance as an argument",
+    "Jsimple .share factory should receive jsimple instance as an argument",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber75",
-    "Jimple .share factory should share service instance",
+    "Jsimple .share factory should share service instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber59",
-    "Jimple .share should overwrite existing service",
+    "Jsimple .share should overwrite existing service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber68",
-    "Jimple .share should refuse to override an already fetched service",
+    "Jsimple .share should refuse to override an already fetched service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber48",
-    "Jimple .share should return jimple instance",
+    "Jsimple .share should return jsimple instance",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber50",
-    "Jimple .share should wrap callable",
+    "Jsimple .share should wrap callable",
     "test"
   ],
   [
-    "jimple#tagged src/index.js~jimple#tagged,jimple#tagged",
+    "jsimple#tagged src/index.js~jsimple#tagged,jsimple#tagged",
     "test-file/tests/jimple.js.html#lineNumber237",
-    "Jimple .tagged",
+    "Jsimple .tagged",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber246",
-    "Jimple .tagged should return service names associated with several tags",
+    "Jsimple .tagged should return service names associated with several tags",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber238",
-    "Jimple .tagged should return tagged service names",
+    "Jsimple .tagged should return tagged service names",
     "test"
   ],
   [
-    "jimple#use src/index.js~jimple#use,jimple#use",
+    "jsimple#use src/index.js~jsimple#use,jsimple#use",
     "test-file/tests/jimple.js.html#lineNumber188",
-    "Jimple .use",
+    "Jsimple .use",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber191",
-    "Jimple .use should inject given service",
+    "Jsimple .use should inject given service",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber200",
-    "Jimple .use should inject given services",
+    "Jsimple .use should inject given services",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber189",
-    "Jimple .use should inject jimple",
+    "Jsimple .use should inject jsimple",
     "test"
   ],
   [
-    "jimple#constructor src/index.js~jimple#constructor,jimple#constructor",
+    "jsimple#constructor src/index.js~jsimple#constructor,jsimple#constructor",
     "test-file/tests/jimple.js.html#lineNumber12",
-    "Jimple constructor",
+    "Jsimple constructor",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber15",
-    "Jimple constructor should be empty",
+    "Jsimple constructor should be empty",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber17",
-    "Jimple constructor should be frozen",
+    "Jsimple constructor should be frozen",
     "test"
   ],
   [
     "",
     "test-file/tests/jimple.js.html#lineNumber13",
-    "Jimple constructor should instanciate",
+    "Jsimple constructor should instanciate",
     "test"
+  ],
+  [
+    "src/decorator.js",
+    "file/src/decorator.js.html",
+    "src/decorator.js",
+    "file"
+  ],
+  [
+    "src/decorator.js~decorator.extend",
+    "class/src/decorator.js~Decorator.html#static-method-extend",
+    "src/decorator.js~Decorator.extend",
+    "method"
+  ],
+  [
+    "src/decorator.js~decorator.factory",
+    "class/src/decorator.js~Decorator.html#static-method-factory",
+    "src/decorator.js~Decorator.factory",
+    "method"
+  ],
+  [
+    "src/decorator.js~decorator.setjsimple",
+    "class/src/decorator.js~Decorator.html#static-method-setJsimple",
+    "src/decorator.js~Decorator.setJsimple",
+    "method"
+  ],
+  [
+    "src/decorator.js~decorator.share",
+    "class/src/decorator.js~Decorator.html#static-method-share",
+    "src/decorator.js~Decorator.share",
+    "method"
+  ],
+  [
+    "src/decorator.js~decorator.use",
+    "class/src/decorator.js~Decorator.html#static-method-use",
+    "src/decorator.js~Decorator.use",
+    "method"
   ],
   [
     "src/index.js",
@@ -780,117 +1020,117 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/index.js~jimple#constructor",
-    "class/src/index.js~Jimple.html#instance-constructor-constructor",
-    "src/index.js~Jimple#constructor",
+    "src/index.js~jsimple#constructor",
+    "class/src/index.js~Jsimple.html#instance-constructor-constructor",
+    "src/index.js~Jsimple#constructor",
     "method"
   ],
   [
-    "src/index.js~jimple#define",
-    "class/src/index.js~Jimple.html#instance-method-define",
-    "src/index.js~Jimple#define",
+    "src/index.js~jsimple#define",
+    "class/src/index.js~Jsimple.html#instance-method-define",
+    "src/index.js~Jsimple#define",
     "method"
   ],
   [
-    "src/index.js~jimple#exists",
-    "class/src/index.js~Jimple.html#instance-method-exists",
-    "src/index.js~Jimple#exists",
+    "src/index.js~jsimple#exists",
+    "class/src/index.js~Jsimple.html#instance-method-exists",
+    "src/index.js~Jsimple#exists",
     "method"
   ],
   [
-    "src/index.js~jimple#extend",
-    "class/src/index.js~Jimple.html#instance-method-extend",
-    "src/index.js~Jimple#extend",
+    "src/index.js~jsimple#extend",
+    "class/src/index.js~Jsimple.html#instance-method-extend",
+    "src/index.js~Jsimple#extend",
     "method"
   ],
   [
-    "src/index.js~jimple#factory",
-    "class/src/index.js~Jimple.html#instance-method-factory",
-    "src/index.js~Jimple#factory",
+    "src/index.js~jsimple#factory",
+    "class/src/index.js~Jsimple.html#instance-method-factory",
+    "src/index.js~Jsimple#factory",
     "method"
   ],
   [
-    "src/index.js~jimple#frozen",
-    "class/src/index.js~Jimple.html#instance-member-frozen",
-    "src/index.js~Jimple#frozen",
+    "src/index.js~jsimple#frozen",
+    "class/src/index.js~Jsimple.html#instance-member-frozen",
+    "src/index.js~Jsimple#frozen",
     "member"
   ],
   [
-    "src/index.js~jimple#get",
-    "class/src/index.js~Jimple.html#instance-method-get",
-    "src/index.js~Jimple#get",
+    "src/index.js~jsimple#get",
+    "class/src/index.js~Jsimple.html#instance-method-get",
+    "src/index.js~Jsimple#get",
     "method"
   ],
   [
-    "src/index.js~jimple#gettagged",
-    "class/src/index.js~Jimple.html#instance-method-getTagged",
-    "src/index.js~Jimple#getTagged",
+    "src/index.js~jsimple#gettagged",
+    "class/src/index.js~Jsimple.html#instance-method-getTagged",
+    "src/index.js~Jsimple#getTagged",
     "method"
   ],
   [
-    "src/index.js~jimple#keys",
-    "class/src/index.js~Jimple.html#instance-method-keys",
-    "src/index.js~Jimple#keys",
+    "src/index.js~jsimple#keys",
+    "class/src/index.js~Jsimple.html#instance-method-keys",
+    "src/index.js~Jsimple#keys",
     "method"
   ],
   [
-    "src/index.js~jimple#protect",
-    "class/src/index.js~Jimple.html#instance-method-protect",
-    "src/index.js~Jimple#protect",
+    "src/index.js~jsimple#protect",
+    "class/src/index.js~Jsimple.html#instance-method-protect",
+    "src/index.js~Jsimple#protect",
     "method"
   ],
   [
-    "src/index.js~jimple#proxify",
-    "class/src/index.js~Jimple.html#instance-method-proxify",
-    "src/index.js~Jimple#proxify",
+    "src/index.js~jsimple#proxify",
+    "class/src/index.js~Jsimple.html#instance-method-proxify",
+    "src/index.js~Jsimple#proxify",
     "method"
   ],
   [
-    "src/index.js~jimple#raw",
-    "class/src/index.js~Jimple.html#instance-method-raw",
-    "src/index.js~Jimple#raw",
+    "src/index.js~jsimple#raw",
+    "class/src/index.js~Jsimple.html#instance-method-raw",
+    "src/index.js~Jsimple#raw",
     "method"
   ],
   [
-    "src/index.js~jimple#share",
-    "class/src/index.js~Jimple.html#instance-method-share",
-    "src/index.js~Jimple#share",
+    "src/index.js~jsimple#share",
+    "class/src/index.js~Jsimple.html#instance-method-share",
+    "src/index.js~Jsimple#share",
     "method"
   ],
   [
-    "src/index.js~jimple#shared",
-    "class/src/index.js~Jimple.html#instance-member-shared",
-    "src/index.js~Jimple#shared",
+    "src/index.js~jsimple#shared",
+    "class/src/index.js~Jsimple.html#instance-member-shared",
+    "src/index.js~Jsimple#shared",
     "member"
   ],
   [
-    "src/index.js~jimple#tagged",
-    "class/src/index.js~Jimple.html#instance-method-tagged",
-    "src/index.js~Jimple#tagged",
+    "src/index.js~jsimple#tagged",
+    "class/src/index.js~Jsimple.html#instance-method-tagged",
+    "src/index.js~Jsimple#tagged",
     "method"
   ],
   [
-    "src/index.js~jimple#tagmap",
-    "class/src/index.js~Jimple.html#instance-member-tagmap",
-    "src/index.js~Jimple#tagmap",
+    "src/index.js~jsimple#tagmap",
+    "class/src/index.js~Jsimple.html#instance-member-tagmap",
+    "src/index.js~Jsimple#tagmap",
     "member"
   ],
   [
-    "src/index.js~jimple#use",
-    "class/src/index.js~Jimple.html#instance-method-use",
-    "src/index.js~Jimple#use",
+    "src/index.js~jsimple#use",
+    "class/src/index.js~Jsimple.html#instance-method-use",
+    "src/index.js~Jsimple#use",
     "method"
   ],
   [
-    "src/index.js~jimple#values",
-    "class/src/index.js~Jimple.html#instance-member-values",
-    "src/index.js~Jimple#values",
+    "src/index.js~jsimple#values",
+    "class/src/index.js~Jsimple.html#instance-member-values",
+    "src/index.js~Jsimple#values",
     "member"
   ],
   [
-    "src/index.js~jimpleproxified.fromjimple",
-    "class/src/index.js~JimpleProxified.html#static-method-fromJimple",
-    "src/index.js~JimpleProxified.fromJimple",
+    "src/index.js~jsimpleproxified.fromjsimple",
+    "class/src/index.js~JsimpleProxified.html#static-method-fromJsimple",
+    "src/index.js~JsimpleProxified.fromJsimple",
     "method"
   ],
   [
@@ -900,10 +1140,16 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/proxy.js~jimpleproxy#constructor",
-    "class/src/proxy.js~JimpleProxy.html#instance-constructor-constructor",
-    "src/proxy.js~JimpleProxy#constructor",
+    "src/proxy.js~jsimpleproxy#constructor",
+    "class/src/proxy.js~JsimpleProxy.html#instance-constructor-constructor",
+    "src/proxy.js~JsimpleProxy#constructor",
     "method"
+  ],
+  [
+    "tests/decorator.es7",
+    "test-file/tests/decorator.es7.html",
+    "tests/decorator.es7",
+    "testFile"
   ],
   [
     "tests/jimple.js",

@@ -1,8 +1,13 @@
 {
   "coverage": "100%",
-  "expectCount": 23,
-  "actualCount": 23,
+  "expectCount": 34,
+  "actualCount": 34,
   "files": {
+    "src/decorator.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
     "src/index.js": {
       "expectCount": 21,
       "actualCount": 21,

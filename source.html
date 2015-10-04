@@ -14,10 +14,11 @@
 
 <header>
   <a href="./">Home</a>
-  <a href="identifiers.html">Identifier</a>
+  
+  <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
-  <a data-ice="repoURL" href="https://gitlab.com/jubianchi/laboard.git">Repository</a>
+  <a data-ice="repoURL" href="https://github.com/jubianchi/jsimple.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -27,28 +28,23 @@
   </div>
 </header>
 
-<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
-  <h2>Class</h2>
+<nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/index.js~JimpleProxified.html">JimpleProxified</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Extend">Extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Factory">Factory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Inject">Inject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Shared">Shared</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Use">Use</a></span></span></li>
 </ul>
 </div>
-
-
-
-
-
-
-
-
-
-
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">23/23</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">34/34</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -64,28 +60,41 @@
   <tbody>
     
   <tr data-ice="file">
+      <td data-ice="filePath"><span><a href="file/src/decorator.js.html">src/decorator.js</a></span></td>
+      <td data-ice="identifier" class="identifiers"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span>
+<span><a href="variable/index.html#static-variable-Extend">Extend</a></span>
+<span><a href="variable/index.html#static-variable-Factory">Factory</a></span>
+<span><a href="variable/index.html#static-variable-Inject">Inject</a></span>
+<span><a href="variable/index.html#static-variable-Shared">Shared</a></span>
+<span><a href="variable/index.html#static-variable-Use">Use</a></span></td>
+      <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">11/11</span></td>
+      <td style="display: none;" data-ice="size">3943 byte</td>
+      <td style="display: none;" data-ice="lines">194</td>
+      <td style="display: none;" data-ice="updated">2015-10-01 17:22:40 (UTC)</td>
+    </tr>
+<tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/index.js.html">src/index.js</a></span></td>
-      <td data-ice="identifier" class="identifiers"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span>
-<span><a href="class/src/index.js~JimpleProxified.html">JimpleProxified</a></span></td>
+      <td data-ice="identifier" class="identifiers"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span>
+<span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">21/21</span></td>
-      <td style="display: none;" data-ice="size">10080 byte</td>
-      <td style="display: none;" data-ice="lines">356</td>
-      <td style="display: none;" data-ice="updated">2015-09-02 16:40:32 (UTC)</td>
+      <td style="display: none;" data-ice="size">10249 byte</td>
+      <td style="display: none;" data-ice="lines">363</td>
+      <td style="display: none;" data-ice="updated">2015-10-01 16:04:31 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/proxy.js.html">src/proxy.js</a></span></td>
-      <td data-ice="identifier" class="identifiers"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></td>
+      <td data-ice="identifier" class="identifiers"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">2/2</span></td>
-      <td style="display: none;" data-ice="size">1164 byte</td>
+      <td style="display: none;" data-ice="size">1175 byte</td>
       <td style="display: none;" data-ice="lines">52</td>
-      <td style="display: none;" data-ice="updated">2015-09-02 14:01:26 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2015-09-04 14:51:52 (UTC)</td>
     </tr>
 </tbody>
 </table>
 </div>
 
 <footer class="footer">
-  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.0)</span></a>
 </footer>
 
 <script src="script/search_index.js"></script>

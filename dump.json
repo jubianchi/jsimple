@@ -1,5 +1,485 @@
 [
   {
+    "__docId__": 0,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/decorator.js",
+    "memberof": null,
+    "longname": "src/decorator.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\n/**\n * @ignore\n */\nlet factory = (target, args) => {\n    return (service, jsimple) => {\n        if (service && jsimple) {\n            args.use = [service].concat(args);\n        }\n\n        if (!jsimple) {\n            jsimple = service;\n        }\n\n        if (args.use.length === 0) {\n            return new target();\n        }\n\n        try {\n            require.resolve(\"harmony-reflect\");\n        } catch (err) {\n            throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n        }\n\n        require(\"harmony-reflect\");\n\n        return Reflect.construct(target, args.use.map(arg => {\n            if (typeof arg === \"string\") {\n                return jsimple.get(arg)\n            }\n\n            return arg;\n        }));\n    }\n};\n\n/**\n * @access public\n */\nclass Decorator {\n    /**\n     * Sets the default Jsimple instance\n     *\n     * @param {Jsimple} jsimple\n     */\n    static setJsimple(jsimple) {\n        Decorator.jsimple = jsimple;\n    }\n\n    /**\n     *\n     * @param {Object} args\n     *\n     * @returns {Function}\n     */\n    static share(args) {\n        args.use = args.use || [];\n        args.tags = args.tags || [];\n        args.jsimple = args.jsimple || Decorator.jsimple;\n\n        return function(target) {\n            args.jsimple.share(args.id, factory(target, args), args.tags);\n\n            return target;\n        }\n    }\n\n    /**\n     *\n     * @param {Object} args\n     *\n     * @returns {Function}\n     */\n    static factory(args) {\n        args.use = args.use || [];\n        args.tags = args.tags || [];\n        args.jsimple = args.jsimple || Decorator.jsimple;\n\n        return function(target) {\n            args.jsimple.factory(args.id, factory(target, args), args.tags);\n\n            return target;\n        }\n    }\n\n    /**\n     *\n     * @param {Object} args\n     *\n     * @returns {Function}\n     */\n    static extend(args) {\n        args.use = args.use || [];\n        args.tags = args.tags || [];\n        args.jsimple = args.jsimple || Decorator.jsimple;\n\n        return function(target) {\n            args.jsimple.extend(args.id, factory(target, args), args.tags);\n\n            return target;\n        }\n    }\n\n    /**\n     *\n     * @param {Array<String>|Object} args\n     *\n     * @returns {Function}\n     */\n    static use(args) {\n        if (args instanceof Array) {\n            args = {\n                deps: args\n            };\n        }\n\n        args.jsimple = args.jsimple || Decorator.jsimple;\n\n        try {\n            require.resolve(\"harmony-reflect\");\n        } catch (err) {\n            throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n        }\n\n        require(\"harmony-reflect\");\n\n        return function(target) {\n            return new Proxy(target, {\n                construct: (target, ctorArgs) => {\n                    return Reflect.construct(target, args.deps.map((dep, index) => {\n                        if (ctorArgs[index]) {\n                            return ctorArgs[index];\n                        }\n\n                        return args.jsimple.get(dep);\n                    }));\n                }\n            });\n        };\n    }\n}\n\n/**\n *\n * @see Decorator.share\n *\n * @param {Object} args\n *\n * @returns {Function}\n */\nlet Shared = Decorator.share;\n\n/**\n *\n * @see Decorator.factory\n *\n * @param {Object} args\n *\n * @returns {Function}\n */\nlet Factory = Decorator.factory;\n\n/**\n *\n * @see Decorator.extend\n *\n * @param {Object} args\n *\n * @returns {Function}\n */\nlet Extend = Decorator.extend;\n\n/**\n *\n * @see Decorator.use\n *\n * @param {Array<String>|Object} args\n *\n * @returns {Function}\n */\nlet Use = Decorator.use;\n\n/**\n *\n * @see Decorator.use\n *\n * @param {Array<String>|Object} args\n *\n * @returns {Function}\n */\nlet Inject = Decorator.use;\n\nmodule.exports = { Decorator, Shared, Factory, Extend, Use, Inject };\n"
+  },
+  {
+    "__docId__": 1,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "factory",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~factory",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 2,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Decorator",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Decorator",
+    "access": "public",
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 41,
+    "interface": false
+  },
+  {
+    "__docId__": 3,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "setJsimple",
+    "memberof": "src/decorator.js~Decorator",
+    "longname": "src/decorator.js~Decorator.setJsimple",
+    "access": null,
+    "description": "Sets the default Jsimple instance",
+    "lineNumber": 47,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Jsimple"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "jsimple",
+        "description": ""
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 4,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "share",
+    "memberof": "src/decorator.js~Decorator",
+    "longname": "src/decorator.js~Decorator.share",
+    "access": null,
+    "description": "",
+    "lineNumber": 57,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 5,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "factory",
+    "memberof": "src/decorator.js~Decorator",
+    "longname": "src/decorator.js~Decorator.factory",
+    "access": null,
+    "description": "",
+    "lineNumber": 75,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 6,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "extend",
+    "memberof": "src/decorator.js~Decorator",
+    "longname": "src/decorator.js~Decorator.extend",
+    "access": null,
+    "description": "",
+    "lineNumber": 93,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 7,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "use",
+    "memberof": "src/decorator.js~Decorator",
+    "longname": "src/decorator.js~Decorator.use",
+    "access": null,
+    "description": "",
+    "lineNumber": 111,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Array<String>",
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 8,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Shared",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Shared",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": "",
+    "see": [
+      "Decorator.share"
+    ],
+    "lineNumber": 152,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Factory",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Factory",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": "",
+    "see": [
+      "Decorator.factory"
+    ],
+    "lineNumber": 162,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Extend",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Extend",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": "",
+    "see": [
+      "Decorator.extend"
+    ],
+    "lineNumber": 172,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 11,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Use",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Use",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": "",
+    "see": [
+      "Decorator.use"
+    ],
+    "lineNumber": 182,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Array<String>",
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Inject",
+    "memberof": "src/decorator.js",
+    "longname": "src/decorator.js~Inject",
+    "access": null,
+    "export": false,
+    "importPath": "jsimple/src/decorator.js",
+    "importStyle": null,
+    "description": "",
+    "see": [
+      "Decorator.use"
+    ],
+    "lineNumber": 192,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{Function}"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Array<String>",
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "args",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Function"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 13,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -9,46 +489,70 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\n/**\n * @access public\n */\nclass Jimple {\n    /**\n     * Builds a new Jimple instance\n     */\n    constructor() {\n        /**\n         * @type {Map<String, *>}\n         * @access protected\n         */\n        this.values = new Map();\n\n        /**\n         * @type {Map<String, Set>}\n         * @access protected\n         */\n        this.tagmap = new Map();\n\n        /**\n         * @type {Map<String, *>}\n         * @access protected\n         */\n        this.shared = new Map();\n\n        /**\n         * @type {Set<String>}\n         * @access protected\n         */\n        this.frozen = new Set();\n\n        Object.freeze(this);\n    }\n\n    /**\n     *\n     * @param {Array<String>|Function(deps: *, container: Jimple): *} deps   List of dependencies to inject or executable function\n     * @param {Function(deps: *, container: Jimple): *}               [code] Executable function\n     *\n     * @returns {*} Result of executing the provided function as code\n     */\n    use(deps, code) {\n        if (deps.constructor.name === \"Array\") {\n            deps = deps || [];\n            deps.forEach((value, key) => deps[key] = this.get(value));\n            deps.push(this);\n\n            return code.apply(null, deps);\n        }\n\n        if (typeof deps === \"function\") {\n            return deps(this);\n        } else {\n            return code(this);\n        }\n    }\n\n    /**\n     * Sets a parameter or an object factory\n     *\n     * @param {String}                           name   The unique identifier for the parameter or factory\n     * @param {*|Function(container: Jimple): *} value  The parameter value or a factory function\n     * @param {Array<String>}                    [tags] An array of tags to associate to the parameter or factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    define(name, value, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.define must be a string identifier\")\n        }\n\n        if (this.frozen.has(name)) {\n            throw new Error(\"Cannot override an already executed factory or fetched service\");\n        }\n\n        if (this.values.has(name)) {\n            (this.values.get(name).tags || []).forEach(tag => {\n                this.tagmap.get(tag).delete(name);\n            });\n\n            this.values.delete(name);\n        }\n\n        if (typeof value !== \"function\") {\n            this.values.set(name, () => value);\n        } else {\n            this.values.set(name, value);\n        }\n\n        this.values.get(name).tags = tags || [];\n        this.values.get(name).tags.forEach(tag => {\n            if (this.tagmap.has(tag) === false) {\n                this.tagmap.set(tag, new Set());\n            }\n\n            this.tagmap.get(tag).add(name);\n        });\n\n        if (this.shared.has(name)) {\n            this.shared.delete(name);\n        }\n\n        return this;\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    share(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.share must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.share must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                if (jimple.shared.has(name) === false) {\n                    jimple.shared.set(name, code(jimple));\n                }\n\n                let instance = jimple.shared.get(name);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    factory(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.factory must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.factory must be a function\")\n        }\n\n        return this.define(\n            name,\n            jimple => {\n                let instance = code(jimple);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                                     name   The unique identifier for the parameter or factory to extend\n     * @param {Function(service: *, container: Jimple): *} code   The executable extended function\n     * @param {Array<String>}                              [tags] An array of tags to associate to the the parameter or factory to extend\n     *\n     * @returns {Jimple} The current Jimple instance\n     */\n    extend(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.extend must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jimple.extend must be a function\")\n        }\n\n        let service = this.raw(name);\n\n        return this.share(\n            name,\n            jimple => code(service(jimple), jimple),\n            tags || this.values.get(name).tags\n        );\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory\n     *\n     * @returns {Boolean} Wether the parameter, service or factory exists\n     */\n    exists(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.exists must be a string identifier\")\n        }\n\n        return this.values.has(name);\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory to fetch\n     *\n     * @returns {*} Result of executing the factory function\n     */\n    get(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.get must be a string identifier\")\n        }\n\n        return this.raw(name)(this);\n    }\n\n    /**\n     *\n     * @deprecated Use {@link Jimple#tagged} instead\n     * @see Jimple#tagged\n     *\n     * @param {String} tag The tag name for which to fetch parameters, services or factories\n     *\n     * @return {Array} Service names associated with the provided tag\n     */\n    getTagged(tag) {\n        return this.tagged(tag);\n    }\n\n    /**\n     *\n     * @param {String|Array<String>} tags tag The tag names for which to fetch parameters, services or factories\n     *\n     * @returns {Array} Service names associated with the provided tags\n     */\n    tagged(tags) {\n        if (typeof tags !== \"string\" && tags.constructor.name !== \"Array\") {\n            throw new Error(\"Argument #1 passed to Jimple.tagged must be a string identifier or an array of string identifiers\")\n        }\n\n        if (typeof tags === \"string\") {\n            tags = [tags];\n        }\n\n        let tagged;\n\n        tags.forEach(tag => {\n            let services = Array.from(this.tagmap.get(tag) || []);\n\n            if (!tagged) {\n                tagged = services;\n            } else {\n                tagged = services.filter(service => tagged.indexOf(service) > -1);\n            }\n        });\n\n        return tagged;\n    }\n\n    /**\n     *\n     * @deprecated\n     *\n     * @return {Array} Declared parameter, service and factory names\n     */\n    keys() {\n        return Array.from(this.values.keys());\n    }\n\n    /**\n     *\n     * @param {Function(): *} code Function to be protected from becoming a factory\n     *\n     * @returns {Function(): *} Function wrapping the provided function as code\n     */\n    protect(code) {\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #1 passed to Jimple.protect must be a function\")\n        }\n\n        return () => code;\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the factory to fetch\n     *\n     * @returns {Function(container: Jimple): *} The declared factory function\n     */\n    raw(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jimple.raw must be a string identifier\")\n        }\n\n        if (this.exists(name) === false) {\n            throw new Error(`Identifier ${name} is not defined`);\n        }\n\n        return this.values.get(name);\n    }\n\n    /**\n     *\n     * @returns {Jimple} The current Jimple instance wrapped in a Proxy\n     */\n    proxify() {\n        return JimpleProxified.fromJimple(this);\n    }\n}\n\n/**\n * @access private\n */\nclass JimpleProxified extends Jimple {\n    /**\n     * Builds a proxified Jimple instance from a Jimple instance\n     *\n     * @param {Jimple} jimple The jimple instance to proxify\n     *\n     * @returns {Jimple} A proxified Jimple instance\n     */\n    static fromJimple(jimple) {\n        if (jimple instanceof JimpleProxified) {\n            return jimple;\n        }\n\n        let Proxy = require(\"./proxy.js\"),\n            proxified = new JimpleProxified();\n\n        Object.getOwnPropertyNames(jimple).forEach(property => {\n            jimple[property].forEach((value, key) => {\n                if (proxified[property] instanceof Map) {\n                    proxified[property].set(key, value);\n                }\n\n                if (proxified[property] instanceof Set) {\n                    proxified[property].add(value);\n                }\n            });\n        });\n\n        return new Proxy(proxified);\n    }\n}\n\nmodule.exports = Jimple;\n"
+    "content": "\"use strict\";\n\n/**\n * @ignore\n */\nlet Decorator = require(\"./decorator.js\").Decorator;\n\n/**\n * @access public\n */\nclass Jsimple {\n    /**\n     * Builds a new Jsimple instance\n     */\n    constructor() {\n        /**\n         * @type {Map<String, *>}\n         * @access protected\n         */\n        this.values = new Map();\n\n        /**\n         * @type {Map<String, Set>}\n         * @access protected\n         */\n        this.tagmap = new Map();\n\n        /**\n         * @type {Map<String, *>}\n         * @access protected\n         */\n        this.shared = new Map();\n\n        /**\n         * @type {Set<String>}\n         * @access protected\n         */\n        this.frozen = new Set();\n\n        Object.freeze(this);\n\n        Decorator.setJsimple(this);\n    }\n\n    /**\n     *\n     * @param {Array<String>|Function(deps: *, container: Jsimple): *} deps   List of dependencies to inject or executable function\n     * @param {Function(deps: *, container: Jsimple): *}               [code] Executable function\n     *\n     * @returns {*} Result of executing the provided function as code\n     */\n    use(deps, code) {\n        if (deps.constructor.name === \"Array\") {\n            deps = deps || [];\n            deps.forEach((value, key) => deps[key] = this.get(value));\n            deps.push(this);\n\n            return code.apply(null, deps);\n        }\n\n        if (typeof deps === \"function\") {\n            return deps(this);\n        } else {\n            return code(this);\n        }\n    }\n\n    /**\n     * Sets a parameter or an object factory\n     *\n     * @param {String}                           name   The unique identifier for the parameter or factory\n     * @param {*|Function(container: Jsimple): *} value  The parameter value or a factory function\n     * @param {Array<String>}                    [tags] An array of tags to associate to the parameter or factory\n     *\n     * @returns {Jsimple} The current Jsimple instance\n     */\n    define(name, value, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.define must be a string identifier\")\n        }\n\n        if (this.frozen.has(name)) {\n            throw new Error(\"Cannot override an already executed factory or fetched service\");\n        }\n\n        if (this.values.has(name)) {\n            (this.values.get(name).tags || []).forEach(tag => {\n                this.tagmap.get(tag).delete(name);\n            });\n\n            this.values.delete(name);\n        }\n\n        if (typeof value !== \"function\") {\n            this.values.set(name, () => value);\n        } else {\n            this.values.set(name, value);\n        }\n\n        this.values.get(name).tags = tags || [];\n        this.values.get(name).tags.forEach(tag => {\n            if (this.tagmap.has(tag) === false) {\n                this.tagmap.set(tag, new Set());\n            }\n\n            this.tagmap.get(tag).add(name);\n        });\n\n        if (this.shared.has(name)) {\n            this.shared.delete(name);\n        }\n\n        return this;\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jsimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jsimple} The current Jsimple instance\n     */\n    share(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.share must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jsimple.share must be a function\")\n        }\n\n        return this.define(\n            name,\n            jsimple => {\n                if (jsimple.shared.has(name) === false) {\n                    jsimple.shared.set(name, code(jsimple));\n                }\n\n                let instance = jsimple.shared.get(name);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                         name   The unique identifier for the factory\n     * @param {Function(container: Jsimple): *} code   The executable factory function\n     * @param {Array<String>}                  [tags] An array of tags to associate to the factory\n     *\n     * @returns {Jsimple} The current Jsimple instance\n     */\n    factory(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.factory must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jsimple.factory must be a function\")\n        }\n\n        return this.define(\n            name,\n            jsimple => {\n                let instance = code(jsimple);\n\n                this.frozen.add(name);\n\n                return instance;\n            },\n            tags || []\n        );\n    }\n\n    /**\n     *\n     * @param {String}                                     name   The unique identifier for the parameter or factory to extend\n     * @param {Function(service: *, container: Jsimple): *} code   The executable extended function\n     * @param {Array<String>}                              [tags] An array of tags to associate to the the parameter or factory to extend\n     *\n     * @returns {Jsimple} The current Jsimple instance\n     */\n    extend(name, code, tags) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.extend must be a string identifier\")\n        }\n\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #2 passed to Jsimple.extend must be a function\")\n        }\n\n        let service = this.raw(name);\n\n        return this.share(\n            name,\n            jsimple => code(service(jsimple), jsimple),\n            tags || this.values.get(name).tags\n        );\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory\n     *\n     * @returns {Boolean} Wether the parameter, service or factory exists\n     */\n    exists(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.exists must be a string identifier\")\n        }\n\n        return this.values.has(name);\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the parameter, service or factory to fetch\n     *\n     * @returns {*} Result of executing the factory function\n     */\n    get(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.get must be a string identifier\")\n        }\n\n        return this.raw(name)(this);\n    }\n\n    /**\n     *\n     * @deprecated Use {@link Jsimple#tagged} instead\n     * @see Jsimple#tagged\n     *\n     * @param {String} tag The tag name for which to fetch parameters, services or factories\n     *\n     * @return {Array} Service names associated with the provided tag\n     */\n    getTagged(tag) {\n        return this.tagged(tag);\n    }\n\n    /**\n     *\n     * @param {String|Array<String>} tags The tag names for which to fetch parameters, services or factories\n     *\n     * @returns {Array} Service names associated with the provided tags\n     */\n    tagged(tags) {\n        if (typeof tags !== \"string\" && tags.constructor.name !== \"Array\") {\n            throw new Error(\"Argument #1 passed to Jsimple.tagged must be a string identifier or an array of string identifiers\")\n        }\n\n        if (typeof tags === \"string\") {\n            tags = [tags];\n        }\n\n        let tagged;\n\n        tags.forEach(tag => {\n            let services = Array.from(this.tagmap.get(tag) || []);\n\n            if (!tagged) {\n                tagged = services;\n            } else {\n                tagged = services.filter(service => tagged.indexOf(service) > -1);\n            }\n        });\n\n        return tagged;\n    }\n\n    /**\n     *\n     * @deprecated\n     *\n     * @return {Array} Declared parameter, service and factory names\n     */\n    keys() {\n        return Array.from(this.values.keys());\n    }\n\n    /**\n     *\n     * @param {Function(): *} code Function to be protected from becoming a factory\n     *\n     * @returns {Function(): *} Function wrapping the provided function as code\n     */\n    protect(code) {\n        if (typeof code !== \"function\") {\n            throw new Error(\"Argument #1 passed to Jsimple.protect must be a function\")\n        }\n\n        return () => code;\n    }\n\n    /**\n     *\n     * @param {String} name The unique identifier for the factory to fetch\n     *\n     * @returns {Function(container: Jsimple): *} The declared factory function\n     */\n    raw(name) {\n        if (typeof name !== \"string\") {\n            throw new Error(\"Argument #1 passed to Jsimple.raw must be a string identifier\")\n        }\n\n        if (this.exists(name) === false) {\n            throw new Error(`Identifier ${name} is not defined`);\n        }\n\n        return this.values.get(name);\n    }\n\n    /**\n     *\n     * @returns {Jsimple} The current Jsimple instance wrapped in a Proxy\n     */\n    proxify() {\n        return JsimpleProxified.fromJsimple(this);\n    }\n}\n\n/**\n * @access private\n */\nclass JsimpleProxified extends Jsimple {\n    /**\n     * Builds a proxified Jsimple instance from a Jsimple instance\n     *\n     * @param {Jsimple} jsimple The jsimple instance to proxify\n     *\n     * @returns {Jsimple} A proxified Jsimple instance\n     */\n    static fromJsimple(jsimple) {\n        if (jsimple instanceof JsimpleProxified) {\n            return jsimple;\n        }\n\n        let Proxy = require(\"./proxy.js\"),\n            proxified = new JsimpleProxified();\n\n        Object.getOwnPropertyNames(jsimple).forEach(property => {\n            jsimple[property].forEach((value, key) => {\n                if (proxified[property] instanceof Map) {\n                    proxified[property].set(key, value);\n                }\n\n                if (proxified[property] instanceof Set) {\n                    proxified[property].add(value);\n                }\n            });\n        });\n\n        return new Proxy(proxified);\n    }\n}\n\nmodule.exports = Jsimple;\n"
   },
   {
-    "kind": "class",
+    "__docId__": 14,
+    "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "Jimple",
+    "name": "Decorator",
     "memberof": "src/index.js",
-    "longname": "src/index.js~Jimple",
-    "access": "public",
+    "longname": "src/index.js~Decorator",
+    "access": null,
     "export": false,
-    "importPath": "jimple",
+    "importPath": "jsimple",
     "importStyle": null,
     "description": null,
     "lineNumber": 6,
+    "ignore": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 15,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Jsimple",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~Jsimple",
+    "access": "public",
+    "export": false,
+    "importPath": "jsimple",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 11,
     "interface": false
   },
   {
+    "__docId__": 16,
     "kind": "constructor",
     "static": false,
     "variation": null,
     "name": "constructor",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#constructor",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#constructor",
     "access": null,
-    "description": "Builds a new Jimple instance",
-    "lineNumber": 10,
+    "description": "Builds a new Jsimple instance",
+    "lineNumber": 15,
     "params": [],
     "generator": false
   },
   {
+    "__docId__": 17,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "values",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#values",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#values",
     "access": "protected",
     "description": null,
-    "lineNumber": 15,
+    "lineNumber": 20,
     "type": {
       "nullable": null,
       "types": [
@@ -59,15 +563,16 @@
     }
   },
   {
+    "__docId__": 18,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "tagmap",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#tagmap",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#tagmap",
     "access": "protected",
     "description": null,
-    "lineNumber": 21,
+    "lineNumber": 26,
     "type": {
       "nullable": null,
       "types": [
@@ -78,15 +583,16 @@
     }
   },
   {
+    "__docId__": 19,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "shared",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#shared",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#shared",
     "access": "protected",
     "description": null,
-    "lineNumber": 27,
+    "lineNumber": 32,
     "type": {
       "nullable": null,
       "types": [
@@ -97,15 +603,16 @@
     }
   },
   {
+    "__docId__": 20,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "frozen",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#frozen",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#frozen",
     "access": "protected",
     "description": null,
-    "lineNumber": 33,
+    "lineNumber": 38,
     "type": {
       "nullable": null,
       "types": [
@@ -116,15 +623,16 @@
     }
   },
   {
+    "__docId__": 21,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "use",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#use",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#use",
     "access": null,
     "description": "",
-    "lineNumber": 45,
+    "lineNumber": 52,
     "unknown": [
       {
         "tagName": "@returns",
@@ -136,7 +644,7 @@
         "nullable": null,
         "types": [
           "Array<String>",
-          "Function(deps: *, container: Jimple): *"
+          "Function(deps: *, container: Jsimple): *"
         ],
         "spread": false,
         "optional": false,
@@ -146,7 +654,7 @@
       {
         "nullable": null,
         "types": [
-          "Function(deps: *, container: Jimple): *"
+          "Function(deps: *, container: Jsimple): *"
         ],
         "spread": false,
         "optional": true,
@@ -165,19 +673,20 @@
     "generator": false
   },
   {
+    "__docId__": 22,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "define",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#define",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#define",
     "access": null,
     "description": "Sets a parameter or an object factory",
-    "lineNumber": 70,
+    "lineNumber": 77,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} The current Jimple instance"
+        "tagValue": "{Jsimple} The current Jsimple instance"
       }
     ],
     "params": [
@@ -195,7 +704,7 @@
         "nullable": null,
         "types": [
           "*",
-          "Function(container: Jimple): *"
+          "Function(container: Jsimple): *"
         ],
         "spread": false,
         "optional": false,
@@ -216,27 +725,28 @@
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "The current Jimple instance"
+      "description": "The current Jsimple instance"
     },
     "generator": false
   },
   {
+    "__docId__": 23,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "share",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#share",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#share",
     "access": null,
     "description": "",
-    "lineNumber": 117,
+    "lineNumber": 124,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} The current Jimple instance"
+        "tagValue": "{Jsimple} The current Jsimple instance"
       }
     ],
     "params": [
@@ -253,7 +763,7 @@
       {
         "nullable": null,
         "types": [
-          "Function(container: Jimple): *"
+          "Function(container: Jsimple): *"
         ],
         "spread": false,
         "optional": false,
@@ -274,27 +784,28 @@
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "The current Jimple instance"
+      "description": "The current Jsimple instance"
     },
     "generator": false
   },
   {
+    "__docId__": 24,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "factory",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#factory",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#factory",
     "access": null,
     "description": "",
-    "lineNumber": 151,
+    "lineNumber": 158,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} The current Jimple instance"
+        "tagValue": "{Jsimple} The current Jsimple instance"
       }
     ],
     "params": [
@@ -311,7 +822,7 @@
       {
         "nullable": null,
         "types": [
-          "Function(container: Jimple): *"
+          "Function(container: Jsimple): *"
         ],
         "spread": false,
         "optional": false,
@@ -332,27 +843,28 @@
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "The current Jimple instance"
+      "description": "The current Jsimple instance"
     },
     "generator": false
   },
   {
+    "__docId__": 25,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "extend",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#extend",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#extend",
     "access": null,
     "description": "",
-    "lineNumber": 181,
+    "lineNumber": 188,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} The current Jimple instance"
+        "tagValue": "{Jsimple} The current Jsimple instance"
       }
     ],
     "params": [
@@ -369,7 +881,7 @@
       {
         "nullable": null,
         "types": [
-          "Function(service: *, container: Jimple): *"
+          "Function(service: *, container: Jsimple): *"
         ],
         "spread": false,
         "optional": false,
@@ -390,23 +902,24 @@
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "The current Jimple instance"
+      "description": "The current Jsimple instance"
     },
     "generator": false
   },
   {
+    "__docId__": 26,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "exists",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#exists",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#exists",
     "access": null,
     "description": "",
-    "lineNumber": 205,
+    "lineNumber": 212,
     "unknown": [
       {
         "tagName": "@returns",
@@ -436,15 +949,16 @@
     "generator": false
   },
   {
+    "__docId__": 27,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "get",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#get",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#get",
     "access": null,
     "description": "",
-    "lineNumber": 219,
+    "lineNumber": 226,
     "unknown": [
       {
         "tagName": "@returns",
@@ -474,19 +988,20 @@
     "generator": false
   },
   {
+    "__docId__": 28,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "getTagged",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#getTagged",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#getTagged",
     "access": null,
     "description": "",
     "see": [
-      "Jimple#tagged"
+      "Jsimple#tagged"
     ],
-    "lineNumber": 236,
-    "deprecated": "Use {@link Jimple#tagged} instead",
+    "lineNumber": 243,
+    "deprecated": "Use {@link Jsimple#tagged} instead",
     "params": [
       {
         "nullable": null,
@@ -510,15 +1025,16 @@
     "generator": false
   },
   {
+    "__docId__": 29,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "tagged",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#tagged",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#tagged",
     "access": null,
     "description": "",
-    "lineNumber": 246,
+    "lineNumber": 253,
     "unknown": [
       {
         "tagName": "@returns",
@@ -535,7 +1051,7 @@
         "spread": false,
         "optional": false,
         "name": "tags",
-        "description": "tag The tag names for which to fetch parameters, services or factories"
+        "description": "The tag names for which to fetch parameters, services or factories"
       }
     ],
     "return": {
@@ -549,15 +1065,16 @@
     "generator": false
   },
   {
+    "__docId__": 30,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "keys",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#keys",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#keys",
     "access": null,
     "description": "",
-    "lineNumber": 276,
+    "lineNumber": 283,
     "deprecated": true,
     "params": [],
     "return": {
@@ -571,15 +1088,16 @@
     "generator": false
   },
   {
+    "__docId__": 31,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "protect",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#protect",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#protect",
     "access": null,
     "description": "",
-    "lineNumber": 286,
+    "lineNumber": 293,
     "unknown": [
       {
         "tagName": "@returns",
@@ -609,19 +1127,20 @@
     "generator": false
   },
   {
+    "__docId__": 32,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "raw",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#raw",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#raw",
     "access": null,
     "description": "",
-    "lineNumber": 300,
+    "lineNumber": 307,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Function(container: Jimple): *} The declared factory function"
+        "tagValue": "{Function(container: Jsimple): *} The declared factory function"
       }
     ],
     "params": [
@@ -639,7 +1158,7 @@
     "return": {
       "nullable": null,
       "types": [
-        "Function(container: Jimple): *"
+        "Function(container: Jsimple): *"
       ],
       "spread": false,
       "description": "The declared factory function"
@@ -647,89 +1166,93 @@
     "generator": false
   },
   {
+    "__docId__": 33,
     "kind": "method",
     "static": false,
     "variation": null,
     "name": "proxify",
-    "memberof": "src/index.js~Jimple",
-    "longname": "src/index.js~Jimple#proxify",
+    "memberof": "src/index.js~Jsimple",
+    "longname": "src/index.js~Jsimple#proxify",
     "access": null,
     "description": "",
-    "lineNumber": 316,
+    "lineNumber": 323,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} The current Jimple instance wrapped in a Proxy"
+        "tagValue": "{Jsimple} The current Jsimple instance wrapped in a Proxy"
       }
     ],
     "params": [],
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "The current Jimple instance wrapped in a Proxy"
+      "description": "The current Jsimple instance wrapped in a Proxy"
     },
     "generator": false
   },
   {
+    "__docId__": 34,
     "kind": "class",
     "static": true,
     "variation": null,
-    "name": "JimpleProxified",
+    "name": "JsimpleProxified",
     "memberof": "src/index.js",
-    "longname": "src/index.js~JimpleProxified",
+    "longname": "src/index.js~JsimpleProxified",
     "access": "private",
     "export": false,
-    "importPath": "jimple",
+    "importPath": "jsimple",
     "importStyle": null,
     "description": null,
-    "lineNumber": 324,
+    "lineNumber": 331,
     "interface": false,
     "extends": [
-      "Jimple"
+      "Jsimple"
     ]
   },
   {
+    "__docId__": 35,
     "kind": "method",
     "static": true,
     "variation": null,
-    "name": "fromJimple",
-    "memberof": "src/index.js~JimpleProxified",
-    "longname": "src/index.js~JimpleProxified.fromJimple",
+    "name": "fromJsimple",
+    "memberof": "src/index.js~JsimpleProxified",
+    "longname": "src/index.js~JsimpleProxified.fromJsimple",
     "access": null,
-    "description": "Builds a proxified Jimple instance from a Jimple instance",
-    "lineNumber": 332,
+    "description": "Builds a proxified Jsimple instance from a Jsimple instance",
+    "lineNumber": 339,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Jimple} A proxified Jimple instance"
+        "tagValue": "{Jsimple} A proxified Jsimple instance"
       }
     ],
     "params": [
       {
         "nullable": null,
         "types": [
-          "Jimple"
+          "Jsimple"
         ],
         "spread": false,
         "optional": false,
-        "name": "jimple",
-        "description": "The jimple instance to proxify"
+        "name": "jsimple",
+        "description": "The jsimple instance to proxify"
       }
     ],
     "return": {
       "nullable": null,
       "types": [
-        "Jimple"
+        "Jsimple"
       ],
       "spread": false,
-      "description": "A proxified Jimple instance"
+      "description": "A proxified Jsimple instance"
     },
     "generator": false
   },
   {
+    "__docId__": 36,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -739,18 +1262,19 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\n/**\n * @ignore\n */\nlet Jimple = require(\".\");\n\n/**\n * @access private\n * @extends {Jimple}\n * @extends {Proxy}\n */\nclass JimpleProxy extends Proxy {\n    /**\n     * Builds a proxy on a Jimple instance\n     *\n     * @param {Jimple} [jimple] A Jimple instance to wrap in a Proxy\n     */\n    constructor(jimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jimple || new Jimple(), handler);\n    }\n}\n\nmodule.exports = JimpleProxy;\n"
+    "content": "\"use strict\";\n\ntry {\n    require.resolve(\"harmony-reflect\");\n} catch (err) {\n    throw new Error(\"You should install harmony-reflect module and use the --harmony_proxies flag to use this feature\");\n}\n\nrequire(\"harmony-reflect\");\n\n/**\n * @ignore\n */\nlet Jsimple = require(\".\");\n\n/**\n * @access private\n * @extends {Jsimple}\n * @extends {Proxy}\n */\nclass JsimpleProxy extends Proxy {\n    /**\n     * Builds a proxy on a Jsimple instance\n     *\n     * @param {Jsimple} [jsimple] A Jsimple instance to wrap in a Proxy\n     */\n    constructor(jsimple) {\n        let handler = {\n            get: (target, name) => {\n                return name in target ? target[name] : target.get(name);\n            },\n\n            set: (target, name, value, receiver) => {\n                if (name in target) {\n                    throw new Error(`Cannot define a service named ${name}`);\n                }\n\n                target.share(name, value);\n\n                return true;\n            },\n\n            has: (target, name) => target.exists(name),\n\n            deleteProperty: () => false\n        };\n\n        super(jsimple || new Jsimple(), handler);\n    }\n}\n\nmodule.exports = JsimpleProxy;\n"
   },
   {
+    "__docId__": 37,
     "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "Jimple",
+    "name": "Jsimple",
     "memberof": "src/proxy.js",
-    "longname": "src/proxy.js~Jimple",
+    "longname": "src/proxy.js~Jsimple",
     "access": null,
     "export": false,
-    "importPath": "jimple/src/proxy.js",
+    "importPath": "jsimple/src/proxy.js",
     "importStyle": null,
     "description": null,
     "lineNumber": 14,
@@ -762,49 +1286,52 @@
     }
   },
   {
+    "__docId__": 38,
     "kind": "class",
     "static": true,
     "variation": null,
-    "name": "JimpleProxy",
+    "name": "JsimpleProxy",
     "memberof": "src/proxy.js",
-    "longname": "src/proxy.js~JimpleProxy",
+    "longname": "src/proxy.js~JsimpleProxy",
     "access": "private",
     "export": false,
-    "importPath": "jimple/src/proxy.js",
+    "importPath": "jsimple/src/proxy.js",
     "importStyle": null,
     "description": null,
     "lineNumber": 21,
     "interface": false,
     "extends": [
-      "Jimple",
+      "Jsimple",
       "Proxy"
     ]
   },
   {
+    "__docId__": 39,
     "kind": "constructor",
     "static": false,
     "variation": null,
     "name": "constructor",
-    "memberof": "src/proxy.js~JimpleProxy",
-    "longname": "src/proxy.js~JimpleProxy#constructor",
+    "memberof": "src/proxy.js~JsimpleProxy",
+    "longname": "src/proxy.js~JsimpleProxy#constructor",
     "access": null,
-    "description": "Builds a proxy on a Jimple instance",
+    "description": "Builds a proxy on a Jsimple instance",
     "lineNumber": 27,
     "params": [
       {
         "nullable": null,
         "types": [
-          "Jimple"
+          "Jsimple"
         ],
         "spread": false,
         "optional": true,
-        "name": "jimple",
-        "description": "A Jimple instance to wrap in a Proxy"
+        "name": "jsimple",
+        "description": "A Jsimple instance to wrap in a Proxy"
       }
     ],
     "generator": false
   },
   {
+    "__docId__": 41,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -817,6 +1344,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 42,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -829,6 +1357,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 43,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -841,6 +1370,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 44,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -853,6 +1383,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 45,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -865,6 +1396,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 46,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -877,6 +1409,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 47,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -889,6 +1422,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 48,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -901,6 +1435,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 49,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -913,6 +1448,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 50,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -925,6 +1461,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 51,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -937,6 +1474,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 52,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -949,6 +1487,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 53,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -961,6 +1500,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 54,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -973,6 +1513,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 55,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -985,6 +1526,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 56,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -997,6 +1539,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 57,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1009,6 +1552,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 58,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1021,6 +1565,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 59,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1033,6 +1578,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 60,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1045,6 +1591,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 61,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1057,6 +1604,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 62,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1069,6 +1617,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 63,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1081,6 +1630,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 64,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1093,6 +1643,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 65,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1105,6 +1656,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 66,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1117,6 +1669,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 67,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1129,6 +1682,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 68,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1141,6 +1695,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 69,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1153,6 +1708,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 70,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1165,6 +1721,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 71,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1177,6 +1734,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 72,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1189,6 +1747,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 73,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1201,6 +1760,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 74,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1213,6 +1773,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 75,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1225,6 +1786,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 76,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1237,6 +1799,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 77,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1249,6 +1812,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 78,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1261,6 +1825,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 79,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1273,6 +1838,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 80,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1285,6 +1851,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 81,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1297,6 +1864,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 82,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1309,6 +1877,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 83,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1321,6 +1890,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 84,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1333,6 +1903,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 85,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1345,6 +1916,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 86,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1357,6 +1929,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 87,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1369,6 +1942,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 89,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1381,6 +1955,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 90,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1393,6 +1968,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 91,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1405,6 +1981,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 92,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1417,6 +1994,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 93,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1429,6 +2007,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 94,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1441,6 +2020,7 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 95,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -1453,6 +2033,502 @@
     "builtinExternal": true
   },
   {
+    "__docId__": 96,
+    "kind": "testFile",
+    "static": true,
+    "variation": null,
+    "name": "tests/decorator.es7",
+    "memberof": null,
+    "longname": "tests/decorator.es7",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nvar Jsimple = require(\"../src\"),\n    Decorators = require(\"../src/decorator.js\"),\n    Decorator = Decorators.Decorator;\n\n/** @test {Decorator} */\ndescribe(\"Decorator\", () => {\n    let jsimple;\n\n    beforeEach(() => jsimple = new Jsimple());\n\n    beforeEach(() => {\n        let should = require(\"should\");\n\n        should.extend(\"then\", Proxy.prototype);\n        should.extend(\"Boolean\", Proxy.prototype);\n    });\n\n    /** @test {Decorator.share} */\n    describe(\".share\", () => {\n        it(\"should declare a shared service\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            jsimple.keys().should.be.eql([\"service\"]);\n            jsimple.get(\"service\").should.be.an.instanceof(Service);\n            jsimple.get(\"service\").should.be.equal(jsimple.get(\"service\"));\n        });\n\n        it(\"should declare a shared service with dependencies\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.share({ id: \"otherService\", use: [\"service\"] })\n            class OtherService {\n                constructor(service) {\n                    service.should.be.an.instanceof(Service);\n                }\n            }\n\n            jsimple.get(\"otherService\").should.be.an.instanceof(OtherService);\n        });\n    });\n\n    /** @test {Shared} */\n    describe(\"Shared\", () => {\n        it(\"should expose a Shared decorator\", () => Decorators.Shared.should.be.equal(Decorator.share));\n    });\n\n    /** @test {Decorator.factory} */\n    describe(\".factory\", () => {\n        it(\"should declare a factory service\", () => {\n            @Decorator.factory({ id: \"factory\" })\n            class Service {}\n\n            jsimple.keys().should.be.eql([\"factory\"]);\n            jsimple.get(\"factory\").should.be.an.instanceof(Service);\n            jsimple.get(\"factory\").should.not.be.equal(jsimple.get(\"factory\"));\n        });\n\n        it(\"should declare a factory service with dependencies\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.factory({ id: \"factory\", use: [\"service\"] })\n            class OtherService {\n                constructor(service) {\n                    service.should.be.an.instanceof(Service);\n                }\n            }\n\n            jsimple.get(\"factory\").should.be.an.instanceof(OtherService);\n        });\n    });\n\n    /** @test {Factory} */\n    describe(\"Factory\", () => {\n        it(\"should expose a Factory decorator\", () => Decorators.Factory.should.be.equal(Decorator.factory));\n    });\n\n    /** @test {Decorator.extend} */\n    describe(\".extend\", () => {\n        it(\"should extend a service\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.extend({ id: \"service\" })\n            class OtherService {}\n\n            jsimple.keys().should.be.eql([\"service\"]);\n            jsimple.get(\"service\").should.be.an.instanceof(OtherService);\n            jsimple.get(\"service\").should.be.equal(jsimple.get(\"service\"));\n        });\n\n        it(\"should pass extended service as first constructor argument\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.extend({ id: \"service\" })\n            class OtherService {\n                constructor(service) {\n                    service.should.be.an.instanceof(Service);\n                }\n            }\n\n            jsimple.keys().should.be.eql([\"service\"]);\n            jsimple.get(\"service\").should.be.an.instanceof(OtherService);\n            jsimple.get(\"service\").should.be.equal(jsimple.get(\"service\"));\n        });\n    });\n\n    /** @test {Extend} */\n    describe(\"Extend\", () => {\n        it(\"should expose a Extend decorator\", () => Decorators.Extend.should.be.equal(Decorator.extend));\n    });\n\n    /** @test {Decorator.use} */\n    describe(\".use\", () => {\n        it(\"should inject dependencies\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.factory({ id: \"factory\" })\n            class Factory {}\n\n            @Decorator.use([\"service\", \"factory\"])\n            class OtherService {\n                constructor(service, factory) {\n                    service.should.be.an.instanceof(Service);\n                    factory.should.be.an.instanceof(Factory);\n                }\n            }\n\n            (new OtherService()).should.be.an.instanceof(OtherService);\n        });\n\n        it(\"should use provided arguments\", () => {\n            @Decorator.share({ id: \"service\" })\n            class Service {}\n\n            @Decorator.factory({ id: \"factory\" })\n            class Factory {}\n\n            @Decorator.use([\"service\", \"factory\"])\n            class OtherService {\n                constructor(service, factory) {\n                    service.should.be.equal(serviceInstance);\n                    factory.should.be.an.instanceof(Factory);\n                }\n            }\n\n            let serviceInstance = new Service();\n\n            (new OtherService(serviceInstance)).should.be.an.instanceof(OtherService);\n        });\n    });\n\n    /** @test {Use} */\n    describe(\"Use\", () => {\n        it(\"should expose a Use decorator\", () => Decorators.Use.should.be.equal(Decorator.use));\n    });\n\n    /** @test {Inject} */\n    describe(\"Inject\", () => {\n        it(\"should expose a Inject decorator\", () => Decorators.Inject.should.be.equal(Decorator.use));\n    });\n\n    describe(\"Combined\", () => {\n        let Shared, Factory, Inject;\n\n        beforeEach(() => {\n            let Decorators = require(\"../src/decorator.js\");\n\n            Shared = Decorators.Shared;\n            Factory = Decorators.Factory;\n            Inject = Decorators.Inject;\n        });\n\n        describe('Shared + Inject', () => {\n            it(\"should declare a shared service with dependencies\", () => {\n                @Shared({ id: \"service\" })\n                class Service {}\n\n                @Shared({ id: \"otherService\" })\n                @Inject([\"service\"])\n                class OtherService {\n                    constructor(service) {\n                        service.should.be.an.instanceof(Service);\n                    }\n                }\n\n                jsimple.get(\"otherService\").should.be.an.instanceof(OtherService);\n            });\n        });\n\n        describe('Factory + Inject', () => {\n            it(\"should declare a shared service with dependencies\", () => {\n                @Shared({ id: \"service\" })\n                class Service {}\n\n                @Factory({ id: \"factory\" })\n                @Inject([\"service\"])\n                class OtherService {\n                    constructor(service) {\n                        service.should.be.an.instanceof(Service);\n                    }\n                }\n\n                jsimple.get(\"factory\").should.be.an.instanceof(OtherService);\n            });\n        });\n    });\n});\n"
+  },
+  {
+    "__docId__": 97,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe0",
+    "testId": 0,
+    "memberof": "tests/decorator.es7",
+    "testDepth": 0,
+    "longname": "tests/decorator.es7~describe0",
+    "access": null,
+    "description": "Decorator",
+    "lineNumber": 8,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Decorator}"
+      }
+    ],
+    "testTargets": [
+      "Decorator"
+    ]
+  },
+  {
+    "__docId__": 98,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe1",
+    "testId": 1,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe1",
+    "access": null,
+    "description": ".share",
+    "lineNumber": 21,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Decorator.share}"
+      }
+    ],
+    "testTargets": [
+      "Decorator.share"
+    ]
+  },
+  {
+    "__docId__": 99,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it2",
+    "testId": 2,
+    "memberof": "tests/decorator.es7~describe0.describe1",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe1.it2",
+    "access": null,
+    "description": "should declare a shared service",
+    "lineNumber": 22
+  },
+  {
+    "__docId__": 100,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it3",
+    "testId": 3,
+    "memberof": "tests/decorator.es7~describe0.describe1",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe1.it3",
+    "access": null,
+    "description": "should declare a shared service with dependencies",
+    "lineNumber": 31
+  },
+  {
+    "__docId__": 101,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe4",
+    "testId": 4,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe4",
+    "access": null,
+    "description": "Shared",
+    "lineNumber": 47,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Shared}"
+      }
+    ],
+    "testTargets": [
+      "Shared"
+    ]
+  },
+  {
+    "__docId__": 102,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it5",
+    "testId": 5,
+    "memberof": "tests/decorator.es7~describe0.describe4",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe4.it5",
+    "access": null,
+    "description": "should expose a Shared decorator",
+    "lineNumber": 48
+  },
+  {
+    "__docId__": 103,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe6",
+    "testId": 6,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe6",
+    "access": null,
+    "description": ".factory",
+    "lineNumber": 52,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Decorator.factory}"
+      }
+    ],
+    "testTargets": [
+      "Decorator.factory"
+    ]
+  },
+  {
+    "__docId__": 104,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it7",
+    "testId": 7,
+    "memberof": "tests/decorator.es7~describe0.describe6",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe6.it7",
+    "access": null,
+    "description": "should declare a factory service",
+    "lineNumber": 53
+  },
+  {
+    "__docId__": 105,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it8",
+    "testId": 8,
+    "memberof": "tests/decorator.es7~describe0.describe6",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe6.it8",
+    "access": null,
+    "description": "should declare a factory service with dependencies",
+    "lineNumber": 62
+  },
+  {
+    "__docId__": 106,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe9",
+    "testId": 9,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe9",
+    "access": null,
+    "description": "Factory",
+    "lineNumber": 78,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Factory}"
+      }
+    ],
+    "testTargets": [
+      "Factory"
+    ]
+  },
+  {
+    "__docId__": 107,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it10",
+    "testId": 10,
+    "memberof": "tests/decorator.es7~describe0.describe9",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe9.it10",
+    "access": null,
+    "description": "should expose a Factory decorator",
+    "lineNumber": 79
+  },
+  {
+    "__docId__": 108,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe11",
+    "testId": 11,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe11",
+    "access": null,
+    "description": ".extend",
+    "lineNumber": 83,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Decorator.extend}"
+      }
+    ],
+    "testTargets": [
+      "Decorator.extend"
+    ]
+  },
+  {
+    "__docId__": 109,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it12",
+    "testId": 12,
+    "memberof": "tests/decorator.es7~describe0.describe11",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe11.it12",
+    "access": null,
+    "description": "should extend a service",
+    "lineNumber": 84
+  },
+  {
+    "__docId__": 110,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it13",
+    "testId": 13,
+    "memberof": "tests/decorator.es7~describe0.describe11",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe11.it13",
+    "access": null,
+    "description": "should pass extended service as first constructor argument",
+    "lineNumber": 96
+  },
+  {
+    "__docId__": 111,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe14",
+    "testId": 14,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe14",
+    "access": null,
+    "description": "Extend",
+    "lineNumber": 114,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Extend}"
+      }
+    ],
+    "testTargets": [
+      "Extend"
+    ]
+  },
+  {
+    "__docId__": 112,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it15",
+    "testId": 15,
+    "memberof": "tests/decorator.es7~describe0.describe14",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe14.it15",
+    "access": null,
+    "description": "should expose a Extend decorator",
+    "lineNumber": 115
+  },
+  {
+    "__docId__": 113,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe16",
+    "testId": 16,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe16",
+    "access": null,
+    "description": ".use",
+    "lineNumber": 119,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Decorator.use}"
+      }
+    ],
+    "testTargets": [
+      "Decorator.use"
+    ]
+  },
+  {
+    "__docId__": 114,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it17",
+    "testId": 17,
+    "memberof": "tests/decorator.es7~describe0.describe16",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe16.it17",
+    "access": null,
+    "description": "should inject dependencies",
+    "lineNumber": 120
+  },
+  {
+    "__docId__": 115,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it18",
+    "testId": 18,
+    "memberof": "tests/decorator.es7~describe0.describe16",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe16.it18",
+    "access": null,
+    "description": "should use provided arguments",
+    "lineNumber": 138
+  },
+  {
+    "__docId__": 116,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe19",
+    "testId": 19,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe19",
+    "access": null,
+    "description": "Use",
+    "lineNumber": 160,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Use}"
+      }
+    ],
+    "testTargets": [
+      "Use"
+    ]
+  },
+  {
+    "__docId__": 117,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it20",
+    "testId": 20,
+    "memberof": "tests/decorator.es7~describe0.describe19",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe19.it20",
+    "access": null,
+    "description": "should expose a Use decorator",
+    "lineNumber": 161
+  },
+  {
+    "__docId__": 118,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe21",
+    "testId": 21,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe21",
+    "access": null,
+    "description": "Inject",
+    "lineNumber": 165,
+    "unknown": [
+      {
+        "tagName": "@test",
+        "tagValue": "{Inject}"
+      }
+    ],
+    "testTargets": [
+      "Inject"
+    ]
+  },
+  {
+    "__docId__": 119,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it22",
+    "testId": 22,
+    "memberof": "tests/decorator.es7~describe0.describe21",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe21.it22",
+    "access": null,
+    "description": "should expose a Inject decorator",
+    "lineNumber": 166
+  },
+  {
+    "__docId__": 120,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe23",
+    "testId": 23,
+    "memberof": "tests/decorator.es7~describe0",
+    "testDepth": 1,
+    "longname": "tests/decorator.es7~describe0.describe23",
+    "access": null,
+    "description": "Combined",
+    "lineNumber": 169
+  },
+  {
+    "__docId__": 121,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe24",
+    "testId": 24,
+    "memberof": "tests/decorator.es7~describe0.describe23",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe23.describe24",
+    "access": null,
+    "description": "Shared + Inject",
+    "lineNumber": 180
+  },
+  {
+    "__docId__": 122,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it25",
+    "testId": 25,
+    "memberof": "tests/decorator.es7~describe0.describe23.describe24",
+    "testDepth": 3,
+    "longname": "tests/decorator.es7~describe0.describe23.describe24.it25",
+    "access": null,
+    "description": "should declare a shared service with dependencies",
+    "lineNumber": 181
+  },
+  {
+    "__docId__": 123,
+    "kind": "testDescribe",
+    "static": true,
+    "variation": null,
+    "name": "describe26",
+    "testId": 26,
+    "memberof": "tests/decorator.es7~describe0.describe23",
+    "testDepth": 2,
+    "longname": "tests/decorator.es7~describe0.describe23.describe26",
+    "access": null,
+    "description": "Factory + Inject",
+    "lineNumber": 197
+  },
+  {
+    "__docId__": 124,
+    "kind": "testIt",
+    "static": true,
+    "variation": null,
+    "name": "it27",
+    "testId": 27,
+    "memberof": "tests/decorator.es7~describe0.describe23.describe26",
+    "testDepth": 3,
+    "longname": "tests/decorator.es7~describe0.describe23.describe26.it27",
+    "access": null,
+    "description": "should declare a shared service with dependencies",
+    "lineNumber": 198
+  },
+  {
+    "__docId__": 125,
     "kind": "testFile",
     "static": true,
     "variation": null,
@@ -1462,1068 +2538,1140 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "\"use strict\";\n\nvar Jimple = require(\"../src\");\n\n/** @test {Jimple} */\ndescribe(\"Jimple\", () => {\n    let jimple;\n\n    beforeEach(() => jimple = new Jimple());\n\n    /** @test {Jimple#constructor} */\n    describe(\"constructor\", () => {\n        it(\"should instanciate\", () => jimple.should.be.an.object);\n\n        it(\"should be empty\", () => jimple.keys().should.be.empty);\n\n        it(\"should be frozen\", () => {\n            Object.isExtensible(jimple).should.be.false;\n            (() => jimple.foo = \"bar\").should.throw(Error);\n        });\n    });\n\n    /** @test {Jimple#define} */\n    describe(\".define\", () => {\n        it(\"should return jimple instance\", () => jimple.define(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should define service\", () => jimple.define(\"service\", () => {}).keys().should.be.eql([\"service\"]));\n\n        it(\"should store callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should store value as callable\", () => {\n            let value = 42;\n\n            jimple.define(\"service\", value).raw(\"service\")().should.be.equal(value);\n        });\n\n        it(\"should tag callable\", () => jimple.define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n\n        it(\"should not tag same callable twice\", () => jimple.define(\"service\", () => {}, [\"tag\"]).define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n    });\n\n    /** @test {Jimple#share} */\n    describe(\".share\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.raw(\"service\").should.be.a.Function();\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should overwrite existing service\", () => {\n            let callable = () => {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"service\", () => {});\n\n            jimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should refuse to override an already fetched service\", () => {\n            jimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jimple.share(\"service\", () => {})).should.throw(Error);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should share service instance\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\").should.equal(service);\n                jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.share(\"service\", callable);\n\n                jimple.get(\"service\");\n            });\n        });\n    });\n\n    /** @test {Jimple#factory} */\n    describe(\".factory\", () => {\n        it(\"should return jimple instance\", () => jimple.factory(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.factory(\"factory\", callable);\n\n            jimple.raw(\"factory\").should.be.a.Function();\n            jimple.raw(\"factory\").should.not.be.equal(callable);\n        });\n\n        it(\"should refuse to override an already fetched service\", () => {\n            jimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jimple.factory(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to override an already executed factory\", () => {\n            jimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jimple.factory(\"factory\", () => {})).should.throw(Error);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should not share service instance\", () => {\n                let callable = () => ({});\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\").should.be.an.object;\n                jimple.get(\"factory\").should.be.eql({});\n                jimple.get(\"factory\").should.not.equal(jimple.get(\"factory\"));\n            });\n\n            it(\"should receive jimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jimple);\n\n                jimple.factory(\"factory\", callable);\n\n                jimple.get(\"factory\");\n            });\n        });\n    });\n\n    /** @test {Jimple#extend} */\n    describe(\".extend\", () => {\n        it(\"should return jimple instance\", () => jimple.share(\"service\", () => {}).extend(\"service\", () => {}).should.be.equal(jimple));\n\n        it(\"should extend existing service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", () => {});\n\n            jimple.extend(\"service\", callable).get(\"service\").should.be.equal(service);\n        });\n\n        it(\"should receive base service instance as first argument\", () => {\n            let service, extended,\n                callable = () => service = {},\n                extendedCallable = (arg) => arg.should.be.equal(service);\n\n            jimple.share(\"service\", callable);\n            jimple.extend(\"service\", extendedCallable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should receive jimple instance as second argument\", () => {\n            let callable = (service, arg) => arg.should.be.equal(jimple);\n\n            jimple.share(\"service\", () => {});\n            jimple.extend(\"service\", callable);\n\n            jimple.get(\"service\");\n        });\n\n        it(\"should refuse to extend an already fetched service\", () => {\n            jimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jimple.extend(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to extend an already used factory\", () => {\n            jimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jimple.extend(\"factory\", () => {})).should.throw(Error);\n        });\n    });\n\n    /** @test {Jimple#use} */\n    describe(\".use\", () => {\n        it(\"should inject jimple\", () => jimple.use((arg) => arg.should.be.equal(jimple)));\n\n        it(\"should inject given service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jimple.share(\"service\", callable);\n\n            jimple.use([\"service\"], (arg) => arg.should.be.equal(service));\n        });\n\n        it(\"should inject given services\", () => {\n            let service, otherService,\n                callable = () => service = {},\n                otherCallable = () => otherService = {};\n\n            jimple.share(\"service\", callable);\n            jimple.share(\"otherService\", otherCallable);\n\n            jimple.use([\"service\", \"otherService\"], (arg, otherArg) => {\n                arg.should.be.equal(service);\n                otherArg.should.be.equal(otherService);\n            });\n        });\n    });\n\n    /** @test {Jimple#protect} */\n    describe(\".protect\", () => {\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jimple.protect(callable).should.not.be.equal(callable);\n            jimple.protect(callable)().should.be.equal(callable);\n        });\n    });\n\n    /** @test {Jimple#raw} */\n    describe(\".raw\", () => {\n        it(\"should return raw callable\", () => {\n            let callable = () => {};\n\n            jimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should return raw callable for value\", () => jimple.define(\"service\", 42).raw(\"service\").should.be.a.Function());\n    });\n\n    /** @test {Jimple#tagged} */\n    describe(\".tagged\", () => {\n        it(\"should return tagged service names\", () => {\n            jimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jimple.define(\"ecivres\", () => {}, [\"tag\"]);\n\n            jimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jimple.tagged(\"gat\").should.be.eql([\"service\"]);\n        });\n\n        it(\"should return service names associated with several tags\", () => {\n            jimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jimple.define(\"ecivres\", () => {}, [\"tag\"]);\n            jimple.define(\"vreseci\", () => {}, [\"gat\"]);\n\n            jimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jimple.tagged([\"tag\", \"gat\"]).should.be.eql([\"service\"]);\n        })\n    });\n\n    /** @test {Jimple#proxify} */\n    describe(\".proxify\", () => {\n        beforeEach(() => {\n            let should = require(\"should\");\n\n            should.extend(\"then\", Proxy.prototype);\n            should.extend(\"Boolean\", Proxy.prototype);\n        });\n\n        it(\"should return a proxified instance\", () => jimple.proxify().should.be.an.instanceof(Jimple));\n\n        it(\"should be extensible\", () => Object.isExtensible(jimple.proxify()).should.be.true);\n\n        it(\"should be idempotent\", () => {\n            (jimple.proxify().proxify() === jimple).should.be.true;\n            (jimple.proxify().proxify() === jimple.proxify()).should.be.true;\n        });\n\n        describe(\"traps\", () => {\n            beforeEach(() => jimple = jimple.proxify());\n\n            describe(\".get\", () => {\n                it(\"should not override native methods\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.get(\"service\").should.be.equal(service);\n                });\n\n                it(\"should fetch service\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.share(\"service\", callable);\n\n                    jimple.service.should.be.equal(service);\n                });\n\n                it(\"should execute factory\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jimple.factory(\"service\", callable);\n\n                    jimple.service.should.be.an.object;\n                    jimple.service.should.be.eql({});\n                    jimple.service.should.not.equal(jimple.service);\n                });\n            });\n\n            describe(\".set\", () => {\n                it(\"should refuse to override native methods\", () => {\n                    (() => jimple.factory = () => {\n                    }).should.throw(Error);\n                    (() => jimple.get = () => {\n                    }).should.throw(Error);\n                });\n\n                it(\"should define a shared service\", () => {\n                    let service;\n\n                    jimple.service = () => service = {};\n\n                    jimple.get(\"service\").should.equal(service);\n                    jimple.get(\"service\").should.be.equal(jimple.get(\"service\"));\n                });\n            });\n\n            describe(\".has\", () => {\n                it(\"should check if service exists\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n\n                it(\"should check if factory exists\", () => {\n                    jimple.factory(\"service\", () => {\n                    });\n\n                    (\"service\" in jimple).should.be.true;\n                    (\"factory\" in jimple).should.be.false;\n                });\n            });\n\n            describe(\".delete\", () => {\n                it(\"should prevent deletion\", () => {\n                    jimple.service = () => {\n                    };\n\n                    (() => delete jimple.service).should.throw(Error);\n                });\n            });\n        });\n\n        /** @test {Jimple#share} */\n        describe(\".share\", () => {\n            beforeEach(() => jimple = jimple.proxify());\n\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let otherService,\n                        callable = (arg) => arg.otherService.should.be.equal(otherService),\n                        otherCallable = () => otherService = {};\n\n                    jimple.share(\"service\", callable);\n                    jimple.share(\"otherService\", otherCallable);\n\n                    jimple.get(\"service\");\n                });\n            });\n        });\n\n        /** @test {Jimple#factory} */\n        describe(\".factory\", () => {\n            beforeEach(() => jimple = jimple.proxify());\n\n            describe(\"factory\", () => {\n                it(\"should receive jimple proxy instance as an argument\", () => {\n                    let service,\n                        callable = (arg) => arg.service.should.be.equal(service),\n                        otherCallable = () => service = {};\n\n                    jimple.share(\"service\", otherCallable);\n                    jimple.factory(\"factory\", callable);\n\n                    jimple.get(\"factory\");\n                });\n            });\n        });\n\n        /** @test {JimpleProxified.fromJimple} */\n        describe(\"cast\", () => {\n            it(\"should keep current state\", () => {\n                jimple.share(\"service\", () => ({}));\n                jimple.share(\"otherService\", () => {});\n                jimple.share(\"taggedService\", () => {}, [\"tag\"]);\n\n                let fetchedService = jimple.get(\"service\");\n                jimple = jimple.proxify();\n\n                jimple.service.should.be.equal(fetchedService);\n                (\"otherService\" in jimple).should.be.true;\n                jimple.tagged(\"tag\").should.be.eql([\"taggedService\"]);\n            });\n        })\n    });\n});\n"
+    "content": "\"use strict\";\n\nvar Jsimple = require(\"../src\");\n\n/** @test {Jsimple} */\ndescribe(\"Jsimple\", () => {\n    let jsimple;\n\n    beforeEach(() => jsimple = new Jsimple());\n\n    /** @test {Jsimple#constructor} */\n    describe(\"constructor\", () => {\n        it(\"should instanciate\", () => jsimple.should.be.an.object);\n\n        it(\"should be empty\", () => jsimple.keys().should.be.empty);\n\n        it(\"should be frozen\", () => {\n            Object.isExtensible(jsimple).should.be.false;\n            (() => jsimple.foo = \"bar\").should.throw(Error);\n        });\n    });\n\n    /** @test {Jsimple#define} */\n    describe(\".define\", () => {\n        it(\"should return jsimple instance\", () => jsimple.define(\"service\", () => {}).should.be.equal(jsimple));\n\n        it(\"should define service\", () => jsimple.define(\"service\", () => {}).keys().should.be.eql([\"service\"]));\n\n        it(\"should store callable\", () => {\n            let callable = () => {};\n\n            jsimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should store value as callable\", () => {\n            let value = 42;\n\n            jsimple.define(\"service\", value).raw(\"service\")().should.be.equal(value);\n        });\n\n        it(\"should tag callable\", () => jsimple.define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n\n        it(\"should not tag same callable twice\", () => jsimple.define(\"service\", () => {}, [\"tag\"]).define(\"service\", () => {}, [\"tag\"]).tagged(\"tag\").should.be.eql([\"service\"]));\n    });\n\n    /** @test {Jsimple#share} */\n    describe(\".share\", () => {\n        it(\"should return jsimple instance\", () => jsimple.share(\"service\", () => {}).should.be.equal(jsimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jsimple.share(\"service\", callable);\n\n            jsimple.raw(\"service\").should.be.a.Function();\n            jsimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should overwrite existing service\", () => {\n            let callable = () => {};\n\n            jsimple.share(\"service\", callable);\n            jsimple.share(\"service\", () => {});\n\n            jsimple.raw(\"service\").should.not.be.equal(callable);\n        });\n\n        it(\"should refuse to override an already fetched service\", () => {\n            jsimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jsimple.share(\"service\", () => {})).should.throw(Error);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should share service instance\", () => {\n                let service,\n                    callable = () => service = {};\n\n                jsimple.share(\"service\", callable);\n\n                jsimple.get(\"service\").should.equal(service);\n                jsimple.get(\"service\").should.be.equal(jsimple.get(\"service\"));\n            });\n\n            it(\"should receive jsimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jsimple);\n\n                jsimple.share(\"service\", callable);\n\n                jsimple.get(\"service\");\n            });\n        });\n    });\n\n    /** @test {Jsimple#factory} */\n    describe(\".factory\", () => {\n        it(\"should return jsimple instance\", () => jsimple.factory(\"service\", () => {}).should.be.equal(jsimple));\n\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jsimple.factory(\"factory\", callable);\n\n            jsimple.raw(\"factory\").should.be.a.Function();\n            jsimple.raw(\"factory\").should.not.be.equal(callable);\n        });\n\n        it(\"should refuse to override an already fetched service\", () => {\n            jsimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jsimple.factory(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to override an already executed factory\", () => {\n            jsimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jsimple.factory(\"factory\", () => {})).should.throw(Error);\n        });\n\n        describe(\"factory\", () => {\n            it(\"should not share service instance\", () => {\n                let callable = () => ({});\n\n                jsimple.factory(\"factory\", callable);\n\n                jsimple.get(\"factory\").should.be.an.object;\n                jsimple.get(\"factory\").should.be.eql({});\n                jsimple.get(\"factory\").should.not.equal(jsimple.get(\"factory\"));\n            });\n\n            it(\"should receive jsimple instance as an argument\", () => {\n                let callable = (arg) => arg.should.be.equal(jsimple);\n\n                jsimple.factory(\"factory\", callable);\n\n                jsimple.get(\"factory\");\n            });\n        });\n    });\n\n    /** @test {Jsimple#extend} */\n    describe(\".extend\", () => {\n        it(\"should return jsimple instance\", () => jsimple.share(\"service\", () => {}).extend(\"service\", () => {}).should.be.equal(jsimple));\n\n        it(\"should extend existing service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jsimple.share(\"service\", () => {});\n\n            jsimple.extend(\"service\", callable).get(\"service\").should.be.equal(service);\n        });\n\n        it(\"should receive base service instance as first argument\", () => {\n            let service, extended,\n                callable = () => service = {},\n                extendedCallable = (arg) => arg.should.be.equal(service);\n\n            jsimple.share(\"service\", callable);\n            jsimple.extend(\"service\", extendedCallable);\n\n            jsimple.get(\"service\");\n        });\n\n        it(\"should receive jsimple instance as second argument\", () => {\n            let callable = (service, arg) => arg.should.be.equal(jsimple);\n\n            jsimple.share(\"service\", () => {});\n            jsimple.extend(\"service\", callable);\n\n            jsimple.get(\"service\");\n        });\n\n        it(\"should refuse to extend an already fetched service\", () => {\n            jsimple.share(\"service\", () => {}).get(\"service\");\n\n            (() => jsimple.extend(\"service\", () => {})).should.throw(Error);\n        });\n\n        it(\"should refuse to extend an already used factory\", () => {\n            jsimple.factory(\"factory\", () => {}).get(\"factory\");\n\n            (() => jsimple.extend(\"factory\", () => {})).should.throw(Error);\n        });\n    });\n\n    /** @test {Jsimple#use} */\n    describe(\".use\", () => {\n        it(\"should inject jsimple\", () => jsimple.use((arg) => arg.should.be.equal(jsimple)));\n\n        it(\"should inject given service\", () => {\n            let service,\n                callable = () => service = {};\n\n            jsimple.share(\"service\", callable);\n\n            jsimple.use([\"service\"], (arg) => arg.should.be.equal(service));\n        });\n\n        it(\"should inject given services\", () => {\n            let service, otherService,\n                callable = () => service = {},\n                otherCallable = () => otherService = {};\n\n            jsimple.share(\"service\", callable);\n            jsimple.share(\"otherService\", otherCallable);\n\n            jsimple.use([\"service\", \"otherService\"], (arg, otherArg) => {\n                arg.should.be.equal(service);\n                otherArg.should.be.equal(otherService);\n            });\n        });\n    });\n\n    /** @test {Jsimple#protect} */\n    describe(\".protect\", () => {\n        it(\"should wrap callable\", () => {\n            let callable = () => {};\n\n            jsimple.protect(callable).should.not.be.equal(callable);\n            jsimple.protect(callable)().should.be.equal(callable);\n        });\n    });\n\n    /** @test {Jsimple#raw} */\n    describe(\".raw\", () => {\n        it(\"should return raw callable\", () => {\n            let callable = () => {};\n\n            jsimple.define(\"service\", callable).raw(\"service\").should.be.equal(callable);\n        });\n\n        it(\"should return raw callable for value\", () => jsimple.define(\"service\", 42).raw(\"service\").should.be.a.Function());\n    });\n\n    /** @test {Jsimple#tagged} */\n    describe(\".tagged\", () => {\n        it(\"should return tagged service names\", () => {\n            jsimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jsimple.define(\"ecivres\", () => {}, [\"tag\"]);\n\n            jsimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jsimple.tagged(\"gat\").should.be.eql([\"service\"]);\n        });\n\n        it(\"should return service names associated with several tags\", () => {\n            jsimple.define(\"service\", () => {}, [\"tag\", \"gat\"]);\n            jsimple.define(\"ecivres\", () => {}, [\"tag\"]);\n            jsimple.define(\"vreseci\", () => {}, [\"gat\"]);\n\n            jsimple.tagged(\"tag\").should.be.eql([\"service\", \"ecivres\"]);\n            jsimple.tagged([\"tag\", \"gat\"]).should.be.eql([\"service\"]);\n        })\n    });\n\n    /** @test {Jsimple#proxify} */\n    describe(\".proxify\", () => {\n        beforeEach(() => {\n            let should = require(\"should\");\n\n            should.extend(\"then\", Proxy.prototype);\n            should.extend(\"Boolean\", Proxy.prototype);\n        });\n\n        it(\"should return a proxified instance\", () => jsimple.proxify().should.be.an.instanceof(Jsimple));\n\n        it(\"should be extensible\", () => Object.isExtensible(jsimple.proxify()).should.be.true);\n\n        it(\"should be idempotent\", () => {\n            (jsimple.proxify().proxify() === jsimple).should.be.true;\n            (jsimple.proxify().proxify() === jsimple.proxify()).should.be.true;\n        });\n\n        describe(\"traps\", () => {\n            beforeEach(() => jsimple = jsimple.proxify());\n\n            describe(\".get\", () => {\n                it(\"should not override native methods\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jsimple.share(\"service\", callable);\n\n                    jsimple.get(\"service\").should.be.equal(service);\n                });\n\n                it(\"should fetch service\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jsimple.share(\"service\", callable);\n\n                    jsimple.service.should.be.equal(service);\n                });\n\n                it(\"should execute factory\", () => {\n                    let service,\n                        callable = () => service = {};\n\n                    jsimple.factory(\"service\", callable);\n\n                    jsimple.service.should.be.an.object;\n                    jsimple.service.should.be.eql({});\n                    jsimple.service.should.not.equal(jsimple.service);\n                });\n            });\n\n            describe(\".set\", () => {\n                it(\"should refuse to override native methods\", () => {\n                    (() => jsimple.factory = () => {}).should.throw(Error);\n                    (() => jsimple.get = () => {}).should.throw(Error);\n                });\n\n                it(\"should define a shared service\", () => {\n                    let service;\n\n                    jsimple.service = () => service = {};\n\n                    jsimple.get(\"service\").should.equal(service);\n                    jsimple.get(\"service\").should.be.equal(jsimple.get(\"service\"));\n                });\n            });\n\n            describe(\".has\", () => {\n                it(\"should check if service exists\", () => {\n                    jsimple.service = () => {};\n\n                    (\"service\" in jsimple).should.be.true;\n                    (\"factory\" in jsimple).should.be.false;\n                });\n\n                it(\"should check if factory exists\", () => {\n                    jsimple.factory(\"service\", () => {});\n\n                    (\"service\" in jsimple).should.be.true;\n                    (\"factory\" in jsimple).should.be.false;\n                });\n            });\n\n            describe(\".delete\", () => {\n                it(\"should prevent deletion\", () => {\n                    jsimple.service = () => {};\n\n                    (() => delete jsimple.service).should.throw(Error);\n                });\n            });\n        });\n\n        /** @test {Jsimple#share} */\n        describe(\".share\", () => {\n            beforeEach(() => jsimple = jsimple.proxify());\n\n            describe(\"factory\", () => {\n                it(\"should receive jsimple proxy instance as an argument\", () => {\n                    let otherService,\n                        callable = (arg) => arg.otherService.should.be.equal(otherService),\n                        otherCallable = () => otherService = {};\n\n                    jsimple.share(\"service\", callable);\n                    jsimple.share(\"otherService\", otherCallable);\n\n                    jsimple.get(\"service\");\n                });\n            });\n        });\n\n        /** @test {Jsimple#factory} */\n        describe(\".factory\", () => {\n            beforeEach(() => jsimple = jsimple.proxify());\n\n            describe(\"factory\", () => {\n                it(\"should receive jsimple proxy instance as an argument\", () => {\n                    let service,\n                        callable = (arg) => arg.service.should.be.equal(service),\n                        otherCallable = () => service = {};\n\n                    jsimple.share(\"service\", otherCallable);\n                    jsimple.factory(\"factory\", callable);\n\n                    jsimple.get(\"factory\");\n                });\n            });\n        });\n\n        /** @test {JsimpleProxified.fromJsimple} */\n        describe(\"cast\", () => {\n            it(\"should keep current state\", () => {\n                jsimple.share(\"service\", () => ({}));\n                jsimple.share(\"otherService\", () => {});\n                jsimple.share(\"taggedService\", () => {}, [\"tag\"]);\n\n                let fetchedService = jsimple.get(\"service\");\n                jsimple = jsimple.proxify();\n\n                jsimple.service.should.be.equal(fetchedService);\n                (\"otherService\" in jsimple).should.be.true;\n                jsimple.tagged(\"tag\").should.be.eql([\"taggedService\"]);\n            });\n        })\n    });\n});\n"
   },
   {
+    "__docId__": 126,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe0",
-    "testId": 0,
+    "name": "describe28",
+    "testId": 28,
     "memberof": "tests/jimple.js",
     "testDepth": 0,
-    "longname": "tests/jimple.js~describe0",
+    "longname": "tests/jimple.js~describe28",
     "access": null,
-    "description": "Jimple",
+    "description": "Jsimple",
     "lineNumber": 6,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple}"
+        "tagValue": "{Jsimple}"
       }
     ],
     "testTargets": [
-      "Jimple"
+      "Jsimple"
     ]
   },
   {
+    "__docId__": 127,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe1",
-    "testId": 1,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe29",
+    "testId": 29,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe1",
+    "longname": "tests/jimple.js~describe28.describe29",
     "access": null,
     "description": "constructor",
     "lineNumber": 12,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#constructor}"
+        "tagValue": "{Jsimple#constructor}"
       }
     ],
     "testTargets": [
-      "Jimple#constructor"
+      "Jsimple#constructor"
     ]
   },
   {
+    "__docId__": 128,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it2",
-    "testId": 2,
-    "memberof": "tests/jimple.js~describe0.describe1",
+    "name": "it30",
+    "testId": 30,
+    "memberof": "tests/jimple.js~describe28.describe29",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe1.it2",
+    "longname": "tests/jimple.js~describe28.describe29.it30",
     "access": null,
     "description": "should instanciate",
     "lineNumber": 13
   },
   {
+    "__docId__": 129,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it3",
-    "testId": 3,
-    "memberof": "tests/jimple.js~describe0.describe1",
+    "name": "it31",
+    "testId": 31,
+    "memberof": "tests/jimple.js~describe28.describe29",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe1.it3",
+    "longname": "tests/jimple.js~describe28.describe29.it31",
     "access": null,
     "description": "should be empty",
     "lineNumber": 15
   },
   {
+    "__docId__": 130,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it4",
-    "testId": 4,
-    "memberof": "tests/jimple.js~describe0.describe1",
+    "name": "it32",
+    "testId": 32,
+    "memberof": "tests/jimple.js~describe28.describe29",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe1.it4",
+    "longname": "tests/jimple.js~describe28.describe29.it32",
     "access": null,
     "description": "should be frozen",
     "lineNumber": 17
   },
   {
+    "__docId__": 131,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe5",
-    "testId": 5,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe33",
+    "testId": 33,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe5",
+    "longname": "tests/jimple.js~describe28.describe33",
     "access": null,
     "description": ".define",
     "lineNumber": 24,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#define}"
+        "tagValue": "{Jsimple#define}"
       }
     ],
     "testTargets": [
-      "Jimple#define"
+      "Jsimple#define"
     ]
   },
   {
+    "__docId__": 132,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it6",
-    "testId": 6,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it34",
+    "testId": 34,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it6",
+    "longname": "tests/jimple.js~describe28.describe33.it34",
     "access": null,
-    "description": "should return jimple instance",
+    "description": "should return jsimple instance",
     "lineNumber": 25
   },
   {
+    "__docId__": 133,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it7",
-    "testId": 7,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it35",
+    "testId": 35,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it7",
+    "longname": "tests/jimple.js~describe28.describe33.it35",
     "access": null,
     "description": "should define service",
     "lineNumber": 27
   },
   {
+    "__docId__": 134,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it8",
-    "testId": 8,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it36",
+    "testId": 36,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it8",
+    "longname": "tests/jimple.js~describe28.describe33.it36",
     "access": null,
     "description": "should store callable",
     "lineNumber": 29
   },
   {
+    "__docId__": 135,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it9",
-    "testId": 9,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it37",
+    "testId": 37,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it9",
+    "longname": "tests/jimple.js~describe28.describe33.it37",
     "access": null,
     "description": "should store value as callable",
     "lineNumber": 35
   },
   {
+    "__docId__": 136,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it10",
-    "testId": 10,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it38",
+    "testId": 38,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it10",
+    "longname": "tests/jimple.js~describe28.describe33.it38",
     "access": null,
     "description": "should tag callable",
     "lineNumber": 41
   },
   {
+    "__docId__": 137,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it11",
-    "testId": 11,
-    "memberof": "tests/jimple.js~describe0.describe5",
+    "name": "it39",
+    "testId": 39,
+    "memberof": "tests/jimple.js~describe28.describe33",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe5.it11",
+    "longname": "tests/jimple.js~describe28.describe33.it39",
     "access": null,
     "description": "should not tag same callable twice",
     "lineNumber": 43
   },
   {
+    "__docId__": 138,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe12",
-    "testId": 12,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe40",
+    "testId": 40,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe12",
+    "longname": "tests/jimple.js~describe28.describe40",
     "access": null,
     "description": ".share",
     "lineNumber": 47,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#share}"
+        "tagValue": "{Jsimple#share}"
       }
     ],
     "testTargets": [
-      "Jimple#share"
+      "Jsimple#share"
     ]
   },
   {
+    "__docId__": 139,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it13",
-    "testId": 13,
-    "memberof": "tests/jimple.js~describe0.describe12",
+    "name": "it41",
+    "testId": 41,
+    "memberof": "tests/jimple.js~describe28.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe12.it13",
+    "longname": "tests/jimple.js~describe28.describe40.it41",
     "access": null,
-    "description": "should return jimple instance",
+    "description": "should return jsimple instance",
     "lineNumber": 48
   },
   {
+    "__docId__": 140,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it14",
-    "testId": 14,
-    "memberof": "tests/jimple.js~describe0.describe12",
+    "name": "it42",
+    "testId": 42,
+    "memberof": "tests/jimple.js~describe28.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe12.it14",
+    "longname": "tests/jimple.js~describe28.describe40.it42",
     "access": null,
     "description": "should wrap callable",
     "lineNumber": 50
   },
   {
+    "__docId__": 141,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it15",
-    "testId": 15,
-    "memberof": "tests/jimple.js~describe0.describe12",
+    "name": "it43",
+    "testId": 43,
+    "memberof": "tests/jimple.js~describe28.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe12.it15",
+    "longname": "tests/jimple.js~describe28.describe40.it43",
     "access": null,
     "description": "should overwrite existing service",
     "lineNumber": 59
   },
   {
+    "__docId__": 142,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it16",
-    "testId": 16,
-    "memberof": "tests/jimple.js~describe0.describe12",
+    "name": "it44",
+    "testId": 44,
+    "memberof": "tests/jimple.js~describe28.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe12.it16",
+    "longname": "tests/jimple.js~describe28.describe40.it44",
     "access": null,
     "description": "should refuse to override an already fetched service",
     "lineNumber": 68
   },
   {
+    "__docId__": 143,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe17",
-    "testId": 17,
-    "memberof": "tests/jimple.js~describe0.describe12",
+    "name": "describe45",
+    "testId": 45,
+    "memberof": "tests/jimple.js~describe28.describe40",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe12.describe17",
+    "longname": "tests/jimple.js~describe28.describe40.describe45",
     "access": null,
     "description": "factory",
     "lineNumber": 74
   },
   {
+    "__docId__": 144,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it18",
-    "testId": 18,
-    "memberof": "tests/jimple.js~describe0.describe12.describe17",
+    "name": "it46",
+    "testId": 46,
+    "memberof": "tests/jimple.js~describe28.describe40.describe45",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe12.describe17.it18",
+    "longname": "tests/jimple.js~describe28.describe40.describe45.it46",
     "access": null,
     "description": "should share service instance",
     "lineNumber": 75
   },
   {
+    "__docId__": 145,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it19",
-    "testId": 19,
-    "memberof": "tests/jimple.js~describe0.describe12.describe17",
+    "name": "it47",
+    "testId": 47,
+    "memberof": "tests/jimple.js~describe28.describe40.describe45",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe12.describe17.it19",
+    "longname": "tests/jimple.js~describe28.describe40.describe45.it47",
     "access": null,
-    "description": "should receive jimple instance as an argument",
+    "description": "should receive jsimple instance as an argument",
     "lineNumber": 85
   },
   {
+    "__docId__": 146,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe20",
-    "testId": 20,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe48",
+    "testId": 48,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe20",
+    "longname": "tests/jimple.js~describe28.describe48",
     "access": null,
     "description": ".factory",
     "lineNumber": 96,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#factory}"
+        "tagValue": "{Jsimple#factory}"
       }
     ],
     "testTargets": [
-      "Jimple#factory"
+      "Jsimple#factory"
     ]
   },
   {
+    "__docId__": 147,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it21",
-    "testId": 21,
-    "memberof": "tests/jimple.js~describe0.describe20",
+    "name": "it49",
+    "testId": 49,
+    "memberof": "tests/jimple.js~describe28.describe48",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe20.it21",
+    "longname": "tests/jimple.js~describe28.describe48.it49",
     "access": null,
-    "description": "should return jimple instance",
+    "description": "should return jsimple instance",
     "lineNumber": 97
   },
   {
+    "__docId__": 148,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it22",
-    "testId": 22,
-    "memberof": "tests/jimple.js~describe0.describe20",
+    "name": "it50",
+    "testId": 50,
+    "memberof": "tests/jimple.js~describe28.describe48",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe20.it22",
+    "longname": "tests/jimple.js~describe28.describe48.it50",
     "access": null,
     "description": "should wrap callable",
     "lineNumber": 99
   },
   {
+    "__docId__": 149,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it23",
-    "testId": 23,
-    "memberof": "tests/jimple.js~describe0.describe20",
+    "name": "it51",
+    "testId": 51,
+    "memberof": "tests/jimple.js~describe28.describe48",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe20.it23",
+    "longname": "tests/jimple.js~describe28.describe48.it51",
     "access": null,
     "description": "should refuse to override an already fetched service",
     "lineNumber": 108
   },
   {
+    "__docId__": 150,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it24",
-    "testId": 24,
-    "memberof": "tests/jimple.js~describe0.describe20",
+    "name": "it52",
+    "testId": 52,
+    "memberof": "tests/jimple.js~describe28.describe48",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe20.it24",
+    "longname": "tests/jimple.js~describe28.describe48.it52",
     "access": null,
     "description": "should refuse to override an already executed factory",
     "lineNumber": 114
   },
   {
+    "__docId__": 151,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe25",
-    "testId": 25,
-    "memberof": "tests/jimple.js~describe0.describe20",
+    "name": "describe53",
+    "testId": 53,
+    "memberof": "tests/jimple.js~describe28.describe48",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe20.describe25",
+    "longname": "tests/jimple.js~describe28.describe48.describe53",
     "access": null,
     "description": "factory",
     "lineNumber": 120
   },
   {
+    "__docId__": 152,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it26",
-    "testId": 26,
-    "memberof": "tests/jimple.js~describe0.describe20.describe25",
+    "name": "it54",
+    "testId": 54,
+    "memberof": "tests/jimple.js~describe28.describe48.describe53",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe20.describe25.it26",
+    "longname": "tests/jimple.js~describe28.describe48.describe53.it54",
     "access": null,
     "description": "should not share service instance",
     "lineNumber": 121
   },
   {
+    "__docId__": 153,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it27",
-    "testId": 27,
-    "memberof": "tests/jimple.js~describe0.describe20.describe25",
+    "name": "it55",
+    "testId": 55,
+    "memberof": "tests/jimple.js~describe28.describe48.describe53",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe20.describe25.it27",
+    "longname": "tests/jimple.js~describe28.describe48.describe53.it55",
     "access": null,
-    "description": "should receive jimple instance as an argument",
+    "description": "should receive jsimple instance as an argument",
     "lineNumber": 131
   },
   {
+    "__docId__": 154,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe28",
-    "testId": 28,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe56",
+    "testId": 56,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe28",
+    "longname": "tests/jimple.js~describe28.describe56",
     "access": null,
     "description": ".extend",
     "lineNumber": 142,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#extend}"
+        "tagValue": "{Jsimple#extend}"
       }
     ],
     "testTargets": [
-      "Jimple#extend"
+      "Jsimple#extend"
     ]
   },
   {
+    "__docId__": 155,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it29",
-    "testId": 29,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it57",
+    "testId": 57,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it29",
+    "longname": "tests/jimple.js~describe28.describe56.it57",
     "access": null,
-    "description": "should return jimple instance",
+    "description": "should return jsimple instance",
     "lineNumber": 143
   },
   {
+    "__docId__": 156,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it30",
-    "testId": 30,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it58",
+    "testId": 58,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it30",
+    "longname": "tests/jimple.js~describe28.describe56.it58",
     "access": null,
     "description": "should extend existing service",
     "lineNumber": 145
   },
   {
+    "__docId__": 157,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it31",
-    "testId": 31,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it59",
+    "testId": 59,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it31",
+    "longname": "tests/jimple.js~describe28.describe56.it59",
     "access": null,
     "description": "should receive base service instance as first argument",
     "lineNumber": 154
   },
   {
+    "__docId__": 158,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it32",
-    "testId": 32,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it60",
+    "testId": 60,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it32",
+    "longname": "tests/jimple.js~describe28.describe56.it60",
     "access": null,
-    "description": "should receive jimple instance as second argument",
+    "description": "should receive jsimple instance as second argument",
     "lineNumber": 165
   },
   {
+    "__docId__": 159,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it33",
-    "testId": 33,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it61",
+    "testId": 61,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it33",
+    "longname": "tests/jimple.js~describe28.describe56.it61",
     "access": null,
     "description": "should refuse to extend an already fetched service",
     "lineNumber": 174
   },
   {
+    "__docId__": 160,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it34",
-    "testId": 34,
-    "memberof": "tests/jimple.js~describe0.describe28",
+    "name": "it62",
+    "testId": 62,
+    "memberof": "tests/jimple.js~describe28.describe56",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe28.it34",
+    "longname": "tests/jimple.js~describe28.describe56.it62",
     "access": null,
     "description": "should refuse to extend an already used factory",
     "lineNumber": 180
   },
   {
+    "__docId__": 161,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe35",
-    "testId": 35,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe63",
+    "testId": 63,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe35",
+    "longname": "tests/jimple.js~describe28.describe63",
     "access": null,
     "description": ".use",
     "lineNumber": 188,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#use}"
+        "tagValue": "{Jsimple#use}"
       }
     ],
     "testTargets": [
-      "Jimple#use"
+      "Jsimple#use"
     ]
   },
   {
+    "__docId__": 162,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it36",
-    "testId": 36,
-    "memberof": "tests/jimple.js~describe0.describe35",
+    "name": "it64",
+    "testId": 64,
+    "memberof": "tests/jimple.js~describe28.describe63",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe35.it36",
+    "longname": "tests/jimple.js~describe28.describe63.it64",
     "access": null,
-    "description": "should inject jimple",
+    "description": "should inject jsimple",
     "lineNumber": 189
   },
   {
+    "__docId__": 163,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it37",
-    "testId": 37,
-    "memberof": "tests/jimple.js~describe0.describe35",
+    "name": "it65",
+    "testId": 65,
+    "memberof": "tests/jimple.js~describe28.describe63",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe35.it37",
+    "longname": "tests/jimple.js~describe28.describe63.it65",
     "access": null,
     "description": "should inject given service",
     "lineNumber": 191
   },
   {
+    "__docId__": 164,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it38",
-    "testId": 38,
-    "memberof": "tests/jimple.js~describe0.describe35",
+    "name": "it66",
+    "testId": 66,
+    "memberof": "tests/jimple.js~describe28.describe63",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe35.it38",
+    "longname": "tests/jimple.js~describe28.describe63.it66",
     "access": null,
     "description": "should inject given services",
     "lineNumber": 200
   },
   {
+    "__docId__": 165,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe39",
-    "testId": 39,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe67",
+    "testId": 67,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe39",
+    "longname": "tests/jimple.js~describe28.describe67",
     "access": null,
     "description": ".protect",
     "lineNumber": 216,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#protect}"
+        "tagValue": "{Jsimple#protect}"
       }
     ],
     "testTargets": [
-      "Jimple#protect"
+      "Jsimple#protect"
     ]
   },
   {
+    "__docId__": 166,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it40",
-    "testId": 40,
-    "memberof": "tests/jimple.js~describe0.describe39",
+    "name": "it68",
+    "testId": 68,
+    "memberof": "tests/jimple.js~describe28.describe67",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe39.it40",
+    "longname": "tests/jimple.js~describe28.describe67.it68",
     "access": null,
     "description": "should wrap callable",
     "lineNumber": 217
   },
   {
+    "__docId__": 167,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe41",
-    "testId": 41,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe69",
+    "testId": 69,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe41",
+    "longname": "tests/jimple.js~describe28.describe69",
     "access": null,
     "description": ".raw",
     "lineNumber": 226,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#raw}"
+        "tagValue": "{Jsimple#raw}"
       }
     ],
     "testTargets": [
-      "Jimple#raw"
+      "Jsimple#raw"
     ]
   },
   {
+    "__docId__": 168,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it42",
-    "testId": 42,
-    "memberof": "tests/jimple.js~describe0.describe41",
+    "name": "it70",
+    "testId": 70,
+    "memberof": "tests/jimple.js~describe28.describe69",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe41.it42",
+    "longname": "tests/jimple.js~describe28.describe69.it70",
     "access": null,
     "description": "should return raw callable",
     "lineNumber": 227
   },
   {
+    "__docId__": 169,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it43",
-    "testId": 43,
-    "memberof": "tests/jimple.js~describe0.describe41",
+    "name": "it71",
+    "testId": 71,
+    "memberof": "tests/jimple.js~describe28.describe69",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe41.it43",
+    "longname": "tests/jimple.js~describe28.describe69.it71",
     "access": null,
     "description": "should return raw callable for value",
     "lineNumber": 233
   },
   {
+    "__docId__": 170,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe44",
-    "testId": 44,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe72",
+    "testId": 72,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe44",
+    "longname": "tests/jimple.js~describe28.describe72",
     "access": null,
     "description": ".tagged",
     "lineNumber": 237,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#tagged}"
+        "tagValue": "{Jsimple#tagged}"
       }
     ],
     "testTargets": [
-      "Jimple#tagged"
+      "Jsimple#tagged"
     ]
   },
   {
+    "__docId__": 171,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it45",
-    "testId": 45,
-    "memberof": "tests/jimple.js~describe0.describe44",
+    "name": "it73",
+    "testId": 73,
+    "memberof": "tests/jimple.js~describe28.describe72",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.it45",
+    "longname": "tests/jimple.js~describe28.describe72.it73",
     "access": null,
     "description": "should return tagged service names",
     "lineNumber": 238
   },
   {
+    "__docId__": 172,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it46",
-    "testId": 46,
-    "memberof": "tests/jimple.js~describe0.describe44",
+    "name": "it74",
+    "testId": 74,
+    "memberof": "tests/jimple.js~describe28.describe72",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe44.it46",
+    "longname": "tests/jimple.js~describe28.describe72.it74",
     "access": null,
     "description": "should return service names associated with several tags",
     "lineNumber": 246
   },
   {
+    "__docId__": 173,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe47",
-    "testId": 47,
-    "memberof": "tests/jimple.js~describe0",
+    "name": "describe75",
+    "testId": 75,
+    "memberof": "tests/jimple.js~describe28",
     "testDepth": 1,
-    "longname": "tests/jimple.js~describe0.describe47",
+    "longname": "tests/jimple.js~describe28.describe75",
     "access": null,
     "description": ".proxify",
     "lineNumber": 257,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#proxify}"
+        "tagValue": "{Jsimple#proxify}"
       }
     ],
     "testTargets": [
-      "Jimple#proxify"
+      "Jsimple#proxify"
     ]
   },
   {
+    "__docId__": 174,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it48",
-    "testId": 48,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "it76",
+    "testId": 76,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.it48",
+    "longname": "tests/jimple.js~describe28.describe75.it76",
     "access": null,
     "description": "should return a proxified instance",
     "lineNumber": 265
   },
   {
+    "__docId__": 175,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it49",
-    "testId": 49,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "it77",
+    "testId": 77,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.it49",
+    "longname": "tests/jimple.js~describe28.describe75.it77",
     "access": null,
     "description": "should be extensible",
     "lineNumber": 267
   },
   {
+    "__docId__": 176,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it50",
-    "testId": 50,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "it78",
+    "testId": 78,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.it50",
+    "longname": "tests/jimple.js~describe28.describe75.it78",
     "access": null,
     "description": "should be idempotent",
     "lineNumber": 269
   },
   {
+    "__docId__": 177,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe51",
-    "testId": 51,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "describe79",
+    "testId": 79,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.describe51",
+    "longname": "tests/jimple.js~describe28.describe75.describe79",
     "access": null,
     "description": "traps",
     "lineNumber": 274
   },
   {
+    "__docId__": 178,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe52",
-    "testId": 52,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51",
+    "name": "describe80",
+    "testId": 80,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe52",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe80",
     "access": null,
     "description": ".get",
     "lineNumber": 277
   },
   {
+    "__docId__": 179,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it53",
-    "testId": 53,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe52",
+    "name": "it81",
+    "testId": 81,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe80",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe52.it53",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe80.it81",
     "access": null,
     "description": "should not override native methods",
     "lineNumber": 278
   },
   {
+    "__docId__": 180,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it54",
-    "testId": 54,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe52",
+    "name": "it82",
+    "testId": 82,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe80",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe52.it54",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe80.it82",
     "access": null,
     "description": "should fetch service",
     "lineNumber": 287
   },
   {
+    "__docId__": 181,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it55",
-    "testId": 55,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe52",
+    "name": "it83",
+    "testId": 83,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe80",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe52.it55",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe80.it83",
     "access": null,
     "description": "should execute factory",
     "lineNumber": 296
   },
   {
+    "__docId__": 182,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe56",
-    "testId": 56,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51",
+    "name": "describe84",
+    "testId": 84,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe56",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe84",
     "access": null,
     "description": ".set",
     "lineNumber": 308
   },
   {
+    "__docId__": 183,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it57",
-    "testId": 57,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe56",
+    "name": "it85",
+    "testId": 85,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe84",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe56.it57",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe84.it85",
     "access": null,
     "description": "should refuse to override native methods",
     "lineNumber": 309
   },
   {
+    "__docId__": 184,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it58",
-    "testId": 58,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe56",
+    "name": "it86",
+    "testId": 86,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe84",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe56.it58",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe84.it86",
     "access": null,
     "description": "should define a shared service",
-    "lineNumber": 316
+    "lineNumber": 314
   },
   {
+    "__docId__": 185,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe59",
-    "testId": 59,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51",
+    "name": "describe87",
+    "testId": 87,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe59",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe87",
     "access": null,
     "description": ".has",
-    "lineNumber": 326
+    "lineNumber": 324
   },
   {
+    "__docId__": 186,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it60",
-    "testId": 60,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe59",
+    "name": "it88",
+    "testId": 88,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe87",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe59.it60",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe87.it88",
     "access": null,
     "description": "should check if service exists",
-    "lineNumber": 327
+    "lineNumber": 325
   },
   {
+    "__docId__": 187,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it61",
-    "testId": 61,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe59",
+    "name": "it89",
+    "testId": 89,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe87",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe59.it61",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe87.it89",
     "access": null,
     "description": "should check if factory exists",
-    "lineNumber": 335
+    "lineNumber": 332
   },
   {
+    "__docId__": 188,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe62",
-    "testId": 62,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51",
+    "name": "describe90",
+    "testId": 90,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe62",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe90",
     "access": null,
     "description": ".delete",
-    "lineNumber": 344
+    "lineNumber": 340
   },
   {
+    "__docId__": 189,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it63",
-    "testId": 63,
-    "memberof": "tests/jimple.js~describe0.describe47.describe51.describe62",
+    "name": "it91",
+    "testId": 91,
+    "memberof": "tests/jimple.js~describe28.describe75.describe79.describe90",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe51.describe62.it63",
+    "longname": "tests/jimple.js~describe28.describe75.describe79.describe90.it91",
     "access": null,
     "description": "should prevent deletion",
-    "lineNumber": 345
+    "lineNumber": 341
   },
   {
+    "__docId__": 190,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe64",
-    "testId": 64,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "describe92",
+    "testId": 92,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.describe64",
+    "longname": "tests/jimple.js~describe28.describe75.describe92",
     "access": null,
     "description": ".share",
-    "lineNumber": 355,
+    "lineNumber": 350,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#share}"
+        "tagValue": "{Jsimple#share}"
       }
     ],
     "testTargets": [
-      "Jimple#share"
+      "Jsimple#share"
     ]
   },
   {
+    "__docId__": 191,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe65",
-    "testId": 65,
-    "memberof": "tests/jimple.js~describe0.describe47.describe64",
+    "name": "describe93",
+    "testId": 93,
+    "memberof": "tests/jimple.js~describe28.describe75.describe92",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe64.describe65",
+    "longname": "tests/jimple.js~describe28.describe75.describe92.describe93",
     "access": null,
     "description": "factory",
-    "lineNumber": 358
+    "lineNumber": 353
   },
   {
+    "__docId__": 192,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it66",
-    "testId": 66,
-    "memberof": "tests/jimple.js~describe0.describe47.describe64.describe65",
+    "name": "it94",
+    "testId": 94,
+    "memberof": "tests/jimple.js~describe28.describe75.describe92.describe93",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe64.describe65.it66",
+    "longname": "tests/jimple.js~describe28.describe75.describe92.describe93.it94",
     "access": null,
-    "description": "should receive jimple proxy instance as an argument",
-    "lineNumber": 359
+    "description": "should receive jsimple proxy instance as an argument",
+    "lineNumber": 354
   },
   {
+    "__docId__": 193,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe67",
-    "testId": 67,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "describe95",
+    "testId": 95,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.describe67",
+    "longname": "tests/jimple.js~describe28.describe75.describe95",
     "access": null,
     "description": ".factory",
-    "lineNumber": 373,
+    "lineNumber": 368,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{Jimple#factory}"
+        "tagValue": "{Jsimple#factory}"
       }
     ],
     "testTargets": [
-      "Jimple#factory"
+      "Jsimple#factory"
     ]
   },
   {
+    "__docId__": 194,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe68",
-    "testId": 68,
-    "memberof": "tests/jimple.js~describe0.describe47.describe67",
+    "name": "describe96",
+    "testId": 96,
+    "memberof": "tests/jimple.js~describe28.describe75.describe95",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe67.describe68",
+    "longname": "tests/jimple.js~describe28.describe75.describe95.describe96",
     "access": null,
     "description": "factory",
-    "lineNumber": 376
+    "lineNumber": 371
   },
   {
+    "__docId__": 195,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it69",
-    "testId": 69,
-    "memberof": "tests/jimple.js~describe0.describe47.describe67.describe68",
+    "name": "it97",
+    "testId": 97,
+    "memberof": "tests/jimple.js~describe28.describe75.describe95.describe96",
     "testDepth": 4,
-    "longname": "tests/jimple.js~describe0.describe47.describe67.describe68.it69",
+    "longname": "tests/jimple.js~describe28.describe75.describe95.describe96.it97",
     "access": null,
-    "description": "should receive jimple proxy instance as an argument",
-    "lineNumber": 377
+    "description": "should receive jsimple proxy instance as an argument",
+    "lineNumber": 372
   },
   {
+    "__docId__": 196,
     "kind": "testDescribe",
     "static": true,
     "variation": null,
-    "name": "describe70",
-    "testId": 70,
-    "memberof": "tests/jimple.js~describe0.describe47",
+    "name": "describe98",
+    "testId": 98,
+    "memberof": "tests/jimple.js~describe28.describe75",
     "testDepth": 2,
-    "longname": "tests/jimple.js~describe0.describe47.describe70",
+    "longname": "tests/jimple.js~describe28.describe75.describe98",
     "access": null,
     "description": "cast",
-    "lineNumber": 391,
+    "lineNumber": 386,
     "unknown": [
       {
         "tagName": "@test",
-        "tagValue": "{JimpleProxified.fromJimple}"
+        "tagValue": "{JsimpleProxified.fromJsimple}"
       }
     ],
     "testTargets": [
-      "JimpleProxified.fromJimple"
+      "JsimpleProxified.fromJsimple"
     ]
   },
   {
+    "__docId__": 197,
     "kind": "testIt",
     "static": true,
     "variation": null,
-    "name": "it71",
-    "testId": 71,
-    "memberof": "tests/jimple.js~describe0.describe47.describe70",
+    "name": "it99",
+    "testId": 99,
+    "memberof": "tests/jimple.js~describe28.describe75.describe98",
     "testDepth": 3,
-    "longname": "tests/jimple.js~describe0.describe47.describe70.it71",
+    "longname": "tests/jimple.js~describe28.describe75.describe98.it99",
     "access": null,
     "description": "should keep current state",
-    "lineNumber": 392
+    "lineNumber": 387
   }
 ]

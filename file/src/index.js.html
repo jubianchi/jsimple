@@ -14,10 +14,11 @@
 
 <header>
   <a href="./">Home</a>
-  <a href="identifiers.html">Identifier</a>
+  
+  <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
-  <a data-ice="repoURL" href="https://gitlab.com/jubianchi/laboard.git">Repository</a>
+  <a data-ice="repoURL" href="https://github.com/jubianchi/jsimple.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -27,36 +28,36 @@
   </div>
 </header>
 
-<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
-  <h2>Class</h2>
+<nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/index.js~JimpleProxified.html">JimpleProxified</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Extend">Extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Factory">Factory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Inject">Inject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Shared">Shared</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Use">Use</a></span></span></li>
 </ul>
 </div>
-
-
-
-
-
-
-
-
-
-
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
 
 /**
+ * @ignore
+ */
+let Decorator = require(&quot;./decorator.js&quot;).Decorator;
+
+/**
  * @access public
  */
-class Jimple {
+class Jsimple {
     /**
-     * Builds a new Jimple instance
+     * Builds a new Jsimple instance
      */
     constructor() {
         /**
@@ -84,12 +85,14 @@ class Jimple {
         this.frozen = new Set();
 
         Object.freeze(this);
+
+        Decorator.setJsimple(this);
     }
 
     /**
      *
-     * @param {Array&lt;String&gt;|Function(deps: *, container: Jimple): *} deps   List of dependencies to inject or executable function
-     * @param {Function(deps: *, container: Jimple): *}               [code] Executable function
+     * @param {Array&lt;String&gt;|Function(deps: *, container: Jsimple): *} deps   List of dependencies to inject or executable function
+     * @param {Function(deps: *, container: Jsimple): *}               [code] Executable function
      *
      * @returns {*} Result of executing the provided function as code
      */
@@ -113,14 +116,14 @@ class Jimple {
      * Sets a parameter or an object factory
      *
      * @param {String}                           name   The unique identifier for the parameter or factory
-     * @param {*|Function(container: Jimple): *} value  The parameter value or a factory function
+     * @param {*|Function(container: Jsimple): *} value  The parameter value or a factory function
      * @param {Array&lt;String&gt;}                    [tags] An array of tags to associate to the parameter or factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     define(name, value, tags) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.define must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.define must be a string identifier&quot;)
         }
 
         if (this.frozen.has(name)) {
@@ -160,28 +163,28 @@ class Jimple {
     /**
      *
      * @param {String}                         name   The unique identifier for the factory
-     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Function(container: Jsimple): *} code   The executable factory function
      * @param {Array&lt;String&gt;}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     share(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.share must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.share must be a string identifier&quot;)
         }
 
         if (typeof code !== &quot;function&quot;) {
-            throw new Error(&quot;Argument #2 passed to Jimple.share must be a function&quot;)
+            throw new Error(&quot;Argument #2 passed to Jsimple.share must be a function&quot;)
         }
 
         return this.define(
             name,
-            jimple =&gt; {
-                if (jimple.shared.has(name) === false) {
-                    jimple.shared.set(name, code(jimple));
+            jsimple =&gt; {
+                if (jsimple.shared.has(name) === false) {
+                    jsimple.shared.set(name, code(jsimple));
                 }
 
-                let instance = jimple.shared.get(name);
+                let instance = jsimple.shared.get(name);
 
                 this.frozen.add(name);
 
@@ -194,24 +197,24 @@ class Jimple {
     /**
      *
      * @param {String}                         name   The unique identifier for the factory
-     * @param {Function(container: Jimple): *} code   The executable factory function
+     * @param {Function(container: Jsimple): *} code   The executable factory function
      * @param {Array&lt;String&gt;}                  [tags] An array of tags to associate to the factory
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     factory(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.factory must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.factory must be a string identifier&quot;)
         }
 
         if (typeof code !== &quot;function&quot;) {
-            throw new Error(&quot;Argument #2 passed to Jimple.factory must be a function&quot;)
+            throw new Error(&quot;Argument #2 passed to Jsimple.factory must be a function&quot;)
         }
 
         return this.define(
             name,
-            jimple =&gt; {
-                let instance = code(jimple);
+            jsimple =&gt; {
+                let instance = code(jsimple);
 
                 this.frozen.add(name);
 
@@ -224,25 +227,25 @@ class Jimple {
     /**
      *
      * @param {String}                                     name   The unique identifier for the parameter or factory to extend
-     * @param {Function(service: *, container: Jimple): *} code   The executable extended function
+     * @param {Function(service: *, container: Jsimple): *} code   The executable extended function
      * @param {Array&lt;String&gt;}                              [tags] An array of tags to associate to the the parameter or factory to extend
      *
-     * @returns {Jimple} The current Jimple instance
+     * @returns {Jsimple} The current Jsimple instance
      */
     extend(name, code, tags) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.extend must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.extend must be a string identifier&quot;)
         }
 
         if (typeof code !== &quot;function&quot;) {
-            throw new Error(&quot;Argument #2 passed to Jimple.extend must be a function&quot;)
+            throw new Error(&quot;Argument #2 passed to Jsimple.extend must be a function&quot;)
         }
 
         let service = this.raw(name);
 
         return this.share(
             name,
-            jimple =&gt; code(service(jimple), jimple),
+            jsimple =&gt; code(service(jsimple), jsimple),
             tags || this.values.get(name).tags
         );
     }
@@ -255,7 +258,7 @@ class Jimple {
      */
     exists(name) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.exists must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.exists must be a string identifier&quot;)
         }
 
         return this.values.has(name);
@@ -269,7 +272,7 @@ class Jimple {
      */
     get(name) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.get must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.get must be a string identifier&quot;)
         }
 
         return this.raw(name)(this);
@@ -277,8 +280,8 @@ class Jimple {
 
     /**
      *
-     * @deprecated Use {@link Jimple#tagged} instead
-     * @see Jimple#tagged
+     * @deprecated Use {@link Jsimple#tagged} instead
+     * @see Jsimple#tagged
      *
      * @param {String} tag The tag name for which to fetch parameters, services or factories
      *
@@ -290,13 +293,13 @@ class Jimple {
 
     /**
      *
-     * @param {String|Array&lt;String&gt;} tags tag The tag names for which to fetch parameters, services or factories
+     * @param {String|Array&lt;String&gt;} tags The tag names for which to fetch parameters, services or factories
      *
      * @returns {Array} Service names associated with the provided tags
      */
     tagged(tags) {
         if (typeof tags !== &quot;string&quot; &amp;&amp; tags.constructor.name !== &quot;Array&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.tagged must be a string identifier or an array of string identifiers&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.tagged must be a string identifier or an array of string identifiers&quot;)
         }
 
         if (typeof tags === &quot;string&quot;) {
@@ -336,7 +339,7 @@ class Jimple {
      */
     protect(code) {
         if (typeof code !== &quot;function&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.protect must be a function&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.protect must be a function&quot;)
         }
 
         return () =&gt; code;
@@ -346,11 +349,11 @@ class Jimple {
      *
      * @param {String} name The unique identifier for the factory to fetch
      *
-     * @returns {Function(container: Jimple): *} The declared factory function
+     * @returns {Function(container: Jsimple): *} The declared factory function
      */
     raw(name) {
         if (typeof name !== &quot;string&quot;) {
-            throw new Error(&quot;Argument #1 passed to Jimple.raw must be a string identifier&quot;)
+            throw new Error(&quot;Argument #1 passed to Jsimple.raw must be a string identifier&quot;)
         }
 
         if (this.exists(name) === false) {
@@ -362,34 +365,34 @@ class Jimple {
 
     /**
      *
-     * @returns {Jimple} The current Jimple instance wrapped in a Proxy
+     * @returns {Jsimple} The current Jsimple instance wrapped in a Proxy
      */
     proxify() {
-        return JimpleProxified.fromJimple(this);
+        return JsimpleProxified.fromJsimple(this);
     }
 }
 
 /**
  * @access private
  */
-class JimpleProxified extends Jimple {
+class JsimpleProxified extends Jsimple {
     /**
-     * Builds a proxified Jimple instance from a Jimple instance
+     * Builds a proxified Jsimple instance from a Jsimple instance
      *
-     * @param {Jimple} jimple The jimple instance to proxify
+     * @param {Jsimple} jsimple The jsimple instance to proxify
      *
-     * @returns {Jimple} A proxified Jimple instance
+     * @returns {Jsimple} A proxified Jsimple instance
      */
-    static fromJimple(jimple) {
-        if (jimple instanceof JimpleProxified) {
-            return jimple;
+    static fromJsimple(jsimple) {
+        if (jsimple instanceof JsimpleProxified) {
+            return jsimple;
         }
 
         let Proxy = require(&quot;./proxy.js&quot;),
-            proxified = new JimpleProxified();
+            proxified = new JsimpleProxified();
 
-        Object.getOwnPropertyNames(jimple).forEach(property =&gt; {
-            jimple[property].forEach((value, key) =&gt; {
+        Object.getOwnPropertyNames(jsimple).forEach(property =&gt; {
+            jsimple[property].forEach((value, key) =&gt; {
                 if (proxified[property] instanceof Map) {
                     proxified[property].set(key, value);
                 }
@@ -404,13 +407,13 @@ class JimpleProxified extends Jimple {
     }
 }
 
-module.exports = Jimple;
+module.exports = Jsimple;
 </code></pre>
 
 </div>
 
 <footer class="footer">
-  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.0)</span></a>
 </footer>
 
 <script src="script/search_index.js"></script>

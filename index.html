@@ -14,10 +14,11 @@
 
 <header>
   <a href="./">Home</a>
-  <a href="identifiers.html">Identifier</a>
+  
+  <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
-  <a data-ice="repoURL" href="https://gitlab.com/jubianchi/laboard.git">Repository</a>
+  <a data-ice="repoURL" href="https://github.com/jubianchi/jsimple.git" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -27,45 +28,40 @@
   </div>
 </header>
 
-<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
-  <h2>Class</h2>
+<nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="classDoc"><span><a href="class/src/index.js~Jimple.html">Jimple</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/index.js~JimpleProxified.html">JimpleProxified</a></span></li>
-<li data-ice="classDoc"><span><a href="class/src/proxy.js~JimpleProxy.html">JimpleProxy</a></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Extend">Extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Factory">Factory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Inject">Inject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Shared">Shared</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Use">Use</a></span></span></li>
 </ul>
 </div>
-
-
-
-
-
-
-
-
-
-
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="jimple-a-js-dependency-injection-container-service-locator-build-status-https-travis-ci-org-jubianchi-jimple-svg-branch-master-https-travis-ci-org-jubianchi-jimple-">jimple - a JS dependency injection container/service locator <a href="https://travis-ci.org/jubianchi/jimple"><img src="https://travis-ci.org/jubianchi/jimple.svg?branch=master" alt="Build Status"></a></h1>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="jsimple-a-js-dependency-injection-container-service-locator-build-status-https-travis-ci-org-jubianchi-jsimple-svg-branch-master-https-travis-ci-org-jubianchi-jsimple-">jsimple - a JS dependency injection container/service locator <a href="https://travis-ci.org/jubianchi/jsimple"><img src="https://travis-ci.org/jubianchi/jsimple.svg?branch=master" alt="Build Status"></a></h1>
 <h2 id="installation">Installation</h2>
-<p>Before using jimple in your project, add it to your <code>package.json</code>:</p>
-<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save --no-optional jimple</code>
+<p>Before using jsimple in your project, add it to your <code>package.json</code>:</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save --no-optional jsimple</code>
 </code></pre>
 <p>Using <code>--no-optional</code> will prevent NPM from installing the <code>harmony-reflect</code> package and you won&apos;t be able to use the
-Proxy features of jimple. If you want them simply remove the flag:</p>
-<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save jimple</code>
+Proxy features of jsimple. If you want them simply remove the flag:</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">npm install --save jsimple</code>
 </code></pre>
 <h2 id="usage">Usage</h2>
-<p>Creating a jimple container is as simple as instanciating it:</p>
+<p>Creating a jsimple container is as simple as instanciating it:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
 
-let Jimple = require(&quot;jimple&quot;),
-    container = new Jimple();</code>
+let Jsimple = require(&quot;jsimple&quot;),
+    container = new Jsimple();</code>
 </code></pre>
 <h3 id="defining-services">Defining services</h3>
-<p>There are four ways to defines services with jimple:</p>
+<p>There are four ways to defines services with jsimple:</p>
 <ul>
 <li>Defining them as <em>shared</em> services</li>
 <li>Defining them through <em>factory</em> functions</li>
@@ -73,7 +69,7 @@ let Jimple = require(&quot;jimple&quot;),
 <li>Defining <em>parameters</em> as services</li>
 </ul>
 <h4 id="shared-services">Shared services</h4>
-<p>Shared services are defined through a function which will build them once and jimple will then share the same instance
+<p>Shared services are defined through a function which will build them once and jsimple will then share the same instance
 across every call:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;app&quot;, () =&gt; {
     let express = require(&quot;express&quot;);
@@ -86,44 +82,44 @@ the exact same instance:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;app&quot;) === container.get(&quot;app&quot;)); //true</code>
 </code></pre>
 <h4 id="service-factories">Service factories</h4>
-<p>Sometime you will want to have a new instance of a service each time you fetch it from jimple. This is where factories are useful:</p>
+<p>Sometime you will want to have a new instance of a service each time you fetch it from jsimple. This is where factories are useful:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.factory(&quot;session&quot;, (c) =&gt; {
     return {
         id: c.get(&quot;session.id_generator&quot;)()
     };
 });</code>
 </code></pre>
-<p>This will define a factory called <code>session</code> which will return a new fresh object each time you fetch it from jimple:</p>
+<p>This will define a factory called <code>session</code> which will return a new fresh object each time you fetch it from jsimple:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;session&quot;) === container.get(&quot;session&quot;)); //false</code>
 </code></pre>
-<p>As you can see in the previous example, the factory function received one argument (<code>c</code>): this is the current jimple instance.
-Jimple will automatically pass itself as an argument of both factories and shared service factories.</p>
+<p>As you can see in the previous example, the factory function received one argument (<code>c</code>): this is the current jsimple instance.
+Jsimple will automatically pass itself as an argument of both factories and shared service factories.</p>
 <h4 id="function-services">Function services</h4>
-<p>Sometimes you will need to store a function inside jimple to use it later. For example, in our previous example (the <code>session</code> factory)
+<p>Sometimes you will need to store a function inside jsimple to use it later. For example, in our previous example (the <code>session</code> factory)
 the <code>session.id_generator</code> is just a plain function. But how did we do that ?</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;session.id_generator&quot;, container.protect(require(&apos;uuid&apos;).v4));</code>
 </code></pre>
 <p>Doing so we store the <code>uuid#v4</code> function in the container and we can use it later.</p>
 <h4 id="parameters-as-services">Parameters as services</h4>
-<p>Defining parameters as services is the process of storing simple values inside jimple. This can be usefull to store configuration values.
+<p>Defining parameters as services is the process of storing simple values inside jsimple. This can be usefull to store configuration values.
 They can be of any kind but not function (scalars, objects, arrays):</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.share(&quot;port&quot;, 4242);
 
 container.get(&quot;app&quot;).listen(container.get(&quot;port&quot;));</code>
 </code></pre>
 <h3 id="extending-overriding-services">Extending/Overriding services</h3>
-<p>Any service of any kind defined insde jimple can be extended or overridden. <strong>The only rule here is you can&apos;t modify a service
-of any kind once it has been fetched from jimple.</strong></p>
+<p>Any service of any kind defined insde jsimple can be extended or overridden. <strong>The only rule here is you can&apos;t modify a service
+of any kind once it has been fetched from jsimple.</strong></p>
 <h4 id="extending-shared-services">Extending shared services</h4>
 <p>Let&apos;s see how we would extend our <code>app</code> service:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">container.extend(&quot;app&quot;, (app, c) =&gt; {
-    app.locals.title = &quot;My Jimple Powered App&quot;;
+    app.locals.title = &quot;My Jsimple Powered App&quot;;
 
     return app;
 });</code>
 </code></pre>
 <p>Now everytime we fetch the <code>app</code> service it will automatically have its <code>title</code> defined:</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;app&quot;).locals.title); //My Jimple Powered App</code>
+<pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;app&quot;).locals.title); //My Jsimple Powered App</code>
 </code></pre>
 <h4 id="extending-service-factories">Extending service factories</h4>
 <p>Extending service factories is as simple as extending shared services:</p>
@@ -142,12 +138,12 @@ of any kind once it has been fetched from jimple.</strong></p>
     return {};
 });</code>
 </code></pre>
-<p>Now if we fetch the <code>session</code> from jimple we&apos;ll just get an empty object:</p>
+<p>Now if we fetch the <code>session</code> from jsimple we&apos;ll just get an empty object:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">console.log(container.get(&quot;session&quot;)); //{}</code>
 </code></pre>
 <p>No more <code>id</code> nor <code>start</code> attributes.</p>
 <h3 id="using-tags">Using tags</h3>
-<p>In jimple each service can have one or more associated tags. This is useful to create groups of services. Let&apos;s see an example:</p>
+<p>In jsimple each service can have one or more associated tags. This is useful to create groups of services. Let&apos;s see an example:</p>
 <pre><code><code class="source-code prettyprint">container.share(&quot;app.static&quot;, container.protect(express.static(&quot;public&quot;)), [&quot;middleware&quot;]);
 container.share(&quot;app.static&quot;, container.protect(express.static(&quot;files&quot;)), [&quot;middleware&quot;]);
 
@@ -159,12 +155,12 @@ container.extend(&quot;app&quot;, (app, c) =&gt; {
 </code></pre><p>Our Express app will now have the <code>static</code> middleware configured to lookup the <code>public</code> and <code>files</code> folders when we request
 resources.</p>
 <h3 id="using-the-proxy">Using the proxy</h3>
-<p>Jimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to <code>Jimple#get</code>
-or <code>Jimple#share</code>:</p>
+<p>Jsimple provides a proxy mode which will ease fetching and defining service in some cases. No more calls to <code>Jsimple#get</code>
+or <code>Jsimple#share</code>:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
 
-let Jimple = require(&quot;jimple&quot;),
-    container = (new Jimple()).proxify(); //Here the magic happens!
+let Jsimple = require(&quot;jsimple&quot;),
+    container = (new Jsimple()).proxify(); //Here the magic happens!
 
 container.app = () =&gt; {
     let express = require(&quot;express&quot;);
@@ -183,6 +179,136 @@ container.extend(&quot;app&quot;, (app, c) =&gt; {
 </code></pre>
 <p>See how we removed every call to <code>share</code> and <code>get</code>! We now call services as if they were direct property on the <code>container</code> object.
 <strong>Do not forget that to use this feature you have to remove the <code>--no-optional</code> flag from the <code>npm install</code> command.</strong></p>
+<h3 id="using-decorators">Using decorators</h3>
+<p>Jsimple also take advantage of <a href="https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841">ES7 decorators</a> and
+provides some usefull annotations to help you define services and factories.</p>
+<p>All decorators apply to the last instanciated Jsimple instance. This can be customized using the <code>jsimple</code> argument on decorators.</p>
+<p><strong>Keep in mind that decorators are experimental and support is provided through Babel which only supports class decorators.</strong></p>
+<h4 id="shared-services">Shared services</h4>
+<p>Given a file where you create your Jsimple instance:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Jsimple = require(&quot;jsimple&quot;),
+    container = new Jsimple();
+
+//...</code>
+</code></pre>
+<p>And a file where you define a class to be used as a shared service:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+
+@Shared({ id: &quot;myService&quot; })
+class MyService {
+    //...
+}</code>
+</code></pre>
+<p>This will declare a shared service identified by <code>myService</code> in the Jsimple instance.</p>
+<h4 id="service-factories">Service factories</h4>
+<p>Declaring factory services is not really different from the previous example. Once you have created your Jsimple instance,
+use the <code>Factory</code> decorator:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Factory = require(&quot;jsimple/decorator&quot;).Factory;
+
+@Factory({ id: &quot;myFactory&quot; })
+class MyService {
+    //...
+}</code>
+</code></pre>
+<h4 id="extending-overriding-services">Extending/Overriding services</h4>
+<p>You can also extend shared services or factory using a dedicated decorator:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Extend = require(&quot;jsimple/decorator&quot;).Extend;
+
+@Extend({ id: &quot;myService&quot; })
+class MyService {
+    constructor(service) {
+        //...
+    }
+
+    //...
+}</code>
+</code></pre>
+<p>Here, we are extending the <code>myService</code> service. Note that the extending service will receive an instance of the extended service as
+its first constructor argument.</p>
+<h4 id="defining-dependencies">Defining dependencies</h4>
+<p>In addition to defining services and factories, decorators let you define your classes&apos; dependencies. You can do that using one
+of those two syntaxes:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+
+@Shared({
+    id: &quot;myService&quot;,
+    use: [&quot;myOtherService&quot;]
+})
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}</code>
+</code></pre>
+<p>As you can see, the <code>Shared</code> decorator (but also <code>Factory</code> and <code>Extend</code>) takes an extra <code>use</code> argument by which you can define an array of dependencies. A more elegant way of doing this is
+by using the <code>Inject</code> decorator:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+
+@Shared({ id: &quot;myService&quot; })
+@Inject([&quot;myOtherService&quot;])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}</code>
+</code></pre>
+<p>The <code>Inject</code> decorator will create a Proxy around the annotated class so that when it&apos;s instanciated it will automatically fetch
+its dependencies through Jsimple.</p>
+<p><strong>Note that using <code>Inject</code> applies a Proxy on the class itself so even when you instanciate it by hand, it will try to fetch its dependencies through Jsimple:</strong></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+
+@Shared({ id: &quot;myService&quot; })
+@Inject([&quot;myOtherService&quot;])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+
+let myService = new MyService();
+
+// Is equivalent to
+
+let myService = new MyService(container.get(&quot;myService&quot;));</code>
+</code></pre>
+<p>The <code>Inject</code> helper will only inject service for arguments you don&apos;t manually provide:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
+
+let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+
+@Shared({ id: &quot;myService&quot; })
+@Inject([&quot;myOtherService&quot;])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+
+let myService = new MyService(new OtherService());</code>
+</code></pre>
+<p>This will never call Jsimple as all the constructor arguments are manually provided.</p>
 <h2 id="license">License</h2>
 <p><a href="LICENSE">The MIT License (MIT)</a></p>
 <p>Copyright (c) 2015 jubianchi</p>
@@ -190,7 +316,7 @@ container.extend(&quot;app&quot;, (app, c) =&gt; {
 </div>
 
 <footer class="footer">
-  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.2.6)</span></a>
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.0)</span></a>
 </footer>
 
 <script src="script/search_index.js"></script>

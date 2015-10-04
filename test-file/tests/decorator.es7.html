@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">tests/decorator.es7 | Jimple API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/jubianchi/jsimple.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/decorator.js~Decorator.html">Decorator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Jsimple.html">Jsimple</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~JsimpleProxified.html">JsimpleProxified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/proxy.js~JsimpleProxy.html">JsimpleProxy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Extend">Extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Factory">Factory</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Inject">Inject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Shared">Shared</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Use">Use</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">tests/decorator.es7</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&quot;use strict&quot;;
+
+var Jsimple = require(&quot;../src&quot;),
+    Decorators = require(&quot;../src/decorator.js&quot;),
+    Decorator = Decorators.Decorator;
+
+/** @test {Decorator} */
+describe(&quot;Decorator&quot;, () =&gt; {
+    let jsimple;
+
+    beforeEach(() =&gt; jsimple = new Jsimple());
+
+    beforeEach(() =&gt; {
+        let should = require(&quot;should&quot;);
+
+        should.extend(&quot;then&quot;, Proxy.prototype);
+        should.extend(&quot;Boolean&quot;, Proxy.prototype);
+    });
+
+    /** @test {Decorator.share} */
+    describe(&quot;.share&quot;, () =&gt; {
+        it(&quot;should declare a shared service&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            jsimple.keys().should.be.eql([&quot;service&quot;]);
+            jsimple.get(&quot;service&quot;).should.be.an.instanceof(Service);
+            jsimple.get(&quot;service&quot;).should.be.equal(jsimple.get(&quot;service&quot;));
+        });
+
+        it(&quot;should declare a shared service with dependencies&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.share({ id: &quot;otherService&quot;, use: [&quot;service&quot;] })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.get(&quot;otherService&quot;).should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Shared} */
+    describe(&quot;Shared&quot;, () =&gt; {
+        it(&quot;should expose a Shared decorator&quot;, () =&gt; Decorators.Shared.should.be.equal(Decorator.share));
+    });
+
+    /** @test {Decorator.factory} */
+    describe(&quot;.factory&quot;, () =&gt; {
+        it(&quot;should declare a factory service&quot;, () =&gt; {
+            @Decorator.factory({ id: &quot;factory&quot; })
+            class Service {}
+
+            jsimple.keys().should.be.eql([&quot;factory&quot;]);
+            jsimple.get(&quot;factory&quot;).should.be.an.instanceof(Service);
+            jsimple.get(&quot;factory&quot;).should.not.be.equal(jsimple.get(&quot;factory&quot;));
+        });
+
+        it(&quot;should declare a factory service with dependencies&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.factory({ id: &quot;factory&quot;, use: [&quot;service&quot;] })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.get(&quot;factory&quot;).should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Factory} */
+    describe(&quot;Factory&quot;, () =&gt; {
+        it(&quot;should expose a Factory decorator&quot;, () =&gt; Decorators.Factory.should.be.equal(Decorator.factory));
+    });
+
+    /** @test {Decorator.extend} */
+    describe(&quot;.extend&quot;, () =&gt; {
+        it(&quot;should extend a service&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.extend({ id: &quot;service&quot; })
+            class OtherService {}
+
+            jsimple.keys().should.be.eql([&quot;service&quot;]);
+            jsimple.get(&quot;service&quot;).should.be.an.instanceof(OtherService);
+            jsimple.get(&quot;service&quot;).should.be.equal(jsimple.get(&quot;service&quot;));
+        });
+
+        it(&quot;should pass extended service as first constructor argument&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.extend({ id: &quot;service&quot; })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.keys().should.be.eql([&quot;service&quot;]);
+            jsimple.get(&quot;service&quot;).should.be.an.instanceof(OtherService);
+            jsimple.get(&quot;service&quot;).should.be.equal(jsimple.get(&quot;service&quot;));
+        });
+    });
+
+    /** @test {Extend} */
+    describe(&quot;Extend&quot;, () =&gt; {
+        it(&quot;should expose a Extend decorator&quot;, () =&gt; Decorators.Extend.should.be.equal(Decorator.extend));
+    });
+
+    /** @test {Decorator.use} */
+    describe(&quot;.use&quot;, () =&gt; {
+        it(&quot;should inject dependencies&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.factory({ id: &quot;factory&quot; })
+            class Factory {}
+
+            @Decorator.use([&quot;service&quot;, &quot;factory&quot;])
+            class OtherService {
+                constructor(service, factory) {
+                    service.should.be.an.instanceof(Service);
+                    factory.should.be.an.instanceof(Factory);
+                }
+            }
+
+            (new OtherService()).should.be.an.instanceof(OtherService);
+        });
+
+        it(&quot;should use provided arguments&quot;, () =&gt; {
+            @Decorator.share({ id: &quot;service&quot; })
+            class Service {}
+
+            @Decorator.factory({ id: &quot;factory&quot; })
+            class Factory {}
+
+            @Decorator.use([&quot;service&quot;, &quot;factory&quot;])
+            class OtherService {
+                constructor(service, factory) {
+                    service.should.be.equal(serviceInstance);
+                    factory.should.be.an.instanceof(Factory);
+                }
+            }
+
+            let serviceInstance = new Service();
+
+            (new OtherService(serviceInstance)).should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Use} */
+    describe(&quot;Use&quot;, () =&gt; {
+        it(&quot;should expose a Use decorator&quot;, () =&gt; Decorators.Use.should.be.equal(Decorator.use));
+    });
+
+    /** @test {Inject} */
+    describe(&quot;Inject&quot;, () =&gt; {
+        it(&quot;should expose a Inject decorator&quot;, () =&gt; Decorators.Inject.should.be.equal(Decorator.use));
+    });
+
+    describe(&quot;Combined&quot;, () =&gt; {
+        let Shared, Factory, Inject;
+
+        beforeEach(() =&gt; {
+            let Decorators = require(&quot;../src/decorator.js&quot;);
+
+            Shared = Decorators.Shared;
+            Factory = Decorators.Factory;
+            Inject = Decorators.Inject;
+        });
+
+        describe(&apos;Shared + Inject&apos;, () =&gt; {
+            it(&quot;should declare a shared service with dependencies&quot;, () =&gt; {
+                @Shared({ id: &quot;service&quot; })
+                class Service {}
+
+                @Shared({ id: &quot;otherService&quot; })
+                @Inject([&quot;service&quot;])
+                class OtherService {
+                    constructor(service) {
+                        service.should.be.an.instanceof(Service);
+                    }
+                }
+
+                jsimple.get(&quot;otherService&quot;).should.be.an.instanceof(OtherService);
+            });
+        });
+
+        describe(&apos;Factory + Inject&apos;, () =&gt; {
+            it(&quot;should declare a shared service with dependencies&quot;, () =&gt; {
+                @Shared({ id: &quot;service&quot; })
+                class Service {}
+
+                @Factory({ id: &quot;factory&quot; })
+                @Inject([&quot;service&quot;])
+                class OtherService {
+                    constructor(service) {
+                        service.should.be.an.instanceof(Service);
+                    }
+                }
+
+                jsimple.get(&quot;factory&quot;).should.be.an.instanceof(OtherService);
+            });
+        });
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.0)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
