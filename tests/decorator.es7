@@ -1,0 +1,214 @@
+"use strict";
+
+var Jsimple = require("../src"),
+    Decorators = require("../src/decorator.js"),
+    Decorator = Decorators.Decorator;
+
+/** @test {Decorator} */
+describe("Decorator", () => {
+    let jsimple;
+
+    beforeEach(() => jsimple = new Jsimple());
+
+    beforeEach(() => {
+        let should = require("should");
+
+        should.extend("then", Proxy.prototype);
+        should.extend("Boolean", Proxy.prototype);
+    });
+
+    /** @test {Decorator.share} */
+    describe(".share", () => {
+        it("should declare a shared service", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            jsimple.keys().should.be.eql(["service"]);
+            jsimple.get("service").should.be.an.instanceof(Service);
+            jsimple.get("service").should.be.equal(jsimple.get("service"));
+        });
+
+        it("should declare a shared service with dependencies", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.share({ id: "otherService", use: ["service"] })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.get("otherService").should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Shared} */
+    describe("Shared", () => {
+        it("should expose a Shared decorator", () => Decorators.Shared.should.be.equal(Decorator.share));
+    });
+
+    /** @test {Decorator.factory} */
+    describe(".factory", () => {
+        it("should declare a factory service", () => {
+            @Decorator.factory({ id: "factory" })
+            class Service {}
+
+            jsimple.keys().should.be.eql(["factory"]);
+            jsimple.get("factory").should.be.an.instanceof(Service);
+            jsimple.get("factory").should.not.be.equal(jsimple.get("factory"));
+        });
+
+        it("should declare a factory service with dependencies", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.factory({ id: "factory", use: ["service"] })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.get("factory").should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Factory} */
+    describe("Factory", () => {
+        it("should expose a Factory decorator", () => Decorators.Factory.should.be.equal(Decorator.factory));
+    });
+
+    /** @test {Decorator.extend} */
+    describe(".extend", () => {
+        it("should extend a service", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.extend({ id: "service" })
+            class OtherService {}
+
+            jsimple.keys().should.be.eql(["service"]);
+            jsimple.get("service").should.be.an.instanceof(OtherService);
+            jsimple.get("service").should.be.equal(jsimple.get("service"));
+        });
+
+        it("should pass extended service as first constructor argument", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.extend({ id: "service" })
+            class OtherService {
+                constructor(service) {
+                    service.should.be.an.instanceof(Service);
+                }
+            }
+
+            jsimple.keys().should.be.eql(["service"]);
+            jsimple.get("service").should.be.an.instanceof(OtherService);
+            jsimple.get("service").should.be.equal(jsimple.get("service"));
+        });
+    });
+
+    /** @test {Extend} */
+    describe("Extend", () => {
+        it("should expose a Extend decorator", () => Decorators.Extend.should.be.equal(Decorator.extend));
+    });
+
+    /** @test {Decorator.use} */
+    describe(".use", () => {
+        it("should inject dependencies", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.factory({ id: "factory" })
+            class Factory {}
+
+            @Decorator.use(["service", "factory"])
+            class OtherService {
+                constructor(service, factory) {
+                    service.should.be.an.instanceof(Service);
+                    factory.should.be.an.instanceof(Factory);
+                }
+            }
+
+            (new OtherService()).should.be.an.instanceof(OtherService);
+        });
+
+        it("should use provided arguments", () => {
+            @Decorator.share({ id: "service" })
+            class Service {}
+
+            @Decorator.factory({ id: "factory" })
+            class Factory {}
+
+            @Decorator.use(["service", "factory"])
+            class OtherService {
+                constructor(service, factory) {
+                    service.should.be.equal(serviceInstance);
+                    factory.should.be.an.instanceof(Factory);
+                }
+            }
+
+            let serviceInstance = new Service();
+
+            (new OtherService(serviceInstance)).should.be.an.instanceof(OtherService);
+        });
+    });
+
+    /** @test {Use} */
+    describe("Use", () => {
+        it("should expose a Use decorator", () => Decorators.Use.should.be.equal(Decorator.use));
+    });
+
+    /** @test {Inject} */
+    describe("Inject", () => {
+        it("should expose a Inject decorator", () => Decorators.Inject.should.be.equal(Decorator.use));
+    });
+
+    describe("Combined", () => {
+        let Shared, Factory, Inject;
+
+        beforeEach(() => {
+            let Decorators = require("../src/decorator.js");
+
+            Shared = Decorators.Shared;
+            Factory = Decorators.Factory;
+            Inject = Decorators.Inject;
+        });
+
+        describe('Shared + Inject', () => {
+            it("should declare a shared service with dependencies", () => {
+                @Shared({ id: "service" })
+                class Service {}
+
+                @Shared({ id: "otherService" })
+                @Inject(["service"])
+                class OtherService {
+                    constructor(service) {
+                        service.should.be.an.instanceof(Service);
+                    }
+                }
+
+                jsimple.get("otherService").should.be.an.instanceof(OtherService);
+            });
+        });
+
+        describe('Factory + Inject', () => {
+            it("should declare a shared service with dependencies", () => {
+                @Shared({ id: "service" })
+                class Service {}
+
+                @Factory({ id: "factory" })
+                @Inject(["service"])
+                class OtherService {
+                    constructor(service) {
+                        service.should.be.an.instanceof(Service);
+                    }
+                }
+
+                jsimple.get("factory").should.be.an.instanceof(OtherService);
+            });
+        });
+    });
+});

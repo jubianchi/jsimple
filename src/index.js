@@ -1,6 +1,11 @@
 "use strict";
 
 /**
+ * @ignore
+ */
+let Decorator = require("./decorator.js").Decorator;
+
+/**
  * @access public
  */
 class Jsimple {
@@ -33,6 +38,8 @@ class Jsimple {
         this.frozen = new Set();
 
         Object.freeze(this);
+
+        Decorator.setJsimple(this);
     }
 
     /**

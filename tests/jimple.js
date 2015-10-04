@@ -307,10 +307,8 @@ describe("Jsimple", () => {
 
             describe(".set", () => {
                 it("should refuse to override native methods", () => {
-                    (() => jsimple.factory = () => {
-                    }).should.throw(Error);
-                    (() => jsimple.get = () => {
-                    }).should.throw(Error);
+                    (() => jsimple.factory = () => {}).should.throw(Error);
+                    (() => jsimple.get = () => {}).should.throw(Error);
                 });
 
                 it("should define a shared service", () => {
@@ -325,16 +323,14 @@ describe("Jsimple", () => {
 
             describe(".has", () => {
                 it("should check if service exists", () => {
-                    jsimple.service = () => {
-                    };
+                    jsimple.service = () => {};
 
                     ("service" in jsimple).should.be.true;
                     ("factory" in jsimple).should.be.false;
                 });
 
                 it("should check if factory exists", () => {
-                    jsimple.factory("service", () => {
-                    });
+                    jsimple.factory("service", () => {});
 
                     ("service" in jsimple).should.be.true;
                     ("factory" in jsimple).should.be.false;
@@ -343,8 +339,7 @@ describe("Jsimple", () => {
 
             describe(".delete", () => {
                 it("should prevent deletion", () => {
-                    jsimple.service = () => {
-                    };
+                    jsimple.service = () => {};
 
                     (() => delete jsimple.service).should.throw(Error);
                 });

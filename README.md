@@ -205,6 +205,172 @@ container.extend("app", (app, c) => {
 See how we removed every call to `share` and `get`! We now call services as if they were direct property on the `container` object.
 **Do not forget that to use this feature you have to remove the `--no-optional` flag from the `npm install` command.**
 
+### Using decorators
+
+Jsimple also take advantage of [ES7 decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) and
+provides some usefull annotations to help you define services and factories.
+
+All decorators apply to the last instanciated Jsimple instance. This can be customized using the `jsimple` argument on decorators.
+
+**Keep in mind that decorators are experimental and support is provided through Babel which only supports class decorators.**
+
+#### Shared services
+
+Given a file where you create your Jsimple instance:
+
+```js
+"use strict";
+
+let Jsimple = require("jsimple"),
+    container = new Jsimple();
+
+//...
+```
+
+And a file where you define a class to be used as a shared service:
+
+```js
+"use strict";
+
+let Shared = require("jsimple/decorator").Shared;
+
+@Shared({ id: "myService" })
+class MyService {
+    //...
+}
+```
+
+This will declare a shared service identified by `myService` in the Jsimple instance.
+
+#### Service factories
+
+Declaring factory services is not really different from the previous example. Once you have created your Jsimple instance,
+use the `Factory` decorator:
+
+```js
+"use strict";
+
+let Factory = require("jsimple/decorator").Factory;
+
+@Factory({ id: "myFactory" })
+class MyService {
+    //...
+}
+```
+
+#### Extending/Overriding services
+
+You can also extend shared services or factory using a dedicated decorator:
+
+```js
+"use strict";
+
+let Extend = require("jsimple/decorator").Extend;
+
+@Extend({ id: "myService" })
+class MyService {
+    constructor(service) {
+        //...
+    }
+
+    //...
+}
+```
+
+Here, we are extending the `myService` service. Note that the extending service will receive an instance of the extended service as
+its first constructor argument.
+
+#### Defining dependencies
+
+In addition to defining services and factories, decorators let you define your classes' dependencies. You can do that using one
+of those two syntaxes:
+
+```js
+"use strict";
+
+let Shared = require("jsimple/decorator").Shared;
+
+@Shared({
+    id: "myService",
+    use: ["myOtherService"]
+})
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+```
+
+As you can see, the `Shared` decorator (but also `Factory` and `Extend`) takes an extra `use` argument by which you can define an array of dependencies. A more elegant way of doing this is
+by using the `Inject` decorator:
+
+```js
+"use strict";
+
+let Shared = require("jsimple/decorator").Shared;
+
+@Shared({ id: "myService" })
+@Inject(["myOtherService"])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+```
+
+The `Inject` decorator will create a Proxy around the annotated class so that when it's instanciated it will automatically fetch
+its dependencies through Jsimple.
+
+**Note that using `Inject` applies a Proxy on the class itself so even when you instanciate it by hand, it will try to fetch its dependencies through Jsimple:**
+
+```js
+"use strict";
+
+let Shared = require("jsimple/decorator").Shared;
+
+@Shared({ id: "myService" })
+@Inject(["myOtherService"])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+
+let myService = new MyService();
+
+// Is equivalent to
+
+let myService = new MyService(container.get("myService"));
+```
+
+The `Inject` helper will only inject service for arguments you don't manually provide:
+
+```js
+"use strict";
+
+let Shared = require("jsimple/decorator").Shared;
+
+@Shared({ id: "myService" })
+@Inject(["myOtherService"])
+class MyService {
+    constructor(otherService) {
+        //...
+    }
+
+    //...
+}
+
+let myService = new MyService(new OtherService());
+```
+
+This will never call Jsimple as all the constructor arguments are manually provided.
+
 ## License
 
 [The MIT License (MIT)](LICENSE)

@@ -7,6 +7,10 @@
     "test": {
         "type": "mocha",
         "source": "./tests",
-        "includes": ["\\.(js|es6)$"]
-    }
+        "includes": ["\\.(js|es6|es7)$"],
+        "excludes": ["decorator\\.js"]
+    },
+    "plugins": [
+        { "name": "esdoc-es7-plugin" }
+    ]
 }

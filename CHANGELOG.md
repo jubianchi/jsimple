@@ -1,5 +1,6 @@
 # 2.0.0
 
+* Added decorators
 * Renamed library from `jimple` to `jsimple`
 * Find services associated with several tags
 * Added proxy traps
