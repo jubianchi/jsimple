@@ -309,7 +309,8 @@ by using the `Inject` decorator:
 ```js
 "use strict";
 
-let Shared = require("jsimple/decorator").Shared;
+let Shared = require("jsimple/decorator").Shared,
+    Inject = require("jsimple/decorator").Inject;
 
 @Shared({ id: "myService" })
 @Inject(["myOtherService"])
@@ -330,7 +331,8 @@ its dependencies through Jsimple.
 ```js
 "use strict";
 
-let Shared = require("jsimple/decorator").Shared;
+let Shared = require("jsimple/decorator").Shared,
+    Inject = require("jsimple/decorator").Inject;
 
 @Shared({ id: "myService" })
 @Inject(["myOtherService"])
@@ -354,7 +356,8 @@ The `Inject` helper will only inject service for arguments you don't manually pr
 ```js
 "use strict";
 
-let Shared = require("jsimple/decorator").Shared;
+let Shared = require("jsimple/decorator").Shared,
+    Inject = require("jsimple/decorator").Inject;
 
 @Shared({ id: "myService" })
 @Inject(["myOtherService"])
