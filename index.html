@@ -256,7 +256,8 @@ class MyService {
 by using the <code>Inject</code> decorator:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
 
-let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+let Shared = require(&quot;jsimple/decorator&quot;).Shared,
+    Inject = require(&quot;jsimple/decorator&quot;).Inject;
 
 @Shared({ id: &quot;myService&quot; })
 @Inject([&quot;myOtherService&quot;])
@@ -273,7 +274,8 @@ its dependencies through Jsimple.</p>
 <p><strong>Note that using <code>Inject</code> applies a Proxy on the class itself so even when you instanciate it by hand, it will try to fetch its dependencies through Jsimple:</strong></p>
 <pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
 
-let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+let Shared = require(&quot;jsimple/decorator&quot;).Shared,
+    Inject = require(&quot;jsimple/decorator&quot;).Inject;
 
 @Shared({ id: &quot;myService&quot; })
 @Inject([&quot;myOtherService&quot;])
@@ -294,7 +296,8 @@ let myService = new MyService(container.get(&quot;myService&quot;));</code>
 <p>The <code>Inject</code> helper will only inject service for arguments you don&apos;t manually provide:</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">&quot;use strict&quot;;
 
-let Shared = require(&quot;jsimple/decorator&quot;).Shared;
+let Shared = require(&quot;jsimple/decorator&quot;).Shared,
+    Inject = require(&quot;jsimple/decorator&quot;).Inject;
 
 @Shared({ id: &quot;myService&quot; })
 @Inject([&quot;myOtherService&quot;])
