@@ -1,0 +1,25 @@
+{
+  "name": "jsimple-example",
+  "main": "index.js",
+  "author": "Julien Bianchi <contact@jubianchi.fr>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jubianchi/jsimple.git"
+  },
+  "engines": {
+    "node": "^4.0",
+    "npm": "<3.0"
+  },
+  "dependencies": {
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "harmony-reflect": "^1.4.2",
+    "jsimple": "../",
+    "morgan": "^1.6.1"
+  },
+  "scripts": {
+    "start": "node --harmony_proxies index.js",
+    "dstart": "docker run --rm -it -v $(pwd):/app -v $(pwd)/../docs:/docs -w /app -p 3000:3000 jubianchi/docker-node-4 /node-v4.1.0-linux-x64/bin/npm start"
+  }
+}
