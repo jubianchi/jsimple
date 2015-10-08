@@ -1,6 +1,6 @@
 "use strict";
 
 module.exports = {
-    static: require("./static"),
-    logger: require("./logger")
+    logger: require("./logger"),
+    static: require("./static")
 };
