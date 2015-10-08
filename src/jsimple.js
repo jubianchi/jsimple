@@ -327,7 +327,11 @@ class Jsimple {
      * @returns {Jsimple} The current Jsimple instance wrapped in a Proxy
      */
     proxify() {
-        return JsimpleProxified.fromJsimple(this);
+        let jsimple = JsimpleProxified.fromJsimple(this);
+
+        Decorator.setJsimple(jsimple);
+
+        return jsimple;
     }
 }
 
