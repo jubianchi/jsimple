@@ -1,5 +1,6 @@
 # 2.0.0
 
+* `.share` accepts scalar values or objects to define parameters or services
 * Introduced `@` notation to fetch tagged services
 * Added decorators
 * Renamed library from `jimple` to `jsimple`

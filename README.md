@@ -93,7 +93,7 @@ Defining parameters as services is the process of storing simple values inside j
 They can be of any kind but not function (scalars, objects, arrays):
 
 ```js
-container.define("port", 4242);
+container.share("port", 4242);
 
 container.get("app").listen(container.get("port"));
 ```

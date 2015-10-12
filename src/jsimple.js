@@ -74,6 +74,8 @@ class Jsimple {
     /**
      * Sets a parameter or an object factory
      *
+     * @private
+     *
      * @param {String}                           name   The unique identifier for the parameter or factory
      * @param {*|Function(container: Jsimple): *} value  The parameter value or a factory function
      * @param {Array<String>}                    [tags] An array of tags to associate to the parameter or factory
@@ -89,6 +91,10 @@ class Jsimple {
             throw new Error("Cannot override an already executed factory or fetched service");
         }
 
+        if (typeof value !== "function") {
+            throw new Error("Argument #2 passed to Jsimple.define must be a function")
+        }
+
         if (this.values.has(name)) {
             (this.values.get(name).tags || []).forEach(tag => {
                 this.tagmap.get(tag).delete(name);
@@ -97,11 +103,7 @@ class Jsimple {
             this.values.delete(name);
         }
 
-        if (typeof value !== "function") {
-            this.values.set(name, () => value);
-        } else {
-            this.values.set(name, value);
-        }
+        this.values.set(name, value);
 
         this.values.get(name).tags = tags || [];
         this.values.get(name).tags.forEach(tag => {
@@ -132,15 +134,11 @@ class Jsimple {
             throw new Error("Argument #1 passed to Jsimple.share must be a string identifier")
         }
 
-        if (typeof code !== "function") {
-            throw new Error("Argument #2 passed to Jsimple.share must be a function")
-        }
-
         return this.define(
             name,
             jsimple => {
                 if (jsimple.shared.has(name) === false) {
-                    jsimple.shared.set(name, code(jsimple));
+                    jsimple.shared.set(name, typeof code !== "function" ? code : code(jsimple));
                 }
 
                 let instance = jsimple.shared.get(name);

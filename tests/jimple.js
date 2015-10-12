@@ -32,12 +32,6 @@ describe("Jsimple", () => {
             jsimple.define("service", callable).raw("service").should.be.equal(callable);
         });
 
-        it("should store value as callable", () => {
-            let value = 42;
-
-            jsimple.define("service", value).raw("service")().should.be.equal(value);
-        });
-
         it("should tag callable", () => jsimple.define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
 
         it("should not tag same callable twice", () => jsimple.define("service", () => {}, ["tag"]).define("service", () => {}, ["tag"]).tagged("tag").should.be.eql(["service"]));
@@ -69,6 +63,22 @@ describe("Jsimple", () => {
             jsimple.share("service", () => {}).get("service");
 
             (() => jsimple.share("service", () => {})).should.throw(Error);
+        });
+
+        it("should store scalar values as callable", () => {
+            let value = 42;
+
+            jsimple.share("parameter", value);
+
+            jsimple.get("parameter").should.equal(value);
+        });
+
+        it("should store object values as callable", () => {
+            let value = {};
+
+            jsimple.share("service", value);
+
+            jsimple.get("service").should.equal(value);
         });
 
         describe("factory", () => {
@@ -250,7 +260,7 @@ describe("Jsimple", () => {
             jsimple.define("service", callable).raw("service").should.be.equal(callable);
         });
 
-        it("should return raw callable for value", () => jsimple.define("service", 42).raw("service").should.be.a.Function());
+        it("should return raw callable for value", () => jsimple.share("parameter", 42).raw("parameter").should.be.a.Function());
     });
 
     /** @test {Jsimple#tagged} */
