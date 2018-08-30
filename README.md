@@ -1,4 +1,4 @@
-# jsimple - a JS dependency injection container/service locator [![Build Status](https://travis-ci.org/jubianchi/jsimple.svg?branch=master)](https://travis-ci.org/jubianchi/jsimple)
+# jsimple - a JS dependency injection container/service locator [![Build Status](https://travis-ci.org/jubianchi/jsimple.svg?branch=master)](https://travis-ci.org/jubianchi/jsimple) [![Greenkeeper badge](https://badges.greenkeeper.io/jubianchi/jsimple.svg)](https://greenkeeper.io/)
 
 ## Installation
 
