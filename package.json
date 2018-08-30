@@ -14,13 +14,13 @@
     "npm": "<3.0"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "esdoc": "^0.4",
-    "esdoc-es7-plugin": "0.0.2",
-    "istanbul": "^0.3.20",
-    "jscs": "^1.7.3",
-    "mocha": "^2.3.2",
-    "should": "^7.1.0"
+    "babel": "^6.23.0",
+    "esdoc": "^1.1.0",
+    "esdoc-es7-plugin": "0.0.3",
+    "istanbul": "^0.4.5",
+    "jscs": "^3.0.7",
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
   },
   "optionalDependencies": {
     "harmony-reflect": "^1.4.2"
